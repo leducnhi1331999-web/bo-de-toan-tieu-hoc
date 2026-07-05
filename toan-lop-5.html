@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toán lớp 5 - Bộ đề 15 câu tương tác</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#62708a;--line:#dde4f0;--brand:#2563eb;--brand2:#10b981;--bad:#dc2626;--good:#059669;--warn:#f59e0b;--soft:#eff6ff}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}.wrap{max-width:1180px;margin:0 auto;padding:18px}.topbar{position:sticky;top:0;z-index:10;background:rgba(245,247,251,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 0 12px;margin-bottom:12px}.app-title{font-size:22px;font-weight:900;margin:0 0 10px}.actions{display:flex;gap:10px;align-items:center;white-space:nowrap;overflow-x:auto;padding-bottom:2px}.actions .btn{flex:0 0 auto}.status-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 12px}.btn{border:0;border-radius:12px;background:var(--brand);color:#fff;font-weight:800;padding:11px 14px;cursor:pointer;box-shadow:0 4px 12px rgba(37,99,235,.18)}.btn.secondary{background:#fff;color:var(--brand);border:1px solid #bfdbfe}.btn.good{background:var(--brand2)}.btn.warn{background:var(--warn);color:#111827}.btn.ghost{background:#fff;color:#111827;border:1px solid var(--line);box-shadow:none}.btn.small{padding:7px 10px;border-radius:10px;font-size:13px}.pill{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);font-weight:650}.timer{font-size:22px;font-weight:900;color:#111827}.timer.danger{color:var(--bad)}.section{display:none}.section.active{display:block}.note{background:#fffbeb;border:1px solid #fde68a;color:#713f12;border-radius:14px;padding:12px;margin:12px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}.card,.question,.topic-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(20,40,80,.05)}.topic-card b{display:block;margin-bottom:6px}.topic-card span{color:var(--muted);font-size:14px}.topic-example{margin-top:10px;background:#f8fafc;border-left:4px solid #bfdbfe;padding:8px 10px;border-radius:10px;color:#334155;font-size:14px}h2{margin:26px 0 12px;font-size:24px}.question{margin:12px 0}.qtop{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}.badge{font-size:12px;color:#1d4ed8;background:#dbeafe;padding:4px 8px;border-radius:999px;font-weight:800}.qtext{font-size:18px;margin:12px 0 10px}.answer-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.answer{font-size:18px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:12px;min-width:240px}.unit{color:var(--muted)}details{margin-top:10px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;padding:10px}summary{cursor:pointer;font-weight:800}.hint-example{margin-top:8px;color:#475569;background:#fff;border-left:4px solid #dbeafe;padding:8px 10px;border-radius:10px}.result{margin-top:10px;font-weight:800}.ok{color:var(--good)}.wrong{color:var(--bad)}.solution{margin-top:8px;color:#334155;background:#fff7ed;border-left:4px solid #fb923c;padding:8px 10px;border-radius:8px}.history-item{border:1px solid var(--line);border-radius:16px;background:#fff;margin:10px 0;padding:12px}.wrong-box{border-left:4px solid var(--bad);background:#fffafa;margin:8px 0;padding:10px;border-radius:10px}.footer{color:var(--muted);font-size:13px;margin:30px 0}.hide{display:none}@media print{.topbar,.btn,.note .btn{display:none}.section{display:block}.question{break-inside:avoid}body{background:white}.card,.question{box-shadow:none}.answer{border-bottom:1px solid #111;border-left:0;border-right:0;border-top:0;border-radius:0}.solution,.result,details{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="app-title">Bộ đề Toán lớp 5 tương tác</div>
+    <div class="actions">
+      <button class="btn good" onclick="newTest()">Tạo đề ngẫu nhiên 15 câu</button>
+      <button class="btn" onclick="submitTest(false)">Chấm bài</button>
+      <button class="btn ghost" onclick="window.print()">In đề</button>
+      <button class="btn secondary" onclick="showTab('topics')">Dạng bài đã bao phủ</button>
+      <button class="btn secondary" onclick="showTab('history');renderHistory()">Lịch sử</button>
+      <button class="btn warn" onclick="clearHistory()">Xóa lịch sử</button>
+    </div>
+  </div>
+
+  <section id="test" class="section active">
+    <div class="status-row">
+      <span class="pill">Số câu: <b id="qCount">0</b>/15</span>
+      <span class="pill">Thời gian: <span id="timer" class="timer">60:00</span></span>
+      <span class="pill">Điểm gần nhất: <b id="lastScore">Chưa chấm</b></span>
+    </div>
+    <div class="note">Hướng dẫn: Với câu có đơn vị, học sinh chỉ cần nhập số. Ví dụ đáp án là <b>240 m²</b> thì nhập <b>240</b>. Với phân số nhập dạng <b>3/4</b>; hỗn số có thể nhập dạng <b>2 1/3</b>. Với câu có/không, nhập <b>C</b> hoặc <b>K</b>.</div>
+    <div id="questions"></div>
+  </section>
+
+  <section id="topics" class="section">
+    <h2>Các dạng bài đã bao phủ</h2>
+    <div id="topicGrid" class="grid"></div>
+  </section>
+
+  <section id="history" class="section">
+    <h2>Lịch sử làm bài</h2>
+    <div id="historyList"></div>
+  </section>
+  <div class="footer">File HTML chạy offline bằng trình duyệt. Lịch sử được lưu trong bộ nhớ trình duyệt của máy đang dùng.</div>
+</div>
+<script>
+const STORAGE_KEY = 'toan_lop_5_tuong_tac_history_v1';
+let currentQuestions = [];
+let timerHandle = null;
+let secondsLeft = 60*60;
+let alreadySubmitted = false;
+
+function r(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+function choice(a){return a[r(0,a.length-1)]}
+function shuffle(a){let b=a.slice();for(let i=b.length-1;i>0;i--){let j=r(0,i);[b[i],b[j]]=[b[j],b[i]]}return b}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){let t=a%b;a=b;b=t}return a||1}
+function lcm(a,b){return Math.abs(a*b)/gcd(a,b)}
+function simp(n,d=1){if(d<0){n=-n;d=-d}let g=gcd(n,d);return [n/g,d/g]}
+function f(n,d=1){let s=simp(n,d);return {n:s[0],d:s[1]}}
+function add(a,b){return f(a.n*b.d+b.n*a.d,a.d*b.d)}
+function sub(a,b){return f(a.n*b.d-b.n*a.d,a.d*b.d)}
+function mul(a,b){return f(a.n*b.n,a.d*b.d)}
+function divf(a,b){return f(a.n*b.d,a.d*b.n)}
+function fstr(a){a=f(a.n,a.d); return a.d===1?String(a.n):`${a.n}/${a.d}`}
+function mixedStr(a){a=f(a.n,a.d); if(a.d===1) return String(a.n); let whole=Math.trunc(a.n/a.d); let rem=Math.abs(a.n%a.d); if(whole===0) return fstr(a); return `${whole} ${rem}/${a.d}`}
+function fmt(n){return Number(n).toLocaleString('vi-VN')}
+function sign(a,b){return a>b?'>':(a<b?'<':'=')}
+function q(topic, question, answer, unit, hint, solution, type='number', hard=false){return {topicId:topic.id, topicTitle:topic.title, question, answer:String(answer), unit:unit||'', hint, solution, type, hard}}
+function esc(s){return String(s??'').replace(/[&<>'"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
+function normalize(s){return String(s??'').toLowerCase().trim().replace(/,/g,'.').replace(/\s+/g,' ')}
+function parseRational(s){
+  s=normalize(s); if(!s) return null;
+  if(/^-?\d+\s+\d+\/\d+$/.test(s)){let [w,fr]=s.split(/\s+/);let [n,d]=fr.split('/').map(Number);let sign=Number(w)<0?-1:1;return f(Number(w)*d+sign*n,d)}
+  if(/^-?\d+\/\d+$/.test(s)){let [n,d]=s.split('/').map(Number); if(d===0) return null; return f(n,d)}
+  if(/^-?\d+(\.\d+)?$/.test(s)){ if(s.includes('.')){let parts=s.split('.');let scale=10**parts[1].length;return f(Number(parts[0])*scale+(Number(parts[0])<0?-Number(parts[1]):Number(parts[1])), scale)} return f(Number(s),1)}
+  return null;
+}
+function isCorrect(user, ans, type){
+  if(type==='text'||['<','>','='].includes(ans)||ans==='C'||ans==='K') return normalize(user).toUpperCase()===normalize(ans).toUpperCase();
+  let u=parseRational(user), a=parseRational(ans);
+  if(u&&a) return u.n===a.n && u.d===a.d;
+  return normalize(user)===normalize(ans);
+}
+
+const TOPICS = [
+ {id:1,title:'Rút gọn phân số',group:'fraction',desc:'Chia cả tử số và mẫu số cho cùng một số để được phân số tối giản.',example:'Ví dụ: 45/105 rút gọn được 3/7.',gen:'genRutGon'},
+ {id:2,title:'Quy đồng mẫu số',group:'fraction',desc:'Đưa các phân số về cùng mẫu số để dễ cộng, trừ hoặc so sánh.',example:'Ví dụ: 1/3 = 2/6 và 1/2 = 3/6.',gen:'genQuyDong'},
+ {id:3,title:'So sánh phân số',group:'fraction',desc:'So sánh bằng cách cùng mẫu, cùng tử, so với 1 hoặc quy đồng.',example:'Ví dụ: 3/5 < 4/5 vì cùng mẫu 5.',gen:'genSoSanhPhanSo'},
+ {id:4,title:'Sắp xếp phân số',group:'fraction',desc:'Sắp xếp các phân số theo thứ tự từ bé đến lớn hoặc ngược lại.',example:'Ví dụ: 1/4 < 1/3 < 1/2.',gen:'genSapXepPhanSo'},
+ {id:5,title:'Cộng, trừ phân số',group:'fraction',desc:'Cộng/trừ phân số cùng mẫu hoặc khác mẫu.',example:'Ví dụ: 2/3 + 1/6 = 5/6.',gen:'genCongTruPhanSo'},
+ {id:6,title:'Nhân phân số',group:'fraction',desc:'Nhân tử với tử, mẫu với mẫu rồi rút gọn.',example:'Ví dụ: 2/3 × 3/5 = 2/5.',gen:'genNhanPhanSo'},
+ {id:7,title:'Chia phân số',group:'fraction',desc:'Chia cho một phân số bằng cách nhân với phân số đảo ngược.',example:'Ví dụ: 3/4 : 1/2 = 3/2.',gen:'genChiaPhanSo'},
+ {id:8,title:'Tính nhanh với phân số',group:'fraction',desc:'Dùng tính chất giao hoán, kết hợp hoặc phân phối để tính thuận tiện.',example:'Ví dụ: 3/7×5/6 + 4/7×5/6 = 5/6.',gen:'genTinhNhanhPhanSo'},
+ {id:9,title:'Tìm y trong phép tính phân số',group:'fraction',desc:'Dùng quan hệ thành phần của phép tính để tìm số chưa biết.',example:'Ví dụ: y + 1/3 = 1 thì y = 2/3.',gen:'genTimYPhanSo'},
+ {id:10,title:'Dãy tổng phân số đặc biệt',group:'fraction',desc:'Tính các tổng phân số có quy luật rút gọn hoặc tách mẫu.',example:'Ví dụ: 1/(1×2)+1/(2×3)+1/(3×4)=3/4.',gen:'genDayPhanSo'},
+ {id:11,title:'Chuyển phân số và hỗn số',group:'mixed',desc:'Chuyển phân số lớn hơn 1 thành hỗn số và ngược lại.',example:'Ví dụ: 17/5 = 3 2/5; 2 3/4 = 11/4.',gen:'genChuyenHonSo'},
+ {id:12,title:'Cộng, trừ hỗn số',group:'mixed',desc:'Có thể đổi hỗn số thành phân số rồi cộng hoặc trừ.',example:'Ví dụ: 2 1/3 + 1 1/6 = 3 1/2.',gen:'genCongTruHonSo'},
+ {id:13,title:'Nhân, chia hỗn số',group:'mixed',desc:'Đổi hỗn số về phân số rồi nhân hoặc chia.',example:'Ví dụ: 1 1/2 × 2/3 = 1.',gen:'genNhanChiaHonSo'},
+ {id:14,title:'Tìm giá trị phân số của một số',group:'word',desc:'Muốn tìm m/n của một số, lấy số đó nhân với m/n.',example:'Ví dụ: 3/5 của 100 là 60.',gen:'genGiaTriPhanSo'},
+ {id:15,title:'Tìm một số khi biết giá trị một phân số của số đó',group:'word',desc:'Lấy giá trị đã biết chia cho phân số tương ứng.',example:'Ví dụ: 2/5 của số đó là 40 thì số đó là 100.',gen:'genTimSoBietPhanSo'},
+ {id:16,title:'Tỉ số của hai số',group:'word',desc:'Viết tỉ số của hai số dưới dạng phân số hoặc số thập phân đơn giản.',example:'Ví dụ: Tỉ số của 12 và 20 là 3/5.',gen:'genTiSo'},
+ {id:17,title:'Bài toán phần còn lại',group:'word',desc:'Tính phần đã dùng, phần còn lại trong các bài toán diện tích, sách, vở, kẹo.',example:'Ví dụ: Dùng 1/4 và 1/6 diện tích thì còn 7/12 diện tích.',gen:'genPhanConLai'},
+ {id:18,title:'Hình chữ nhật với phân số',group:'geometry',desc:'Tính chu vi, diện tích khi chiều dài hoặc chiều rộng là phân số/hỗn số.',example:'Ví dụ: Dài 3/5 m, rộng 1/2 m thì diện tích là 3/10 m².',gen:'genHCNPhanSo'},
+ {id:19,title:'Bài toán tỉ lệ thuận',group:'ratio',desc:'Hai đại lượng cùng tăng hoặc cùng giảm theo cùng tỉ lệ.',example:'Ví dụ: 5 kg gạo giá 60 000đ thì 8 kg giá 96 000đ.',gen:'genTiLeThuan'},
+ {id:20,title:'Bài toán tỉ lệ nghịch',group:'ratio',desc:'Một đại lượng tăng thì đại lượng kia giảm theo tỉ lệ ngược.',example:'Ví dụ: 6 người làm 8 ngày; muốn làm 4 ngày thì cần 12 người.',gen:'genTiLeNghich'},
+ {id:21,title:'Bài toán tỉ lệ kép',group:'ratio',desc:'Dùng nhiều đại lượng như số người, số ngày, năng suất, sản phẩm.',example:'Ví dụ: 8 người làm 4 giờ được 120 sản phẩm; 10 người làm 6 giờ được 225 sản phẩm.',gen:'genTiLeKep'},
+ {id:22,title:'Hai hiệu số',group:'ratio',desc:'Giải các bài có hai hiệu, thường dùng sơ đồ hoặc lập quan hệ giữa các phần.',example:'Ví dụ: A hơn B 20; sau khi thay đổi, hiệu mới là 8.',gen:'genHaiHieu'},
+ {id:23,title:'Hai tỉ số',group:'ratio',desc:'Giải bài toán có tỉ số trước và sau khi thêm/bớt.',example:'Ví dụ: Nam bằng 2/3 nữ; thêm 2 nam và 5 nữ thì tỉ số đổi.',gen:'genHaiTiSo'},
+ {id:24,title:'Chia kẹo/vở theo điều kiện thừa thiếu',group:'word',desc:'Dùng hai cách chia để tìm số người và số đồ vật.',example:'Ví dụ: Mỗi em 5 cái thừa 3, mỗi em 7 cái thiếu 5.',gen:'genThuaThieu'},
+ {id:25,title:'Bài toán tuổi',group:'word',desc:'Dùng tổng, hiệu, tỉ số hoặc thay đổi theo thời gian để tìm tuổi.',example:'Ví dụ: Mẹ 30 tuổi, con 6 tuổi; sau 6 năm mẹ gấp 3 lần tuổi con.',gen:'genTuoi'},
+ {id:26,title:'Trung bình cộng',group:'word',desc:'Tổng các số bằng trung bình cộng nhân với số lượng số.',example:'Ví dụ: TBC của 3 số là 12 thì tổng là 36.',gen:'genTBC'},
+ {id:27,title:'Đại số hóa bài toán có lời văn',group:'word',desc:'Gọi số chưa biết là x/y rồi lập biểu thức, phương trình đơn giản.',example:'Ví dụ: Một số cộng 15 rồi nhân 2 được 70 thì số đó là 20.',gen:'genDaiSoHoa'},
+ {id:28,title:'Đọc, viết số thập phân',group:'decimal',desc:'Nhận biết phần nguyên, phần mười, phần trăm, phần nghìn.',example:'Ví dụ: 10 đơn vị và 35 phần trăm viết là 10,35.',gen:'genVietSoThapPhan'},
+ {id:29,title:'Giá trị chữ số trong số thập phân',group:'decimal',desc:'Xác định chữ số ở hàng phần mười, phần trăm, phần nghìn.',example:'Ví dụ: Trong 0,3469, chữ số 4 có giá trị 4/100.',gen:'genGiaTriChuSoTP'},
+ {id:30,title:'So sánh số thập phân',group:'decimal',desc:'So sánh phần nguyên trước, rồi đến từng chữ số ở phần thập phân.',example:'Ví dụ: 3,31 > 3,199.',gen:'genSoSanhTP'},
+ {id:31,title:'Chuyển phân số thành số thập phân',group:'decimal',desc:'Chuyển các phân số có mẫu 10, 100, 1000 hoặc chia tử cho mẫu.',example:'Ví dụ: 3/125 = 0,024.',gen:'genPhanSoSangTP'},
+ {id:32,title:'Đổi đơn vị diện tích',group:'measure',desc:'Đổi ha, dam², m² và vận dụng trong bài toán diện tích.',example:'Ví dụ: 1 ha = 10 000 m²; 12 dam² = 1 200 m².',gen:'genDoiDienTich'},
+ {id:33,title:'Đổi đơn vị khối lượng, độ dài',group:'measure',desc:'Đổi tạ, yến, kg, g; km, m, dm, cm.',example:'Ví dụ: 4 tạ 3 yến = 430 kg.',gen:'genDoiDonVi'},
+ {id:34,title:'Tính biểu thức có phân số và số thập phân',group:'decimal',desc:'Tính biểu thức hỗn hợp, chú ý thứ tự phép tính.',example:'Ví dụ: 6×2/7 + 6:14 = 15/7.',gen:'genBieuThucHonHop'},
+ {id:35,title:'Bài toán công việc, năng suất',group:'ratio',desc:'Tính số người, số ngày, số giờ hoặc số sản phẩm khi năng suất như nhau.',example:'Ví dụ: 8 người 2 ngày làm 64 sản phẩm thì 9 người 5 ngày làm 180 sản phẩm.',gen:'genCongViec'},
+ {id:36,title:'Bài toán vòi nước',group:'ratio',desc:'Tính phần bể mỗi vòi chảy trong một giờ.',example:'Ví dụ: Vòi A đầy bể trong 2 giờ, mỗi giờ chảy 1/2 bể.',gen:'genVoiNuoc'},
+ {id:37,title:'Tìm số tự nhiên trong khoảng với số thập phân',group:'decimal',desc:'Xác định số tự nhiên nằm giữa hai số thập phân.',example:'Ví dụ: 20 < 20,21 < 21 nên hai số tự nhiên liên tiếp là 20 và 21.',gen:'genSoTuNhienVaTP'},
+ {id:38,title:'Bài toán nhiều bước với phân số',group:'mixedword',desc:'Các bài có nhiều lần lấy một phần, còn lại, thêm bớt hoặc so sánh.',example:'Ví dụ: Bán 2/5 số sách, rồi 1/10 số còn lại, sau đó còn 30 quyển.',gen:'genNhieuBuocPhanSo'}
+];
+
+const HINTS = {
+ 1:'Tìm một số cùng chia hết cho cả tử và mẫu, rồi chia cả hai cho số đó.',
+ 2:'Tìm mẫu chung rồi nhân cả tử và mẫu của mỗi phân số với số thích hợp.',
+ 3:'Có thể quy đồng mẫu số hoặc so sánh với 1/2, 1.',
+ 4:'Hãy đưa các phân số về cùng mẫu số rồi so sánh tử số.',
+ 5:'Nếu khác mẫu, quy đồng trước rồi cộng/trừ tử số.',
+ 6:'Nhân tử với tử, mẫu với mẫu, sau đó rút gọn.',
+ 7:'Đổi phép chia thành phép nhân với phân số đảo ngược.',
+ 8:'Tìm thừa số chung hoặc nhóm các phân số tạo thành số tròn.',
+ 9:'Chuyển số đã biết sang vế còn lại bằng phép tính ngược.',
+ 10:'Viết từng phân số thành hiệu của hai phân số nhỏ hơn nếu có thể.',
+ 11:'Chia tử cho mẫu để lấy phần nguyên; số dư làm tử của phần phân số.',
+ 12:'Đổi hỗn số thành phân số rồi cộng hoặc trừ.',
+ 13:'Đổi hỗn số thành phân số rồi nhân/chia như phân số thường.',
+ 14:'Lấy số đã cho nhân với phân số cần tìm.',
+ 15:'Lấy giá trị đã biết chia cho phân số tương ứng.',
+ 16:'Tỉ số của a và b là a/b, sau đó rút gọn nếu cần.',
+ 17:'Tính phần đã dùng trước, rồi lấy cả đơn vị trừ đi phần đã dùng.',
+ 18:'Dùng công thức chu vi hoặc diện tích, chú ý nhân phân số.',
+ 19:'Tìm giá trị của 1 đơn vị rồi nhân với số đơn vị cần tìm.',
+ 20:'Tổng công việc không đổi: số người × số ngày không đổi.',
+ 21:'Tìm năng suất của 1 người trong 1 giờ/ngày trước.',
+ 22:'Xác định hiệu cũ, hiệu mới và sự thay đổi giữa hai đại lượng.',
+ 23:'Dùng hai tỉ số để biểu diễn hai đại lượng theo số phần.',
+ 24:'So sánh hai cách chia để tìm số người trước.',
+ 25:'Sau cùng một số năm, hiệu tuổi không đổi.',
+ 26:'Tổng = trung bình cộng × số lượng số.',
+ 27:'Gọi số cần tìm là x rồi lập phép tính theo đề bài.',
+ 28:'Phần sau dấu phẩy lần lượt là phần mười, phần trăm, phần nghìn.',
+ 29:'Xác định vị trí chữ số sau dấu phẩy.',
+ 30:'Viết thêm chữ số 0 ở tận cùng phần thập phân nếu cần để so sánh.',
+ 31:'Nếu mẫu là 10, 100, 1000 thì viết ngay thành số thập phân.',
+ 32:'1 ha = 10 000 m²; 1 dam² = 100 m².',
+ 33:'Đổi về cùng một đơn vị trước khi tính.',
+ 34:'Làm trong ngoặc trước, nhân chia trước, cộng trừ sau.',
+ 35:'Tính năng suất của 1 người trong 1 đơn vị thời gian.',
+ 36:'Mỗi giờ vòi chảy được một phần của bể; cộng hoặc trừ các phần đó.',
+ 37:'Xem số thập phân nằm giữa hai số tự nhiên nào.',
+ 38:'Vẽ sơ đồ phần còn lại hoặc làm ngược từ cuối bài.'
+};
+function safeHint(topic){return HINTS[topic.id] || 'Đọc kỹ đề, xác định dữ kiện đã biết và câu hỏi cần tìm.'}
+
+const GEN = {
+ genRutGon(topic){let a=r(2,12), b=r(2,12); while(gcd(a,b)!==1)b=r(2,12); let k=r(2,10); let ans=f(a,b); return q(topic,`Rút gọn phân số ${a*k}/${b*k}.`,fstr(ans),'',safeHint(topic),`Chia cả tử và mẫu cho ${k}, được ${fstr(ans)}.`,'fraction');},
+ genQuyDong(topic){let d1=choice([3,4,5,6,8]), d2=choice([6,8,10,12]); let l=lcm(d1,d2); let n1=r(1,d1-1), n2=r(1,d2-1); let a=n1*(l/d1), b=n2*(l/d2); return q(topic,`Quy đồng hai phân số ${n1}/${d1} và ${n2}/${d2}. Mẫu chung nhỏ nhất là bao nhiêu?`,l,'',safeHint(topic),`Mẫu chung nhỏ nhất là BCNN của ${d1} và ${d2}, bằng ${l}. Khi đó hai tử mới là ${a} và ${b}.`,'number');},
+ genSoSanhPhanSo(topic){let d=choice([5,7,9,11,12]); let a=r(1,d-1), b=r(1,d-1); while(a===b)b=r(1,d-1); return q(topic,`Điền dấu >, < hoặc =: ${a}/${d} □ ${b}/${d}`,a>b?'>':'<','',safeHint(topic),`Hai phân số cùng mẫu ${d}; so sánh tử số ${a} và ${b}.`,'text');},
+ genSapXepPhanSo(topic){let den=choice([6,8,10,12]); let arr=shuffle([1,2,3].map(n=>f(n,den))); let ans=[1,2,3].map(n=>`${n}/${den}`).join('; '); return q(topic,`Sắp xếp các phân số sau theo thứ tự từ bé đến lớn: ${arr.map(fstr).join(', ')}. Nhập theo dạng a/b; a/b; a/b`,ans,'',safeHint(topic),`Các phân số cùng mẫu ${den}, tử số nhỏ hơn thì phân số nhỏ hơn. Thứ tự là ${ans}.`,'text',true);},
+ genCongTruPhanSo(topic){let d1=choice([3,4,5,6,8]), d2=choice([6,8,10,12]); let a=f(r(1,d1-1),d1), b=f(r(1,d2-1),d2); let op=choice(['+','-']); if(op==='-' && a.n/a.d < b.n/b.d){let t=a;a=b;b=t} let ans=op==='+'?add(a,b):sub(a,b); return q(topic,`Tính: ${fstr(a)} ${op} ${fstr(b)}`,fstr(ans),'',safeHint(topic),`Quy đồng rồi ${op==='+'?'cộng':'trừ'} tử số, kết quả là ${fstr(ans)}.`,'fraction');},
+ genNhanPhanSo(topic){let a=f(r(1,8),r(2,12)), b=f(r(1,8),r(2,12)); let ans=mul(a,b); return q(topic,`Tính: ${fstr(a)} × ${fstr(b)}`,fstr(ans),'',safeHint(topic),`Nhân tử với tử, mẫu với mẫu rồi rút gọn: ${fstr(ans)}.`,'fraction');},
+ genChiaPhanSo(topic){let a=f(r(1,8),r(2,12)), b=f(r(1,8),r(2,12)); let ans=divf(a,b); return q(topic,`Tính: ${fstr(a)} : ${fstr(b)}`,fstr(ans),'',safeHint(topic),`Nhân ${fstr(a)} với phân số đảo ngược của ${fstr(b)}, được ${fstr(ans)}.`,'fraction');},
+ genTinhNhanhPhanSo(topic){let den=choice([7,9,11]); let x=r(1,den-2), y=den-x; let c=f(r(1,5),r(2,9)); let ans=c; return q(topic,`Tính nhanh: ${x}/${den} × ${fstr(c)} + ${y}/${den} × ${fstr(c)}`,fstr(ans),'',safeHint(topic),`Đặt ${fstr(c)} làm thừa số chung: (${x}/${den}+${y}/${den})×${fstr(c)} = 1×${fstr(c)} = ${fstr(ans)}.`,'fraction',true);},
+ genTimYPhanSo(topic){let y=f(r(1,8),r(2,10)), b=f(r(1,6),r(2,9)); let total=add(y,b); return q(topic,`Tìm y, biết: y + ${fstr(b)} = ${fstr(total)}`,fstr(y),'',safeHint(topic),`y = ${fstr(total)} - ${fstr(b)} = ${fstr(y)}.`,'fraction',true);},
+ genDayPhanSo(topic){let n=r(3,8); let ans=f(n,n+1); return q(topic,`Tính: 1/(1×2) + 1/(2×3) + ... + 1/(${n}×${n+1})`,fstr(ans),'',safeHint(topic),`Mỗi hạng tử 1/(k×(k+1)) = 1/k - 1/(k+1). Tổng rút gọn còn ${n}/${n+1}.`,'fraction',true);},
+ genChuyenHonSo(topic){let whole=r(1,8), den=r(2,9), num=r(1,den-1); let ans=f(whole*den+num,den); return q(topic,`Chuyển hỗn số ${whole} ${num}/${den} thành phân số.`,fstr(ans),'',safeHint(topic),`Tử số mới = ${whole} × ${den} + ${num} = ${ans.n}; mẫu số giữ nguyên là ${den}.`,'fraction');},
+ genCongTruHonSo(topic){let a={w:r(1,5),n:r(1,3),d:4}, b={w:r(1,4),n:r(1,3),d:4}; let fa=f(a.w*a.d+a.n,a.d), fb=f(b.w*b.d+b.n,b.d); let ans=add(fa,fb); return q(topic,`Tính: ${a.w} ${a.n}/${a.d} + ${b.w} ${b.n}/${b.d}`,mixedStr(ans),'',safeHint(topic),`Đổi về phân số rồi cộng; kết quả là ${mixedStr(ans)}.`,'fraction');},
+ genNhanChiaHonSo(topic){let a={w:r(1,4),n:1,d:2}; let b=f(choice([2,3,4]),choice([3,5,7])); let fa=f(a.w*a.d+a.n,a.d); let ans=mul(fa,b); return q(topic,`Tính: ${a.w} ${a.n}/${a.d} × ${fstr(b)}`,fstr(ans),'',safeHint(topic),`Đổi hỗn số thành ${fstr(fa)}, rồi nhân với ${fstr(b)}, được ${fstr(ans)}.`,'fraction');},
+ genGiaTriPhanSo(topic){let d=choice([4,5,6,8,10,12]), n=r(1,d-1), base=r(5,30)*d; let ans=base*n/d; return q(topic,`Tìm ${n}/${d} của ${base}.`,ans,'',safeHint(topic),`${base} × ${n}/${d} = ${ans}.`,'number');},
+ genTimSoBietPhanSo(topic){let d=choice([4,5,6,8,10]), n=r(1,d-1), total=r(5,25)*d, value=total*n/d; return q(topic,`${n}/${d} của một số là ${value}. Tìm số đó.`,total,'',safeHint(topic),`Số đó = ${value} : ${n}/${d} = ${total}.`,'number',true);},
+ genTiSo(topic){let b=r(2,12), a=r(1,b-1), k=r(2,10); let x=a*k, y=b*k; let ans=f(a,b); return q(topic,`Viết tỉ số của ${x} và ${y} dưới dạng phân số tối giản.`,fstr(ans),'',safeHint(topic),`Tỉ số là ${x}/${y}. Chia cả tử và mẫu cho ${k}, được ${fstr(ans)}.`,'fraction');},
+ genPhanConLai(topic){let total=r(200,1200), d1=4, d2=5; total=20*r(10,60); let used1=f(1,d1), used2=f(1,d2); let remain=sub(sub(f(1,1),used1),used2); let ans=total*remain.n/remain.d; return q(topic,`Một khu vườn rộng ${total} m². Người ta dùng 1/${d1} diện tích trồng bưởi và 1/${d2} diện tích trồng ổi. Hỏi diện tích còn lại là bao nhiêu m²?`,ans,'m²',safeHint(topic),`Phần còn lại = 1 - 1/${d1} - 1/${d2} = ${fstr(remain)}. Diện tích còn lại = ${total} × ${fstr(remain)} = ${ans}.`,'number',true);},
+ genHCNPhanSo(topic){let length=f(r(3,9),choice([2,3,4])); let width=f(r(1,5),choice([3,4,5])); let ans=mul(length,width); return q(topic,`Hình chữ nhật có chiều dài ${fstr(length)} m, chiều rộng ${fstr(width)} m. Tính diện tích.`,fstr(ans),'m²',safeHint(topic),`Diện tích = dài × rộng = ${fstr(length)} × ${fstr(width)} = ${fstr(ans)} m².`,'fraction');},
+ genTiLeThuan(topic){let price=r(8000,20000); price=Math.round(price/1000)*1000; let kg1=r(3,8), kg2=r(kg1+1,12); return q(topic,`${kg1} kg gạo giá ${fmt(price*kg1)} đồng. Hỏi ${kg2} kg gạo cùng loại giá bao nhiêu đồng?`,price*kg2,'đồng',safeHint(topic),`1 kg giá ${fmt(price)} đồng, nên ${kg2} kg giá ${fmt(price*kg2)} đồng.`,'number');},
+ genTiLeNghich(topic){let people=r(4,10), days=r(6,15), newDays=choice([3,4,5,6]); let work=people*days; let newPeople=work/newDays; while(!Number.isInteger(newPeople)){people=r(4,10);days=r(6,15);work=people*days;newDays=choice([3,4,5,6]);newPeople=work/newDays} return q(topic,`${people} người làm xong một công việc trong ${days} ngày. Muốn xong trong ${newDays} ngày thì cần bao nhiêu người?`,newPeople,'người',safeHint(topic),`Tổng công là ${people} × ${days} = ${work} người-ngày. Cần ${work} : ${newDays} = ${newPeople} người.`,'number',true);},
+ genTiLeKep(topic){let p1=r(4,9), h1=r(2,5), rate=r(2,6), p2=r(5,12), h2=r(3,7); let prod1=p1*h1*rate, prod2=p2*h2*rate; return q(topic,`${p1} người làm trong ${h1} giờ được ${prod1} sản phẩm. Hỏi ${p2} người làm trong ${h2} giờ được bao nhiêu sản phẩm?`,prod2,'sản phẩm',safeHint(topic),`1 người 1 giờ làm được ${rate} sản phẩm. Vậy ${p2} người trong ${h2} giờ làm được ${p2} × ${h2} × ${rate} = ${prod2}.`,'number',true);},
+ genHaiHieu(topic){let small=r(20,80), diff1=r(8,25), diff2=r(3,10); let big=small+diff1; let transfer=(diff1-diff2)/2; if(!Number.isInteger(transfer)||transfer<=0) return GEN.genHaiHieu(topic); return q(topic,`Bạn A hơn bạn B ${diff1} viên bi. A cho B bao nhiêu viên bi thì A còn hơn B ${diff2} viên bi?`,transfer,'viên',safeHint(topic),`Mỗi viên A cho B làm hiệu giảm 2 viên. Hiệu giảm ${diff1}-${diff2}=${diff1-diff2}, nên A cho B ${(diff1-diff2)}:2=${transfer} viên.`,'number',true);},
+ genHaiTiSo(topic){let girls=r(10,30); let boys=Math.floor(girls*2/3); girls = boys*3/2; if(!Number.isInteger(girls)) return GEN.genHaiTiSo(topic); let total=boys+girls; return q(topic,`Một lớp có số bạn nam bằng 2/3 số bạn nữ. Biết số bạn nam là ${boys}. Hỏi lớp có tất cả bao nhiêu học sinh?`,total,'học sinh',safeHint(topic),`Số bạn nữ = ${boys} : 2 × 3 = ${girls}. Tổng số học sinh = ${boys}+${girls}=${total}.`,'number',true);},
+ genThuaThieu(topic){let children=r(4,12), a=r(3,7), b=a+r(1,4), surplus=r(1,5); let candies=a*children+surplus; let shortage=b*children-candies; if(shortage<=0) return GEN.genThuaThieu(topic); return q(topic,`Chia kẹo cho các em. Nếu mỗi em được ${a} cái thì thừa ${surplus} cái. Nếu mỗi em được ${b} cái thì thiếu ${shortage} cái. Hỏi có bao nhiêu em?`,children,'em',safeHint(topic),`Mỗi em tăng ${b-a} cái thì cần thêm ${surplus}+${shortage}=${surplus+shortage} cái. Số em = ${surplus+shortage}:${b-a}=${children}.`,'number',true);},
+ genTuoi(topic){let child=r(5,12), parent=3*child-12; if(parent<=child) parent=child+24; let years=(parent-3*child)/(3-1); if(!Number.isInteger(years)||years<0) return GEN.genTuoi(topic); return q(topic,`Hiện nay mẹ ${parent} tuổi, con ${child} tuổi. Sau bao nhiêu năm nữa tuổi mẹ gấp 3 lần tuổi con?`,years,'năm',safeHint(topic),`Sau x năm: ${parent}+x = 3×(${child}+x). Giải được x = ${years}.`,'number',true);},
+ genTBC(topic){let a=r(10,30), b=r(10,30), c=r(10,30), avg=(a+b+c)/3; while(!Number.isInteger(avg)){a=r(10,30);b=r(10,30);c=r(10,30);avg=(a+b+c)/3} return q(topic,`Tìm trung bình cộng của ${a}, ${b}, ${c}.`,avg,'',safeHint(topic),`Tổng = ${a+b+c}. Trung bình cộng = ${a+b+c} : 3 = ${avg}.`);},
+ genDaiSoHoa(topic){let x=r(5,80), addv=r(3,25), mulv=r(2,6), result=(x+addv)*mulv; return q(topic,`Một số cộng thêm ${addv} rồi nhân với ${mulv} thì được ${result}. Tìm số đó.`,x,'',safeHint(topic),`Làm ngược: ${result} : ${mulv} - ${addv} = ${x}.`,'number',true);},
+ genVietSoThapPhan(topic){let whole=r(1,99), hundred=r(1,99); let ans=(whole + hundred/100).toFixed(2).replace('.',','); return q(topic,`Viết số thập phân gồm ${whole} đơn vị và ${hundred} phần trăm.`,ans,'',safeHint(topic),`${hundred} phần trăm là ${hundred}/100, nên số cần viết là ${ans}.`,'text');},
+ genGiaTriChuSoTP(topic){let tenths=r(1,9), hundredths=r(1,9), thousandths=r(1,9); let num=`0,${tenths}${hundredths}${thousandths}`; return q(topic,`Trong số ${num}, chữ số ${hundredths} có giá trị là bao nhiêu? Nhập dạng phân số.`,`${hundredths}/100`,'',safeHint(topic),`Chữ số ${hundredths} đứng ở hàng phần trăm nên có giá trị ${hundredths}/100.`,'fraction');},
+ genSoSanhTP(topic){let a=(r(100,999)/100).toFixed(2), b=(r(100,999)/100).toFixed(2); while(a===b)b=(r(100,999)/100).toFixed(2); return q(topic,`Điền dấu >, < hoặc =: ${a.replace('.',',')} □ ${b.replace('.',',')}`,Number(a)>Number(b)?'>':'<','',safeHint(topic),`So sánh phần nguyên rồi phần thập phân: ${a.replace('.',',')} ${Number(a)>Number(b)?'>':'<'} ${b.replace('.',',')}.`,'text');},
+ genPhanSoSangTP(topic){let den=choice([10,100,1000,20,25,50,125]); let num=r(1,den-1); let val=(num/den).toString().replace('.',','); return q(topic,`Viết phân số ${num}/${den} dưới dạng số thập phân.`,val,'',safeHint(topic),`${num} : ${den} = ${val}.`,'text');},
+ genDoiDienTich(topic){let ha=r(1,9), m2=r(10,999); let ans=ha*10000+m2; return q(topic,`Đổi: ${ha} ha ${m2} m² = ... m²`,ans,'m²',safeHint(topic),`${ha} ha = ${fmt(ha*10000)} m². Cộng thêm ${m2} m² được ${fmt(ans)} m².`,'number');},
+ genDoiDonVi(topic){let ta=r(1,9), yen=r(1,9); let ans=ta*100+yen*10; return q(topic,`Đổi: ${ta} tạ ${yen} yến = ... kg`,ans,'kg',safeHint(topic),`${ta} tạ = ${ta*100} kg, ${yen} yến = ${yen*10} kg. Tổng là ${ans} kg.`,'number');},
+ genBieuThucHonHop(topic){let a=f(r(1,5),r(2,8)), b=f(r(1,5),r(2,8)), c=f(r(1,5),r(2,8)); let ans=add(a,mul(b,c)); return q(topic,`Tính: ${fstr(a)} + ${fstr(b)} × ${fstr(c)}`,fstr(ans),'',safeHint(topic),`Nhân trước: ${fstr(b)}×${fstr(c)}=${fstr(mul(b,c))}; sau đó cộng ${fstr(a)} được ${fstr(ans)}.`,'fraction',true);},
+ genCongViec(topic){let people=r(4,10), days=r(2,5), rate=r(3,8), prod=people*days*rate; let p2=r(5,12), d2=r(3,7), ans=p2*d2*rate; return q(topic,`${people} người làm trong ${days} ngày được ${prod} sản phẩm. Hỏi ${p2} người làm trong ${d2} ngày được bao nhiêu sản phẩm?`,ans,'sản phẩm',safeHint(topic),`1 người 1 ngày làm được ${rate} sản phẩm. Vậy kết quả là ${p2}×${d2}×${rate}=${ans}.`,'number',true);},
+ genVoiNuoc(topic){let a=choice([2,3,4,5]), b=choice([3,4,5,6]); let one=add(f(1,a),f(1,b)); return q(topic,`Vòi thứ nhất chảy một mình đầy bể trong ${a} giờ, vòi thứ hai trong ${b} giờ. Cả hai vòi cùng chảy 1 giờ được bao nhiêu phần bể?`,fstr(one),'bể',safeHint(topic),`Trong 1 giờ, hai vòi chảy được 1/${a} + 1/${b} = ${fstr(one)} bể.`,'fraction',true);},
+ genSoTuNhienVaTP(topic){let n=r(2,98); let dec=(n + r(1,99)/100).toFixed(2).replace('.',','); return q(topic,`Tìm hai số tự nhiên liên tiếp a và b, biết: a < ${dec} < b. Nhập số b.`,n+1,'',safeHint(topic),`Số ${dec} nằm giữa ${n} và ${n+1}, nên b = ${n+1}.`,'number');},
+ genNhieuBuocPhanSo(topic){let total=r(20,80)*10; let first=f(2,5), remain1=sub(f(1,1),first), second=f(1,4); let remain2=mul(remain1,sub(f(1,1),second)); let ans=total*remain2.n/remain2.d; return q(topic,`Một cửa hàng có ${total} quyển sách. Ngày thứ nhất bán 2/5 số sách. Ngày thứ hai bán 1/4 số sách còn lại. Hỏi sau hai ngày còn bao nhiêu quyển?`,ans,'quyển',safeHint(topic),`Sau ngày 1 còn ${fstr(remain1)} số sách. Ngày 2 bán 1/4 phần còn lại nên còn 3/4 của phần đó. Còn ${fstr(remain2)} của ${total}, bằng ${ans} quyển.`,'number',true);}
+};
+
+function renderTopics(){
+ const box=document.getElementById('topicGrid');
+ box.innerHTML = TOPICS.map(t=>`<div class="topic-card"><b>${t.id}. ${esc(t.title)}</b><span>${esc(t.desc)}</span><div class="topic-example"><b>Ví dụ:</b> ${esc(t.example)}</div></div>`).join('');
+}
+function showTab(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active');}
+function pickTopics(){
+ const order=['fraction','fraction','mixed','word','ratio','decimal','measure','geometry','fraction','word','ratio','decimal','mixedword','fraction','word'];
+ const used=new Set(); const picked=[];
+ for(const g of order){
+   let pool=TOPICS.filter(t=>t.group===g && !used.has(t.id));
+   if(!pool.length) pool=TOPICS.filter(t=>!used.has(t.id));
+   const t=choice(pool); used.add(t.id); picked.push(t);
+ }
+ return picked;
+}
+function makeQuestion(t){return GEN[t.gen](t)}
+function newTest(){
+ alreadySubmitted=false;
+ currentQuestions=pickTopics().map(makeQuestion);
+ renderQuestions(); resetTimer(); showTab('test'); document.getElementById('lastScore').textContent='Chưa chấm';
+}
+function renderQuestions(){
+ document.getElementById('qCount').textContent=currentQuestions.length;
+ const box=document.getElementById('questions');
+ box.innerHTML=currentQuestions.map((qq,i)=>`
+ <div class="question" id="q${i}">
+   <div class="qtop"><b>Câu ${i+1}</b><span class="badge">${esc(qq.topicTitle)}${qq.hard?' · nâng cao':''}</span></div>
+   <div class="qtext">${esc(qq.question)}</div>
+   <div class="answer-row"><input class="answer" id="ans${i}" autocomplete="off" placeholder="Nhập đáp án"><span class="unit">${esc(qq.unit)}</span></div>
+   <details><summary>Xem gợi ý</summary><div>${esc(qq.hint)}</div><div class="hint-example">Ví dụ tương tự: Với bài tìm 2/5 của 100, ta tính 100 × 2/5 = 40. Cách gợi ý chỉ nêu hướng làm, không thay số của câu hiện tại.</div></details>
+   <div class="result" id="res${i}"></div><div class="solution hide" id="sol${i}"></div>
+ </div>`).join('');
+}
+function resetTimer(){
+ clearInterval(timerHandle); secondsLeft=60*60; updateTimer();
+ timerHandle=setInterval(()=>{secondsLeft--;updateTimer(); if(secondsLeft<=0){clearInterval(timerHandle); submitTest(true)}},1000);
+}
+function updateTimer(){
+ const el=document.getElementById('timer'); let m=Math.floor(secondsLeft/60), s=secondsLeft%60;
+ el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; el.classList.toggle('danger',secondsLeft<=300);
+}
+function submitTest(auto=false){
+ if(alreadySubmitted && !auto) return;
+ alreadySubmitted=true; clearInterval(timerHandle);
+ let correct=0, details=[];
+ currentQuestions.forEach((qq,i)=>{
+   const val=document.getElementById('ans'+i)?.value || '';
+   const ok=isCorrect(val, qq.answer, qq.type);
+   if(ok) correct++;
+   const res=document.getElementById('res'+i), sol=document.getElementById('sol'+i);
+   if(res) res.innerHTML= ok?'<span class="ok">Đúng</span>':'<span class="wrong">Sai</span>';
+   if(sol){sol.classList.remove('hide'); sol.innerHTML=`Đáp án đúng: <b>${esc(qq.answer)}</b> ${esc(qq.unit)}<br>${esc(qq.solution)}`;}
+   details.push({q:qq.question,topic:qq.topicTitle,user:val,answer:qq.answer,unit:qq.unit,ok,solution:qq.solution});
+ });
+ const score=Math.round(correct/currentQuestions.length*100)/10;
+ document.getElementById('lastScore').textContent=`${correct}/${currentQuestions.length} (${score} điểm)`;
+ saveHistory({time:new Date().toLocaleString('vi-VN'),correct,total:currentQuestions.length,score,auto,details});
+}
+function getHistory(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return[]}}
+function saveHistory(item){let h=getHistory(); h.unshift(item); h=h.slice(0,50); localStorage.setItem(STORAGE_KEY,JSON.stringify(h));}
+function renderHistory(){
+ const h=getHistory(); const box=document.getElementById('historyList');
+ if(!h.length){box.innerHTML='<div class="card">Chưa có lịch sử làm bài.</div>';return;}
+ box.innerHTML=h.map((item,idx)=>{
+   const wrong=item.details.filter(d=>!d.ok);
+   return `<div class="history-item"><b>Lần ${idx+1}: ${esc(item.time)}</b><div>Điểm: <b>${item.correct}/${item.total}</b> (${item.score} điểm) ${item.auto?'· tự chấm khi hết giờ':''}</div>
+     ${wrong.length?`<details><summary>Xem ${wrong.length} câu sai</summary>${wrong.map((w,j)=>`<div class="wrong-box"><b>Câu sai ${j+1} - ${esc(w.topic)}</b><div>Đề bài: ${esc(w.q)}</div><div>Bài làm: <b>${esc(w.user||'(bỏ trống)')}</b></div><div>Đáp án đúng: <b>${esc(w.answer)}</b> ${esc(w.unit)}</div><div>${esc(w.solution)}</div></div>`).join('')}</details>`:'<div class="ok">Không có câu sai.</div>'}
+   </div>`
+ }).join('');
+}
+function clearHistory(){if(confirm('Xóa toàn bộ lịch sử làm bài trên trình duyệt này?')){localStorage.removeItem(STORAGE_KEY);renderHistory();}}
+
+renderTopics(); newTest();
+</script>
+</body>
+</html>

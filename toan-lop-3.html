@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toán lớp 3 - Bộ đề 15 câu tương tác v6</title>
+<style>
+:root{--bg:#f5f7fb;--card:#ffffff;--ink:#172033;--muted:#62708a;--line:#dde4f0;--brand:#2563eb;--brand2:#10b981;--bad:#dc2626;--good:#059669;--warn:#f59e0b;}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}.wrap{max-width:1180px;margin:0 auto;padding:18px}.topbar{position:sticky;top:0;z-index:10;background:rgba(245,247,251,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 0 12px;margin-bottom:12px}.app-title{font-size:22px;font-weight:900;margin:0 0 10px}.actions{display:flex;gap:10px;align-items:center;white-space:nowrap;overflow-x:auto;padding-bottom:2px}.actions .btn{flex:0 0 auto}.status-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 12px}.topic-example{margin-top:10px;background:#f8fafc;border-left:4px solid #bfdbfe;padding:8px 10px;border-radius:10px;color:#334155;font-size:14px}.hero{background:linear-gradient(135deg,#dbeafe,#ecfdf5);border:1px solid var(--line);border-radius:22px;padding:24px;margin:14px 0 18px;box-shadow:0 8px 28px rgba(20,40,80,.08)}h1{margin:0 0 8px;font-size:clamp(26px,4vw,42px)}h2{margin:28px 0 12px;font-size:24px}.sub{color:var(--muted);max-width:850px}.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0}.btn{border:0;border-radius:12px;background:var(--brand);color:#fff;font-weight:700;padding:11px 14px;cursor:pointer;box-shadow:0 4px 12px rgba(37,99,235,.18)}.btn.secondary{background:#fff;color:var(--brand);border:1px solid #bfdbfe}.btn.good{background:var(--brand2)}.btn.warn{background:var(--warn);color:#111827}.btn.ghost{background:#fff;color:#111827;border:1px solid var(--line);box-shadow:none}.btn.small{padding:7px 10px;border-radius:10px;font-size:13px}.pill{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);font-weight:650}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.card,.question,.topic-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(20,40,80,.05)}.topic-card b{display:block;margin-bottom:6px}.topic-card span{color:var(--muted);font-size:14px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab{padding:10px 13px;border-radius:12px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:700}.tab.active{background:#111827;color:#fff}.navbtn.active{background:#111827;color:#fff;border-color:#111827}.section{display:none}.section.active{display:block}.toolbar{position:sticky;top:0;z-index:5;background:rgba(245,247,251,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 0}.test-head{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}.timer{font-size:22px;font-weight:900;color:#111827}.timer.danger{color:var(--bad)}.question{margin:12px 0}.qtop{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}.badge{font-size:12px;color:#1d4ed8;background:#dbeafe;padding:4px 8px;border-radius:999px;font-weight:800}.qtext{font-size:18px;margin:12px 0 10px}.answer-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.answer{font-size:18px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:12px;min-width:220px}.unit{color:var(--muted)}details{margin-top:10px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;padding:10px}summary{cursor:pointer;font-weight:800}.result{margin-top:10px;font-weight:800}.ok{color:var(--good)}.wrong{color:var(--bad)}.solution{margin-top:8px;color:#334155;background:#fff7ed;border-left:4px solid #fb923c;padding:8px 10px;border-radius:8px}.hint-example{margin-top:8px;color:#475569;background:#f8fafc;border-left:4px solid #dbeafe;padding:8px 10px;border-radius:10px}.hint-note{margin-top:8px;color:#64748b;font-size:13px}.history-item{border:1px solid var(--line);border-radius:16px;background:#fff;margin:10px 0;padding:12px}.wrong-box{border-left:4px solid var(--bad);background:#fffafa;margin:8px 0;padding:10px;border-radius:10px}.note{background:#fffbeb;border:1px solid #fde68a;color:#713f12;border-radius:14px;padding:12px;margin:12px 0}.select{padding:10px 12px;border:1px solid #cbd5e1;border-radius:12px;background:#fff}.footer{color:var(--muted);font-size:13px;margin:30px 0}.hide{display:none}@media print{.topbar,.tabs,.bar,.toolbar,.btn,.hero .bar{display:none}.section{display:block}.question{break-inside:avoid}body{background:white}.card,.question{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="app-title">Bộ đề Toán lớp 3 tương tác</div>
+    <div class="actions">
+      <button class="btn good" onclick="newTest()">Tạo đề ngẫu nhiên 15 câu</button>
+      <button class="btn" onclick="showTab('test');submitTest(false)">Chấm bài</button>
+      <button class="btn ghost" onclick="window.print()">In đề</button>
+      <button class="btn secondary navbtn" data-tab="topics" onclick="showTab('topics')">Dạng bài đã bao phủ</button>
+      <button class="btn secondary navbtn" data-tab="history" onclick="showTab('history');renderHistory()">Lịch sử</button>
+      <button class="btn warn" onclick="clearHistory()">Xóa lịch sử</button>
+    </div>
+  </div>
+
+  <section id="test" class="section active">
+    <div class="status-row">
+      <span class="pill">Số câu: <b id="qCount">0</b>/15</span>
+      <span class="pill">Thời gian: <span id="timer" class="timer">60:00</span></span>
+      <span class="pill">Điểm gần nhất: <b id="lastScore">Chưa chấm</b></span>
+    </div>
+    <div class="note">Hướng dẫn: Với câu có đơn vị, học sinh chỉ cần nhập số. Ví dụ đáp án là <b>24 cm</b> thì nhập <b>24</b>. Với câu điền dấu, nhập <b>&lt;</b>, <b>&gt;</b> hoặc <b>=</b>.</div>
+    <div id="questions"></div>
+  </section>
+
+  <section id="topics" class="section">
+    <h2>Các dạng bài đã bao phủ từ tài liệu</h2>
+    <div class="note"><b>Kiểm tra phạm vi:</b> HTML này không nhúng ảnh/PDF gốc. Phần dạng bài bên dưới đã được đối chiếu theo các tiêu đề bài trong tài liệu: Bài 1 đến Bài 26 và Bài 28 đến Bài 35. Trong file PDF được tải lên không thấy trang tiêu đề Bài 27, nên không thêm mục Bài 27 giả định.</div>
+    <div class="grid"><div class="topic-card"><b>Bài 1. Số và cấu tạo số</b><span>Nhận biết chữ số, hàng trăm, hàng chục, hàng đơn vị; so sánh và phân tích số.</span><div class="topic-example">Ví dụ: Số 345 gồm 3 trăm, 4 chục, 5 đơn vị; 345 = 300 + 40 + 5.</div></div>
+<div class="topic-card"><b>Bài 2. Phép cộng và phép trừ</b><span>Thực hiện cộng, trừ và tìm thành phần chưa biết trong phép tính.</span><div class="topic-example">Ví dụ: 236 + 125 = 361; 361 - 125 = 236.</div></div>
+<div class="topic-card"><b>Bài 3. Phép cộng, phép trừ (tiếp)</b><span>Tính nhanh, tính hợp lí và giải toán bằng cộng trừ.</span><div class="topic-example">Ví dụ: 25 + 17 + 75 = (25 + 75) + 17 = 117.</div></div>
+<div class="topic-card"><b>Bài 4. Tìm một trong các phần bằng nhau của một số</b><span>Tìm 1 phần mấy của một số hoặc tìm số khi biết 1 phần của nó.</span><div class="topic-example">Ví dụ: 1/4 của 24 là 24 : 4 = 6.</div></div>
+<div class="topic-card"><b>Bài 5. Luyện tập bảng nhân, chia 6; 7</b><span>Ôn bảng nhân, chia 6 và 7 trong phép tính và bài toán.</span><div class="topic-example">Ví dụ: 6 × 7 = 42; 42 : 7 = 6.</div></div>
+<div class="topic-card"><b>Bài 6. Phép chia hết, phép chia có dư</b><span>Tìm thương, số dư, số bị chia hoặc giải toán chia có dư.</span><div class="topic-example">Ví dụ: 25 : 4 = 6 dư 1 vì 4 × 6 + 1 = 25.</div></div>
+<div class="topic-card"><b>Bài 7. Gấp một số lên nhiều lần</b><span>Lấy số đó nhân với số lần được gấp lên.</span><div class="topic-example">Ví dụ: 8 gấp 3 lần là 8 × 3 = 24.</div></div>
+<div class="topic-card"><b>Bài 8. Giảm đi một số lần</b><span>Lấy số đó chia cho số lần giảm đi.</span><div class="topic-example">Ví dụ: 36 giảm đi 4 lần là 36 : 4 = 9.</div></div>
+<div class="topic-card"><b>Bài 9. Tính giá trị của biểu thức</b><span>Tính biểu thức theo đúng thứ tự phép tính.</span><div class="topic-example">Ví dụ: 8 + 6 × 3 = 8 + 18 = 26.</div></div>
+<div class="topic-card"><b>Bài 10. Ôn tập giải toán có lời văn</b><span>Đọc đề, tìm dữ kiện và giải bài toán bằng một hoặc hai phép tính.</span><div class="topic-example">Ví dụ: Lan có 12 cái kẹo, cho bạn 5 cái, Lan còn 12 - 5 = 7 cái.</div></div>
+<div class="topic-card"><b>Bài 11. Tính giá trị biểu thức (tiếp)</b><span>Luyện tính biểu thức có ngoặc, không ngoặc và so sánh kết quả.</span><div class="topic-example">Ví dụ: (20 + 10) : 5 = 30 : 5 = 6.</div></div>
+<div class="topic-card"><b>Bài 12. So sánh số lớn gấp mấy lần số bé</b><span>Lấy số lớn chia cho số bé để biết gấp mấy lần.</span><div class="topic-example">Ví dụ: 24 gấp 6 số lần là 24 : 6 = 4 lần.</div></div>
+<div class="topic-card"><b>Bài 13. So sánh số bé bằng một phần mấy số lớn</b><span>Lấy số lớn chia số bé để tìm mẫu số của phân số.</span><div class="topic-example">Ví dụ: 6 bằng 1/4 của 24 vì 24 : 6 = 4.</div></div>
+<div class="topic-card"><b>Bài 14. Giải toán có lời văn (tiếp)</b><span>Bài toán nhiều bước, có thêm bớt, gấp lên hoặc giảm đi.</span><div class="topic-example">Ví dụ: An có 10 viên bi, Bình gấp 2 lần An và thêm 3 viên: 10 × 2 + 3 = 23 viên.</div></div>
+<div class="topic-card"><b>Bài 15. Tính giá trị biểu thức (tiếp)</b><span>Tính biểu thức nâng cao hơn, có nhiều phép tính.</span><div class="topic-example">Ví dụ: 60 - (12 + 8) × 2 = 60 - 40 = 20.</div></div>
+<div class="topic-card"><b>Bài 16. Ôn tập tổng hợp</b><span>Trộn nhiều dạng đã học để luyện phản xạ làm bài.</span><div class="topic-example">Ví dụ: Tính lần lượt 120 + 80 = 200; 6 × 7 = 42; 45 : 5 = 9.</div></div>
+<div class="topic-card"><b>Bài 17. Chu vi hình chữ nhật</b><span>Chu vi hình chữ nhật bằng chiều dài cộng chiều rộng rồi nhân 2.</span><div class="topic-example">Ví dụ: Hình chữ nhật dài 8 cm, rộng 5 cm có chu vi (8 + 5) × 2 = 26 cm.</div></div>
+<div class="topic-card"><b>Bài 18. Chu vi hình vuông</b><span>Chu vi hình vuông bằng độ dài một cạnh nhân 4.</span><div class="topic-example">Ví dụ: Hình vuông cạnh 6 cm có chu vi 6 × 4 = 24 cm.</div></div>
+<div class="topic-card"><b>Bài 19. Số và cấu tạo số (tiếp theo)</b><span>Làm việc với số có nhiều chữ số, số liền trước, số liền sau.</span><div class="topic-example">Ví dụ: Số liền sau của 999 là 1000; số liền trước của 1000 là 999.</div></div>
+<div class="topic-card"><b>Bài 20. Phép cộng trong phạm vi 10 000</b><span>Cộng các số đến 10 000 và giải toán liên quan.</span><div class="topic-example">Ví dụ: 2345 + 1234 = 3579.</div></div>
+<div class="topic-card"><b>Bài 21. Phép trừ</b><span>Trừ các số đến 10 000 và tìm số còn lại, hiệu.</span><div class="topic-example">Ví dụ: 5000 - 1275 = 3725.</div></div>
+<div class="topic-card"><b>Bài 22. Đơn vị đo</b><span>Đổi đơn vị độ dài, khối lượng, thời gian.</span><div class="topic-example">Ví dụ: 3 m = 300 cm; 2 kg = 2000 g.</div></div>
+<div class="topic-card"><b>Bài 23. Phép nhân</b><span>Nhân số có nhiều chữ số với số có một chữ số.</span><div class="topic-example">Ví dụ: 123 × 3 = 369.</div></div>
+<div class="topic-card"><b>Bài 24. Phép chia</b><span>Chia số có nhiều chữ số cho số có một chữ số.</span><div class="topic-example">Ví dụ: 846 : 2 = 423.</div></div>
+<div class="topic-card"><b>Bài 25. Bài toán liên quan đến rút về đơn vị</b><span>Tìm giá trị của 1 phần rồi tìm nhiều phần.</span><div class="topic-example">Ví dụ: 4 quyển vở giá 28 nghìn đồng, 1 quyển giá 7 nghìn đồng, 6 quyển giá 42 nghìn đồng.</div></div>
+<div class="topic-card"><b>Bài 26. Bài toán liên quan đến rút về đơn vị (tiếp)</b><span>Từ tổng số và số phần, tìm số phần hoặc số lượng tương ứng.</span><div class="topic-example">Ví dụ: 36 quả cam chia đều vào 4 túi thì mỗi túi có 36 : 4 = 9 quả.</div></div>
+<div class="topic-card"><b>Bài 28. Diện tích hình chữ nhật</b><span>Diện tích hình chữ nhật bằng chiều dài nhân chiều rộng.</span><div class="topic-example">Ví dụ: Hình chữ nhật dài 7 cm, rộng 4 cm có diện tích 7 × 4 = 28 cm².</div></div>
+<div class="topic-card"><b>Bài 29. Diện tích hình vuông</b><span>Diện tích hình vuông bằng cạnh nhân cạnh.</span><div class="topic-example">Ví dụ: Hình vuông cạnh 5 cm có diện tích 5 × 5 = 25 cm².</div></div>
+<div class="topic-card"><b>Bài 30. Ôn tập phép cộng, phép trừ</b><span>Ôn cộng trừ, tìm x và bài toán cộng trừ.</span><div class="topic-example">Ví dụ: 365 + 128 - 93 = 400.</div></div>
+<div class="topic-card"><b>Bài 31. Ôn tập phép nhân, phép chia</b><span>Ôn nhân chia, tìm x và bài toán nhân chia.</span><div class="topic-example">Ví dụ: 8 × 7 + 24 : 6 = 56 + 4 = 60.</div></div>
+<div class="topic-card"><b>Bài 32. Ôn tập về số - dãy số - cấu tạo số</b><span>Tìm quy luật dãy số, viết số và phân tích cấu tạo số.</span><div class="topic-example">Ví dụ: Dãy 2, 4, 6, 8, ... có số tiếp theo là 10.</div></div>
+<div class="topic-card"><b>Bài 33. Ôn tập về đại lượng - hình học</b><span>Ôn đổi đơn vị, chu vi, diện tích và hình học cơ bản.</span><div class="topic-example">Ví dụ: Hình chữ nhật dài 9 cm, rộng 3 cm có chu vi 24 cm và diện tích 27 cm².</div></div>
+<div class="topic-card"><b>Bài 34. Ôn tập về giải toán</b><span>Luyện các bài toán lời văn tổng hợp.</span><div class="topic-example">Ví dụ: Có 3 hộp, mỗi hộp 8 bút, thêm 5 bút nữa thì có 3 × 8 + 5 = 29 bút.</div></div>
+<div class="topic-card"><b>Bài 35. Bài toán tính ngược từ cuối</b><span>Đi ngược từ kết quả cuối để tìm số ban đầu.</span><div class="topic-example">Ví dụ: Nghĩ một số, nhân 3 rồi cộng 6 được 30. Đi ngược: (30 - 6) : 3 = 8.</div></div></div>
+  </section>
+
+  <section id="history" class="section">
+    <h2>Lịch sử làm bài</h2>
+    <div id="historyBox"></div>
+  </section>
+
+  <div class="footer">File HTML chạy offline bằng trình duyệt. Không nhúng PDF gốc. Dữ liệu lịch sử lưu trong trình duyệt hiện tại bằng localStorage.</div>
+</div>
+<script>
+const TOPICS = [
+ {id:1, title:'Số và cấu tạo số', group:'number', desc:'Nhận biết chữ số, hàng và cấu tạo số.', gen: genSoCauTao},
+ {id:2, title:'Phép cộng và phép trừ', group:'calc', desc:'Cộng, trừ, tìm thành phần chưa biết.', gen: genCongTru},
+ {id:3, title:'Phép cộng, phép trừ (tiếp)', group:'calc', desc:'Tính hợp lí và bài toán cộng trừ.', gen: genThuanTien},
+ {id:4, title:'Tìm một trong các phần bằng nhau của một số', group:'ratio', desc:'Tìm một phần mấy của số.', gen: genPhanBang},
+ {id:5, title:'Bảng nhân, chia 6; 7', group:'ratio', desc:'Nhân chia 6 và 7.', gen: genNhanChia67},
+ {id:6, title:'Phép chia hết, phép chia có dư', group:'ratio', desc:'Thương và số dư.', gen: genChiaDu},
+ {id:7, title:'Gấp một số lên nhiều lần', group:'ratio', desc:'Nhân với số lần.', gen: genGapNhieuLan},
+ {id:8, title:'Giảm đi một số lần', group:'ratio', desc:'Chia cho số lần.', gen: genGiamNhieuLan},
+ {id:9, title:'Tính giá trị của biểu thức', group:'calc', desc:'Thứ tự thực hiện phép tính.', gen: genBieuThuc},
+ {id:10, title:'Ôn tập giải toán có lời văn', group:'word', desc:'Bài toán một hoặc hai phép tính.', gen: genWordMoreLess},
+ {id:11, title:'Tính giá trị biểu thức (tiếp)', group:'calc', desc:'So sánh, tính biểu thức.', gen: genBieuThuc2},
+ {id:12, title:'So sánh số lớn gấp mấy lần số bé', group:'ratio', desc:'Lấy số lớn chia số bé.', gen: genLonGapMayLan},
+ {id:13, title:'Số bé bằng một phần mấy số lớn', group:'ratio', desc:'Tìm mẫu số của phân số.', gen: genBeBangPhanMay},
+ {id:14, title:'Giải toán có lời văn (tiếp)', group:'word', desc:'Bài toán nhiều bước.', gen: genWordMixed},
+ {id:15, title:'Tính giá trị biểu thức (tiếp)', group:'calc', desc:'Biểu thức nhiều phép tính.', gen: genBieuThuc3},
+ {id:16, title:'Ôn tập tổng hợp', group:'mixed', desc:'Nhiều dạng trộn lẫn.', gen: genTongHop},
+ {id:17, title:'Chu vi hình chữ nhật', group:'geo', desc:'(dài + rộng) × 2.', gen: genChuViHCN},
+ {id:18, title:'Chu vi hình vuông', group:'geo', desc:'cạnh × 4.', gen: genChuViHV},
+ {id:19, title:'Số và cấu tạo số (tiếp theo)', group:'number', desc:'Số nhiều chữ số, liền trước/liền sau.', gen: genSo4ChuSo},
+ {id:20, title:'Phép cộng trong phạm vi 10 000', group:'calc', desc:'Cộng số đến 10 000.', gen: genCong10000},
+ {id:21, title:'Phép trừ', group:'calc', desc:'Trừ số đến 10 000.', gen: genTru10000},
+ {id:22, title:'Đơn vị đo', group:'geo', desc:'Đổi đơn vị đo.', gen: genDonViDo},
+ {id:23, title:'Phép nhân', group:'calc', desc:'Nhân số có nhiều chữ số.', gen: genNhanMulti},
+ {id:24, title:'Phép chia', group:'calc', desc:'Chia số có nhiều chữ số.', gen: genChiaMulti},
+ {id:25, title:'Rút về đơn vị', group:'word', desc:'Tìm 1 phần rồi tìm nhiều phần.', gen: genRutDonVi},
+ {id:26, title:'Rút về đơn vị (tiếp)', group:'word', desc:'Bài toán đơn vị nâng cao.', gen: genRutDonViTiep},
+ {id:28, title:'Diện tích hình chữ nhật', group:'geo', desc:'dài × rộng.', gen: genDienTichHCN},
+ {id:29, title:'Diện tích hình vuông', group:'geo', desc:'cạnh × cạnh.', gen: genDienTichHV},
+ {id:30, title:'Ôn tập phép cộng, phép trừ', group:'calc', desc:'Ôn cộng trừ.', gen: genOnTapCongTru},
+ {id:31, title:'Ôn tập phép nhân, phép chia', group:'calc', desc:'Ôn nhân chia.', gen: genOnTapNhanChia},
+ {id:32, title:'Ôn tập về số - dãy số - cấu tạo số', group:'number', desc:'Dãy số và cấu tạo số.', gen: genDaySo},
+ {id:33, title:'Ôn tập đại lượng - hình học', group:'geo', desc:'Đo lường và hình học.', gen: genHinhHocDoLuong},
+ {id:34, title:'Ôn tập về giải toán', group:'word', desc:'Lời văn tổng hợp.', gen: genGiaiToanTongHop},
+ {id:35, title:'Bài toán tính ngược từ cuối', group:'mixed', desc:'Làm ngược từ kết quả.', gen: genTinhNguoc}
+];
+let currentQuestions = [];
+let timerHandle = null;
+let secondsLeft = 60*60;
+let alreadySubmitted = false;
+
+function r(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+function choice(a){return a[r(0,a.length-1)]}
+function shuffle(a){let b=a.slice();for(let i=b.length-1;i>0;i--){let j=r(0,i);[b[i],b[j]]=[b[j],b[i]]}return b}
+function sign(a,b){return a>b?'>':(a<b?'<':'=')}
+function fmt(n){return Number(n).toLocaleString('vi-VN')}
+function gcd(a,b){while(b){[a,b]=[b,a%b]}return Math.abs(a)}
+function q(topic, question, answer, unit, hint, solution, type='number', hard=false){return {topicId:topic.id, topicTitle:topic.title, question, answer:String(answer), unit:unit||'', hint, solution, type, hard}}
+function esc(s){return String(s??'').replace(/[&<>'"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
+
+function safeExample(qq){
+ const examples={
+  1:'Ví dụ khác: Với số 583, hãy tách thành hàng trăm, hàng chục, hàng đơn vị rồi mới trả lời.',
+  2:'Ví dụ khác: Với x + 25 = 70, muốn tìm x thì lấy tổng trừ số đã biết. Em tự tính kết quả.',
+  3:'Ví dụ khác: Với 25 + 38 + 75, hãy ghép 25 với 75 trước vì được số tròn trăm.',
+  4:'Ví dụ khác: Muốn tìm 1/4 của 20 thì viết phép tính 20 : 4 rồi tự tính.',
+  5:'Ví dụ khác: Gặp 6 × 8 thì đọc bảng nhân 6; gặp phép chia thì nghĩ ngược lại từ bảng nhân.',
+  6:'Ví dụ khác: Khi chia có dư, tìm bội lớn nhất của số chia nhưng không vượt quá số bị chia, rồi lấy phần còn lại làm số dư.',
+  7:'Ví dụ khác: Có 6 bông hoa, gấp 3 lần thì viết phép nhân 6 × 3 rồi tự tính.',
+  8:'Ví dụ khác: Có 24 viên bi, giảm đi 4 lần thì viết phép chia 24 : 4 rồi tự tính.',
+  9:'Ví dụ khác: Với 10 + 3 × 4, hãy làm phép nhân trước, sau đó mới cộng.',
+  10:'Ví dụ khác: Ngày 2 nhiều hơn ngày 1 thì tìm số của ngày 2 trước, sau đó cộng cả hai ngày.',
+  11:'Ví dụ khác: Tính xong vế trái trước, rồi mới so sánh với số ở vế phải.',
+  12:'Ví dụ khác: Muốn biết số lớn gấp mấy lần số bé, lấy số lớn chia cho số bé.',
+  13:'Ví dụ khác: Muốn biết số bé bằng một phần mấy số lớn, lấy số lớn chia cho số bé để tìm mẫu số.',
+  14:'Ví dụ khác: Nếu bài nói “gấp ... lần và thêm ...”, hãy nhân trước rồi cộng thêm.',
+  15:'Ví dụ khác: Trong biểu thức có nhân, chia, cộng, trừ, hãy làm nhân/chia trước rồi cộng/trừ sau.',
+  16:'Ví dụ khác: Đọc kỹ câu hỏi, xác định dạng bài rồi chọn phép tính phù hợp.',
+  17:'Ví dụ khác: Hình chữ nhật cần cộng chiều dài và chiều rộng trước, rồi nhân 2.',
+  18:'Ví dụ khác: Chu vi hình vuông bằng cạnh nhân 4.',
+  19:'Ví dụ khác: Số liền sau thêm 1; số liền trước bớt 1.',
+  20:'Ví dụ khác: Khi cộng số có 4 chữ số, đặt thẳng hàng đơn vị, chục, trăm, nghìn rồi cộng từ phải sang trái.',
+  21:'Ví dụ khác: Khi trừ số có 4 chữ số, đặt thẳng hàng rồi trừ từ phải sang trái; nếu thiếu thì mượn.',
+  22:'Ví dụ khác: Đổi m sang cm thì dùng 1 m = 100 cm; đổi kg sang g thì dùng 1 kg = 1000 g.',
+  23:'Ví dụ khác: Nhân số có nhiều chữ số với một chữ số: nhân từ hàng đơn vị, nhớ nếu có.',
+  24:'Ví dụ khác: Chia từ trái sang phải; có thể kiểm tra bằng thương nhân với số chia.',
+  25:'Ví dụ khác: Bài rút về đơn vị: tìm giá trị của 1 phần trước, rồi nhân với số phần cần tìm.',
+  26:'Ví dụ khác: Muốn biết cần mấy túi, lấy tổng số đồ vật chia cho số đồ vật mỗi túi.',
+  28:'Ví dụ khác: Diện tích hình chữ nhật bằng chiều dài nhân chiều rộng.',
+  29:'Ví dụ khác: Diện tích hình vuông bằng cạnh nhân cạnh.',
+  30:'Ví dụ khác: Với biểu thức tìm x có cộng và trừ, hãy làm ngược từ kết quả cuối.',
+  31:'Ví dụ khác: Muốn tìm thừa số chưa biết, lấy tích chia cho các thừa số đã biết.',
+  32:'Ví dụ khác: Tìm xem dãy tăng hoặc giảm bao nhiêu mỗi bước, rồi áp dụng cho số tiếp theo.',
+  33:'Ví dụ khác: Hình vuông biết chu vi thì tìm cạnh bằng cách lấy chu vi chia 4.',
+  34:'Ví dụ khác: Với bài chia đều, tìm tổng số đồ vật trước rồi chia cho số phần.',
+  35:'Ví dụ khác: Bài tính ngược: từ kết quả cuối, nhân đổi thành chia, cộng đổi thành trừ.'
+ };
+ return examples[qq.topicId] || 'Ví dụ khác: Làm theo đúng dạng bài nhưng dùng số khác, không dùng số trong câu đang làm.';
+}
+
+
+function genSoCauTao(topic){
+ let n=r(120,987), h=Math.floor(n/100), t=Math.floor(n/10)%10, u=n%10;
+ let mode=r(1,3);
+ if(mode===1) return q(topic,`Số ${n} có chữ số hàng chục là bao nhiêu?`,t,'',`Nhìn vào số có 3 chữ số: hàng trăm - hàng chục - hàng đơn vị. Ví dụ 583 có hàng chục là 8.`,`Số ${n} có hàng trăm là ${h}, hàng chục là ${t}, hàng đơn vị là ${u}.`);
+ if(mode===2) return q(topic,`Tổng các chữ số của số ${n} là bao nhiêu?`,h+t+u,'',`Cộng từng chữ số lại. Ví dụ 426 có tổng là 4 + 2 + 6.`,`${h} + ${t} + ${u} = ${h+t+u}.`);
+ return q(topic,`Từ các chữ số ${h}, ${t}, ${u}, viết số lớn nhất có 3 chữ số khác nhau có thể lập được.`,Number([h,t,u].sort((a,b)=>b-a).join('')),'',`Muốn số lớn nhất, xếp chữ số lớn nhất ở hàng trăm, tiếp theo là hàng chục, cuối cùng là hàng đơn vị.`,`Sắp xếp giảm dần: ${[h,t,u].sort((a,b)=>b-a).join(', ')}.`);
+}
+function genCongTru(topic){
+ let mode=r(1,4);
+ if(mode===1){let a=r(120,650), b=r(80,300);return q(topic,`Tính: ${a} + ${b}`,a+b,'',`Cộng từ hàng đơn vị, rồi hàng chục, rồi hàng trăm.`,` ${a} + ${b} = ${a+b}.`)}
+ if(mode===2){let a=r(400,950), b=r(80,390);return q(topic,`Tính: ${a} - ${b}`,a-b,'',`Trừ từ hàng đơn vị. Nếu không đủ thì mượn 1 chục.`,` ${a} - ${b} = ${a-b}.`)}
+ if(mode===3){let x=r(50,300), a=r(70,250);return q(topic,`Tìm x, biết: x + ${a} = ${x+a}`,x,'',`Muốn tìm số hạng chưa biết, lấy tổng trừ số hạng đã biết.`,`x = ${x+a} - ${a} = ${x}.`, 'number', true)}
+ let x=r(80,500), a=r(20,150);return q(topic,`Tìm x, biết: x - ${a} = ${x-a}`,x,'',`Muốn tìm số bị trừ, lấy hiệu cộng số trừ.`,`x = ${x-a} + ${a} = ${x}.`, 'number', true)
+}
+function genThuanTien(topic){
+ let a=choice([15,25,35,45,55,65]), b=100-a, c=r(20,90), d=r(10,80);
+ let ans=a+b+c+d;
+ return q(topic,`Tính bằng cách thuận tiện: ${a} + ${c} + ${b} + ${d}`,ans,'',`Hãy ghép các số có tổng tròn chục hoặc tròn trăm. Ví dụ 35 + 65 = 100.`,`Ghép ${a} + ${b} = 100, còn ${c} + ${d} = ${c+d}. Tổng là ${ans}.`, 'number', true);
+}
+function genPhanBang(topic){
+ let mode=r(1,2), n=choice([2,3,4,5,6,7,8,9]);
+ if(mode===1){let k=r(4,20), total=k*n; return q(topic,`Tìm 1/${n} của ${total}.`,k,'',`Muốn tìm 1/${n} của một số, lấy số đó chia cho ${n}. Ví dụ 1/4 của 20 là 20 : 4.`,`${total} : ${n} = ${k}.`)}
+ let part=r(3,18), total=part*n; return q(topic,`Biết 1/${n} của một số là ${part}. Tìm số đó.`,total,'',`Nếu biết 1 phần, muốn tìm cả số thì nhân phần đó với số phần.`,`${part} × ${n} = ${total}.`, 'number', true)
+}
+function genNhanChia67(topic){
+ let k=choice([6,7]), a=r(2,10), mode=r(1,2);
+ if(mode===1) return q(topic,`Tính: ${k} × ${a}`,k*a,'',`Dựa vào bảng nhân ${k}.`,`${k} × ${a} = ${k*a}.`);
+ return q(topic,`Tính: ${k*a} : ${k}`,a,'',`Dựa vào bảng chia ${k}.`,`${k*a} : ${k} = ${a}.`);
+}
+function genChiaDu(topic){
+ let b=r(3,9), m=r(4,16), du=r(1,b-1), a=b*m+du, mode=r(1,2);
+ if(mode===1) return q(topic,`Trong phép chia ${a} : ${b}, số dư là bao nhiêu?`,du,'',`Số dư phải nhỏ hơn số chia. Tìm bội gần nhất của ${b} không vượt quá ${a}.`,`${b} × ${m} = ${b*m}; ${a} - ${b*m} = ${du}.`);
+ return q(topic,`Một phép chia có thương là ${m}, số chia là ${b}, số dư là ${du}. Tìm số bị chia.`,a,'',`Số bị chia = số chia × thương + số dư.`,`Số bị chia = ${b} × ${m} + ${du} = ${a}.`, 'number', true)
+}
+function genGapNhieuLan(topic){
+ let a=r(6,35), k=r(2,8), thing=choice(['quyển vở','viên bi','bông hoa','cái kẹo']);
+ return q(topic,`Lan có ${a} ${thing}. Mai có số ${thing} gấp ${k} lần Lan. Hỏi Mai có bao nhiêu ${thing}?`,a*k,thing,`Gấp lên ${k} lần nghĩa là nhân với ${k}.`,`Mai có ${a} × ${k} = ${a*k} ${thing}.`)
+}
+function genGiamNhieuLan(topic){
+ let k=r(2,8), ans=r(5,30), total=ans*k, thing=choice(['kg gạo','lít dầu','quyển sách','viên kẹo']);
+ return q(topic,`Một cửa hàng có ${total} ${thing}. Sau khi bán, số ${thing} còn lại giảm đi ${k} lần. Hỏi còn lại bao nhiêu ${thing}?`,ans,thing,`Giảm đi ${k} lần nghĩa là chia cho ${k}.`,`Còn lại ${total} : ${k} = ${ans} ${thing}.`)
+}
+function genBieuThuc(topic){
+ let a=r(80,300), b=r(2,9), c=r(3,9), mode=r(1,2);
+ if(mode===1) return q(topic,`Tính giá trị biểu thức: ${a} + ${b} × ${c}`,a+b*c,'',`Trong biểu thức không có ngoặc, làm nhân chia trước, cộng trừ sau. Ví dụ 10 + 3 × 4 = 10 + 12.`,`${b} × ${c} = ${b*c}; ${a} + ${b*c} = ${a+b*c}.`, 'number', true);
+ let s=(a + b); let ans=s*c; return q(topic,`Tính giá trị biểu thức: (${a} + ${b}) × ${c}`,ans,'',`Có ngoặc thì làm trong ngoặc trước.`,`(${a} + ${b}) = ${s}; ${s} × ${c} = ${ans}.`)
+}
+function genWordMoreLess(topic){
+ let a=r(35,180), more=r(8,60), item=choice(['kg gạo','quyển sách','bông hoa','cái bánh']);
+ return q(topic,`Ngày thứ nhất bán được ${a} ${item}. Ngày thứ hai bán nhiều hơn ngày thứ nhất ${more} ${item}. Hỏi cả hai ngày bán được bao nhiêu ${item}?`,2*a+more,item,`Tìm số ngày thứ hai trước, sau đó cộng cả hai ngày.`,`Ngày thứ hai: ${a} + ${more} = ${a+more}. Cả hai ngày: ${a} + ${a+more} = ${2*a+more} ${item}.`, 'number', true)
+}
+function genBieuThuc2(topic){
+ let a=r(20,80), b=r(2,9), c=r(100,400); let left=a*b+c; let x=left+r(-30,30); if(x===left) x+=5;
+ return q(topic,`Điền dấu <, > hoặc =: ${a} × ${b} + ${c} ___ ${x}`,sign(left,x),'',`Tính vế trái trước rồi so sánh với vế phải.`,`Vế trái = ${a*b} + ${c} = ${left}. So sánh ${left} với ${x} được dấu ${sign(left,x)}.`, 'sign', true)
+}
+function genLonGapMayLan(topic){
+ let small=r(3,20), k=r(2,9), large=small*k;
+ return q(topic,`${large} gấp mấy lần ${small}?`,k,'lần',`Muốn biết số lớn gấp mấy lần số bé, lấy số lớn chia số bé.`,` ${large} : ${small} = ${k} lần.`)
+}
+function genBeBangPhanMay(topic){
+ let small=r(3,20), k=r(2,9), large=small*k;
+ return q(topic,`${small} bằng một phần mấy của ${large}? Hãy nhập mẫu số.`,k,'',`Lấy số lớn chia cho số bé. Kết quả là mẫu số của 1/...`,` ${large} : ${small} = ${k}, vậy ${small} = 1/${k} của ${large}.`, 'number', true)
+}
+function genWordMixed(topic){
+ let a=r(8,30), k=r(2,5), add=r(5,30), thing=choice(['con tem','viên bi','cây bút','quả cam']); let ans=a*k+add;
+ return q(topic,`Bình có ${a} ${thing}. An có số ${thing} gấp ${k} lần Bình và thêm ${add} ${thing}. Hỏi An có bao nhiêu ${thing}?`,ans,thing,`Làm hai bước: gấp lên trước, sau đó cộng thêm.`,`Gấp lên: ${a} × ${k} = ${a*k}. Thêm ${add}: ${a*k} + ${add} = ${ans} ${thing}.`, 'number', true)
+}
+function genBieuThuc3(topic){
+ let b=r(2,8), c=r(3,9), d=r(5,30), a=(r(8,30)*b); let ans=a/b + c*d - d;
+ return q(topic,`Tính: ${a} : ${b} + ${c} × ${d} - ${d}`,ans,'',`Làm phép chia và nhân trước, sau đó cộng trừ từ trái sang phải.`,` ${a}:${b}=${a/b}; ${c}×${d}=${c*d}; ${a/b}+${c*d}-${d}=${ans}.`, 'number', true)
+}
+function genTongHop(topic){ return choice([genSoCauTao,genCongTru,genPhanBang,genBieuThuc,genWordMixed])(topic) }
+function genChuViHCN(topic){
+ let dai=r(8,40), rong=r(3,dai-1), ans=(dai+rong)*2;
+ return q(topic,`Hình chữ nhật có chiều dài ${dai} cm, chiều rộng ${rong} cm. Tính chu vi hình chữ nhật.`,ans,'cm',`Chu vi hình chữ nhật = (chiều dài + chiều rộng) × 2.`,`(${dai} + ${rong}) × 2 = ${ans} cm.`)
+}
+function genChuViHV(topic){ let a=r(4,35); return q(topic,`Hình vuông có cạnh ${a} cm. Tính chu vi hình vuông.`,a*4,'cm',`Chu vi hình vuông = cạnh × 4.`,` ${a} × 4 = ${a*4} cm.`)}
+function genSo4ChuSo(topic){
+ let n=r(1000,9998), mode=r(1,2);
+ if(mode===1) return q(topic,`Số liền sau của ${n} là số nào?`,n+1,'',`Số liền sau hơn số đã cho 1 đơn vị.`,` ${n} + 1 = ${n+1}.`);
+ return q(topic,`Số liền trước của ${n} là số nào?`,n-1,'',`Số liền trước kém số đã cho 1 đơn vị.`,` ${n} - 1 = ${n-1}.`)
+}
+function genCong10000(topic){ let a=r(1200,6500), b=r(500,3000); return q(topic,`Đặt tính rồi tính: ${a} + ${b}`,a+b,'',`Cộng lần lượt từ hàng đơn vị sang hàng nghìn.`,` ${a} + ${b} = ${a+b}.`) }
+function genTru10000(topic){ let b=r(500,3000), ans=r(1000,6500), a=b+ans; return q(topic,`Đặt tính rồi tính: ${a} - ${b}`,ans,'',`Trừ lần lượt từ hàng đơn vị sang hàng nghìn.`,` ${a} - ${b} = ${ans}.`) }
+function genDonViDo(topic){
+ let mode=r(1,4);
+ if(mode===1){let m=r(2,30);return q(topic,`${m} m = bao nhiêu cm?`,m*100,'cm',`1 m = 100 cm.`,` ${m} × 100 = ${m*100} cm.`)}
+ if(mode===2){let kg=r(2,9);return q(topic,`${kg} kg = bao nhiêu g?`,kg*1000,'g',`1 kg = 1000 g.`,` ${kg} × 1000 = ${kg*1000} g.`)}
+ if(mode===3){let h=r(2,8);return q(topic,`${h} giờ = bao nhiêu phút?`,h*60,'phút',`1 giờ = 60 phút.`,` ${h} × 60 = ${h*60} phút.`)}
+ let w=r(2,7); return q(topic,`${w} tuần = bao nhiêu ngày?`,w*7,'ngày',`1 tuần = 7 ngày.`,` ${w} × 7 = ${w*7} ngày.`)
+}
+function genNhanMulti(topic){ let a=r(120,999), b=r(2,9); return q(topic,`Tính: ${a} × ${b}`,a*b,'',`Nhân từ hàng đơn vị sang hàng trăm. Nhớ cộng số nhớ nếu có.`,` ${a} × ${b} = ${a*b}.`, 'number', true)}
+function genChiaMulti(topic){ let b=r(2,9), ans=r(50,999), a=b*ans; return q(topic,`Tính: ${a} : ${b}`,ans,'',`Chia lần lượt từ trái sang phải. Có thể kiểm tra bằng phép nhân thương × số chia.`,`Vì ${ans} × ${b} = ${a}, nên ${a} : ${b} = ${ans}.`, 'number', true)}
+function genRutDonVi(topic){
+ let count=r(3,9), price=r(4,25)*1000, ask=r(2,12), total=count*price;
+ return q(topic,`${count} quyển vở giá ${fmt(total)} đồng. Hỏi ${ask} quyển vở cùng loại giá bao nhiêu đồng?`,ask*price,'đồng',`Tìm giá 1 quyển trước, rồi nhân với số quyển cần tìm.`,`1 quyển: ${fmt(total)} : ${count} = ${fmt(price)} đồng. ${ask} quyển: ${fmt(price)} × ${ask} = ${fmt(ask*price)} đồng.`, 'number', true)
+}
+function genRutDonViTiep(topic){
+ let per=r(4,12), total=per*r(6,20), boxes=total/per;
+ return q(topic,`Có ${total} kg gạo chia đều vào các túi, mỗi túi ${per} kg. Hỏi cần bao nhiêu túi?`,boxes,'túi',`Muốn tìm số túi, lấy tổng số ki-lô-gam chia cho số ki-lô-gam mỗi túi.`,` ${total} : ${per} = ${boxes} túi.`)
+}
+function genDienTichHCN(topic){ let dai=r(6,30), rong=r(3,dai-1); return q(topic,`Hình chữ nhật có chiều dài ${dai} cm, chiều rộng ${rong} cm. Tính diện tích.`,dai*rong,'cm²',`Diện tích hình chữ nhật = chiều dài × chiều rộng.`,` ${dai} × ${rong} = ${dai*rong} cm².`)}
+function genDienTichHV(topic){ let a=r(3,25); return q(topic,`Hình vuông có cạnh ${a} cm. Tính diện tích.`,a*a,'cm²',`Diện tích hình vuông = cạnh × cạnh.`,` ${a} × ${a} = ${a*a} cm².`)}
+function genOnTapCongTru(topic){
+ let x=r(100,900), a=r(50,300), b=r(20,180); return q(topic,`Tìm x, biết: x + ${a} - ${b} = ${x+a-b}`,x,'',`Chuyển từng bước ngược lại: cộng thì đổi thành trừ, trừ thì đổi thành cộng.`,`x + ${a} = ${x+a-b} + ${b} = ${x+a}; x = ${x+a} - ${a} = ${x}.`, 'number', true)
+}
+function genOnTapNhanChia(topic){
+ let x=r(5,50), a=r(2,9), b=r(2,9); let val=x*a*b; return q(topic,`Tìm x, biết: x × ${a} × ${b} = ${val}`,x,'',`Muốn tìm thừa số chưa biết, lấy tích chia cho các thừa số đã biết.`,`x = ${val} : ${a} : ${b} = ${x}.`, 'number', true)
+}
+function genDaySo(topic){
+ let start=r(5,80), step=r(2,15); return q(topic,`Điền số tiếp theo trong dãy: ${start}; ${start+step}; ${start+2*step}; ${start+3*step}; ...`,start+4*step,'',`Tìm xem mỗi lần dãy tăng thêm bao nhiêu.`,`Mỗi số tăng ${step}. Số tiếp theo là ${start+3*step} + ${step} = ${start+4*step}.`)
+}
+function genHinhHocDoLuong(topic){
+ let p=choice([24,28,32,36,40,48,60,80]); return q(topic,`Một hình vuông có chu vi ${p} cm. Tính độ dài một cạnh.`,p/4,'cm',`Cạnh hình vuông = chu vi : 4.`,` ${p} : 4 = ${p/4} cm.`)
+}
+function genGiaiToanTongHop(topic){
+ let k=r(2,4), per=r(6,25), total=per*k, a=r(5,total-3), b=total-a, item=choice(['quả táo','quyển truyện','bông hoa','viên bi']);
+ return q(topic,`Một hộp có ${a} ${item}. Người ta thêm ${b} ${item} rồi chia đều vào ${k} túi. Hỏi mỗi túi có bao nhiêu ${item}?`,per,item,`Tìm tổng số đồ vật sau khi thêm, rồi chia đều cho số túi.`,`Sau khi thêm: ${a} + ${b} = ${total}. Mỗi túi: ${total} : ${k} = ${per} ${item}.`, 'number', true)
+}
+function genTinhNguoc(topic){
+ let x=r(5,80), add=r(3,40), mul=r(2,6), final=(x+add)*mul;
+ return q(topic,`Bình nghĩ một số. Bình cộng số đó với ${add}, rồi nhân kết quả với ${mul} thì được ${final}. Bình đã nghĩ số nào?`,x,'',`Làm ngược lại từ kết quả cuối: phép nhân đổi thành chia, phép cộng đổi thành trừ.`,`Làm ngược: ${final} : ${mul} = ${x+add}; ${x+add} - ${add} = ${x}.`, 'number', true)
+}
+
+function setup(){
+ try{
+   newTest();
+ }catch(err){
+   console.error(err);
+   const box=document.getElementById('questions');
+   if(box) box.innerHTML='<div class="card"><b>Không tạo được đề.</b><br>Chi tiết lỗi: '+esc(err.message||err)+'</div>';
+ }
+}
+function showTab(id){
+ document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));
+ document.querySelectorAll('.tab,.navbtn').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));
+}
+function selectTopicsForTest(){
+ const groups=['number','calc','word','ratio','geo','mixed'];
+ const chosen=[]; const used=new Set();
+ while(chosen.length<15){
+   for(const g of shuffle(groups)){
+     const pool=TOPICS.filter(t=>t.group===g && !used.has(t.id));
+     if(pool.length){let t=choice(pool); chosen.push(t); used.add(t.id); if(chosen.length===15) break;}
+   }
+   if(used.size>=TOPICS.length) used.clear();
+ }
+ return shuffle(chosen).slice(0,15);
+}
+function newTest(){
+ currentQuestions=selectTopicsForTest().map(t=>t.gen(t));
+ alreadySubmitted=false;
+ secondsLeft=60*60;
+ renderQuestions();
+ startTimer();
+ showTab('test');
+ const last=document.getElementById('lastScore'); if(last) last.textContent='Chưa chấm';
+}
+
+function renderQuestions(){
+ const box=document.getElementById('questions');
+ const count=document.getElementById('qCount');
+ if(count) count.textContent=String(currentQuestions.length);
+ if(!box) return;
+ if(!currentQuestions.length){
+   box.innerHTML='<div class="card">Chưa có đề. Bấm <b>Tạo đề ngẫu nhiên 15 câu</b> để bắt đầu.</div>';
+   return;
+ }
+ box.innerHTML=currentQuestions.map((qq,i)=>renderQuestion(qq,i,false)).join('');
+}
+function renderQuestion(qq,i,practice){
+ const ex=safeExample(qq);
+ return `<div class="question" id="q${practice?'p':i}">
+  <div class="qtop"><span class="badge">Bài ${qq.topicId}. ${esc(qq.topicTitle)}</span>${qq.hard?'<span class="badge" style="background:#fef3c7;color:#92400e">Bài khó</span>':''}</div>
+  <div class="qtext"><b>Câu ${practice?'luyện':i+1}.</b> ${esc(qq.question)}</div>
+  <div class="answer-row"><input class="answer" data-index="${i}" placeholder="Nhập đáp án"><span class="unit">${qq.unit?`Đơn vị: ${esc(qq.unit)}`:''}</span></div>
+  <details><summary>Xem gợi ý</summary><div>${esc(qq.hint)}</div>${ex?`<div class="hint-example"><b>Ví dụ tương tự:</b> ${esc(ex)}</div>`:''}<div class="hint-note">Gợi ý chỉ nhắc cách làm, không hiện lời giải của câu này. Đáp án và lời giải chi tiết chỉ hiện sau khi chấm bài.</div></details>
+  <div class="result" id="res${practice?'p':i}"></div>
+ </div>`;
+}
+function startTimer(){
+ if(timerHandle) clearInterval(timerHandle);
+ updateTimer();
+ timerHandle=setInterval(()=>{secondsLeft--; updateTimer(); if(secondsLeft<=0){clearInterval(timerHandle); submitTest(true)}},1000);
+}
+function updateTimer(){
+ const m=Math.max(0,Math.floor(secondsLeft/60)), s=Math.max(0,secondsLeft%60);
+ const el=document.getElementById('timer'); el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; el.classList.toggle('danger',secondsLeft<=300);
+}
+function normalize(s){return String(s??'').trim().toLowerCase().replace(/\s+/g,'').replace(/,/g,'.')}
+function isCorrect(user, qq){
+ let u=normalize(user); if(!u) return false;
+ if(qq.type==='sign') return u===qq.answer;
+ let num = Number(u.replace(/[^0-9.\-]/g,''));
+ let ans = Number(qq.answer);
+ if(!Number.isNaN(num) && !Number.isNaN(ans)) return Math.abs(num-ans)<1e-9;
+ return u===normalize(qq.answer);
+}
+function answerDisplay(qq){return `${qq.answer}${qq.unit?' '+qq.unit:''}`}
+function submitTest(auto){
+ if(alreadySubmitted) return; alreadySubmitted=true; if(timerHandle) clearInterval(timerHandle);
+ let correct=0; const details=[];
+ currentQuestions.forEach((qq,i)=>{
+   const inp=document.querySelector(`input[data-index="${i}"]`); const user=inp?inp.value:''; const ok=isCorrect(user,qq); if(ok) correct++;
+   const res=document.getElementById('res'+i); if(res){res.innerHTML=ok?`<span class="ok">Đúng!</span>`:`<span class="wrong">Chưa đúng.</span> Đáp án: <b>${esc(answerDisplay(qq))}</b><div class="solution">${esc(qq.solution)}</div>`;}
+   details.push({topic:`Bài ${qq.topicId}. ${qq.topicTitle}`, question:qq.question, user:user, correct:answerDisplay(qq), ok, hint:qq.hint, solution:qq.solution});
+ });
+ const scoreText=`${correct}/15`;
+ document.getElementById('lastScore').textContent=scoreText;
+ saveHistory({date:new Date().toLocaleString('vi-VN'), score:correct, total:15, auto, details});
+ alert((auto?'Hết giờ! ':'')+`Kết quả: ${scoreText}`);
+}
+
+
+function saveHistory(item){
+ const key='toan3_history_v1'; const arr=JSON.parse(localStorage.getItem(key)||'[]'); arr.unshift(item); localStorage.setItem(key,JSON.stringify(arr.slice(0,50)));
+}
+function renderHistory(){
+ const key='toan3_history_v1'; const arr=JSON.parse(localStorage.getItem(key)||'[]'); const box=document.getElementById('historyBox');
+ if(!arr.length){box.innerHTML='<div class="card">Chưa có lịch sử làm bài.</div>';return;}
+ box.innerHTML=arr.map((h,idx)=>{
+   const wrong=h.details.filter(d=>!d.ok);
+   return `<div class="history-item"><b>Lần ${idx+1}: ${esc(h.date)}</b><div>Điểm: <b>${h.score}/${h.total}</b>${h.auto?' - nộp do hết giờ':''}</div>
+     <details><summary>Xem chi tiết ${wrong.length?`(${wrong.length} câu sai)`:''}</summary>
+       ${wrong.length?wrong.map((d,j)=>`<div class="wrong-box"><b>Sai ${j+1} - ${esc(d.topic)}</b><div><b>Đề bài:</b> ${esc(d.question)}</div><div>Bài làm: <b>${esc(d.user||'(chưa nhập)')}</b></div><div>Đáp án đúng: <b>${esc(d.correct)}</b></div><div class="solution">${esc(d.solution)}</div></div>`).join(''):'<div class="ok">Làm đúng toàn bộ.</div>'}
+     </details></div>`
+ }).join('');
+}
+function clearHistory(){ if(confirm('Xóa toàn bộ lịch sử làm bài trên trình duyệt này?')){localStorage.removeItem('toan3_history_v1');renderHistory();} }
+
+window.addEventListener('load',setup);
+</script>
+</body>
+</html>

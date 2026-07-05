@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toán lớp 4 - Bộ đề 15 câu tương tác</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#62708a;--line:#dde4f0;--brand:#2563eb;--brand2:#10b981;--bad:#dc2626;--good:#059669;--warn:#f59e0b;--soft:#eff6ff}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}.wrap{max-width:1180px;margin:0 auto;padding:18px}.topbar{position:sticky;top:0;z-index:10;background:rgba(245,247,251,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 0 12px;margin-bottom:12px}.app-title{font-size:22px;font-weight:900;margin:0 0 10px}.actions{display:flex;gap:10px;align-items:center;white-space:nowrap;overflow-x:auto;padding-bottom:2px}.actions .btn{flex:0 0 auto}.status-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 12px}.btn{border:0;border-radius:12px;background:var(--brand);color:#fff;font-weight:800;padding:11px 14px;cursor:pointer;box-shadow:0 4px 12px rgba(37,99,235,.18)}.btn.secondary{background:#fff;color:var(--brand);border:1px solid #bfdbfe}.btn.good{background:var(--brand2)}.btn.warn{background:var(--warn);color:#111827}.btn.ghost{background:#fff;color:#111827;border:1px solid var(--line);box-shadow:none}.btn.small{padding:7px 10px;border-radius:10px;font-size:13px}.pill{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);font-weight:650}.timer{font-size:22px;font-weight:900;color:#111827}.timer.danger{color:var(--bad)}.section{display:none}.section.active{display:block}.note{background:#fffbeb;border:1px solid #fde68a;color:#713f12;border-radius:14px;padding:12px;margin:12px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}.card,.question,.topic-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(20,40,80,.05)}.topic-card b{display:block;margin-bottom:6px}.topic-card span{color:var(--muted);font-size:14px}.topic-example{margin-top:10px;background:#f8fafc;border-left:4px solid #bfdbfe;padding:8px 10px;border-radius:10px;color:#334155;font-size:14px}h2{margin:26px 0 12px;font-size:24px}.question{margin:12px 0}.qtop{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}.badge{font-size:12px;color:#1d4ed8;background:#dbeafe;padding:4px 8px;border-radius:999px;font-weight:800}.qtext{font-size:18px;margin:12px 0 10px}.answer-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.answer{font-size:18px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:12px;min-width:240px}.unit{color:var(--muted)}details{margin-top:10px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;padding:10px}summary{cursor:pointer;font-weight:800}.hint-example{margin-top:8px;color:#475569;background:#fff;border-left:4px solid #dbeafe;padding:8px 10px;border-radius:10px}.result{margin-top:10px;font-weight:800}.ok{color:var(--good)}.wrong{color:var(--bad)}.solution{margin-top:8px;color:#334155;background:#fff7ed;border-left:4px solid #fb923c;padding:8px 10px;border-radius:8px}.history-item{border:1px solid var(--line);border-radius:16px;background:#fff;margin:10px 0;padding:12px}.wrong-box{border-left:4px solid var(--bad);background:#fffafa;margin:8px 0;padding:10px;border-radius:10px}.footer{color:var(--muted);font-size:13px;margin:30px 0}.hide{display:none}@media print{.topbar,.btn,.note .btn{display:none}.section{display:block}.question{break-inside:avoid}body{background:white}.card,.question{box-shadow:none}.answer{border-bottom:1px solid #111;border-left:0;border-right:0;border-top:0;border-radius:0}.solution,.result,details{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="app-title">Bộ đề Toán lớp 4 tương tác</div>
+    <div class="actions">
+      <button class="btn good" onclick="newTest()">Tạo đề ngẫu nhiên 15 câu</button>
+      <button class="btn" onclick="submitTest(false)">Chấm bài</button>
+      <button class="btn ghost" onclick="window.print()">In đề</button>
+      <button class="btn secondary" onclick="showTab('topics')">Dạng bài đã bao phủ</button>
+      <button class="btn secondary" onclick="showTab('history');renderHistory()">Lịch sử</button>
+      <button class="btn warn" onclick="clearHistory()">Xóa lịch sử</button>
+    </div>
+  </div>
+
+  <section id="test" class="section active">
+    <div class="status-row">
+      <span class="pill">Số câu: <b id="qCount">0</b>/15</span>
+      <span class="pill">Thời gian: <span id="timer" class="timer">60:00</span></span>
+      <span class="pill">Điểm gần nhất: <b id="lastScore">Chưa chấm</b></span>
+    </div>
+    <div class="note">Hướng dẫn: Với câu có đơn vị, học sinh chỉ cần nhập số. Ví dụ đáp án là <b>240 cm</b> thì nhập <b>240</b>. Với câu điền dấu, nhập <b>&lt;</b>, <b>&gt;</b> hoặc <b>=</b>. Với phân số, nhập dạng <b>1/2</b>, <b>3/4</b>.</div>
+    <div id="questions"></div>
+  </section>
+
+  <section id="topics" class="section">
+    <h2>Các dạng bài đã bao phủ</h2>
+    <div id="topicGrid" class="grid"></div>
+  </section>
+
+  <section id="history" class="section">
+    <h2>Lịch sử làm bài</h2>
+    <div id="historyList"></div>
+  </section>
+  <div class="footer">File HTML chạy offline bằng trình duyệt. Lịch sử được lưu trong bộ nhớ trình duyệt của máy đang dùng.</div>
+</div>
+<script>
+const STORAGE_KEY = 'toan_lop_4_tuong_tac_history_v1';
+let currentQuestions = [];
+let timerHandle = null;
+let secondsLeft = 60*60;
+let alreadySubmitted = false;
+
+function r(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+function choice(a){return a[r(0,a.length-1)]}
+function shuffle(a){let b=a.slice();for(let i=b.length-1;i>0;i--){let j=r(0,i);[b[i],b[j]]=[b[j],b[i]]}return b}
+function sign(a,b){return a>b?'>':(a<b?'<':'=')}
+function fmt(n){return Number(n).toLocaleString('vi-VN')}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){let t=a%b;a=b;b=t}return a||1}
+function q(topic, question, answer, unit, hint, solution, type='number', hard=false){return {topicId:topic.id, topicTitle:topic.title, question, answer:String(answer), unit:unit||'', hint, solution, type, hard}}
+function esc(s){return String(s??'').replace(/[&<>'"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
+function normalize(s){return String(s??'').toLowerCase().trim().replace(/,/g,'').replace(/\./g,'').replace(/\s+/g,'')}
+function isCorrect(user, ans){return normalize(user)===normalize(ans)}
+
+const TOPICS = [
+ {id:1,title:'Số tự nhiên, hàng và lớp',group:'number',desc:'Đọc, viết số; xác định hàng đơn vị, chục, trăm, nghìn, lớp nghìn.',example:'Ví dụ: Số 23 456 có chữ số hàng nghìn là 3.',gen:'genHangLop'},
+ {id:2,title:'Số chẵn, số lẻ, liền trước, liền sau',group:'number',desc:'Nhận biết số chẵn/lẻ và tìm số đứng ngay trước hoặc ngay sau.',example:'Ví dụ: Số liền sau của 9 999 là 10 000.',gen:'genChanLeLien'},
+ {id:3,title:'Viết số theo điều kiện chữ số',group:'number',desc:'Lập số lớn nhất, nhỏ nhất hoặc số thỏa điều kiện từ các chữ số đã cho.',example:'Ví dụ: Từ 1, 4, 7 lập số lớn nhất có 3 chữ số là 741.',gen:'genLapSo'},
+ {id:4,title:'Phân tích cấu tạo số tự nhiên',group:'number',desc:'Viết số thành tổng theo hàng hoặc tìm chữ số còn thiếu.',example:'Ví dụ: 4 305 = 4 000 + 300 + 5.',gen:'genPhanTichSo'},
+ {id:5,title:'So sánh và sắp xếp số tự nhiên',group:'number',desc:'So sánh các số nhiều chữ số hoặc xếp theo thứ tự.',example:'Ví dụ: 12 045 > 9 999 vì có nhiều chữ số hơn.',gen:'genSoSanhSo'},
+ {id:6,title:'Biểu thức có chứa chữ',group:'calc',desc:'Thay chữ bằng số rồi tính giá trị biểu thức.',example:'Ví dụ: Nếu a = 5 thì a + 12 = 17.',gen:'genBieuThucChu'},
+ {id:7,title:'Tính giá trị biểu thức',group:'calc',desc:'Thực hiện đúng thứ tự: ngoặc trước, nhân chia trước, cộng trừ sau.',example:'Ví dụ: 120 + 6 × 5 = 150.',gen:'genGiaTriBieuThuc'},
+ {id:8,title:'Tính nhanh cộng, trừ',group:'calc',desc:'Ghép số để được tròn chục, tròn trăm, tròn nghìn.',example:'Ví dụ: 125 + 37 + 875 = 1 037.',gen:'genTinhNhanhCongTru'},
+ {id:9,title:'Tìm x với phép cộng, trừ',group:'calc',desc:'Dựa vào quan hệ thành phần trong phép cộng và phép trừ.',example:'Ví dụ: x + 245 = 800 thì x = 800 - 245.',gen:'genTimXCongTru'},
+ {id:10,title:'Đặt tính cộng, trừ nhiều chữ số',group:'calc',desc:'Cộng trừ các số đến hàng nghìn, chục nghìn, trăm nghìn.',example:'Ví dụ: 12 458 + 7 306 = 19 764.',gen:'genCongTruNhieuChuSo'},
+ {id:11,title:'Đơn vị đo khối lượng',group:'measure',desc:'Đổi tấn, tạ, yến, kg, g và tính toán đơn giản.',example:'Ví dụ: 2 tấn = 2 000 kg; 5 kg = 5 000 g.',gen:'genKhoiLuong'},
+ {id:12,title:'Đơn vị đo thời gian',group:'measure',desc:'Đổi giờ, phút, giây; ngày, tháng, năm, thế kỉ.',example:'Ví dụ: 3 giờ = 180 phút; 2 thế kỉ = 200 năm.',gen:'genThoiGian'},
+ {id:13,title:'Đơn vị đo độ dài',group:'measure',desc:'Đổi km, m, dm, cm, mm.',example:'Ví dụ: 4 m = 400 cm; 3 km = 3 000 m.',gen:'genDoDai'},
+ {id:14,title:'Đơn vị đo diện tích',group:'measure',desc:'Đổi m², dm², cm², mm² trong các trường hợp cơ bản.',example:'Ví dụ: 1 m² = 100 dm²; 1 dm² = 100 cm².',gen:'genDienTichDonVi'},
+ {id:15,title:'Trung bình cộng cơ bản',group:'word',desc:'Lấy tổng các số chia cho số lượng số hạng.',example:'Ví dụ: Trung bình cộng của 12, 15, 18 là 15.',gen:'genTBC'},
+ {id:16,title:'Tìm tổng hoặc một số khi biết trung bình cộng',group:'word',desc:'Dùng tổng = trung bình cộng × số số hạng.',example:'Ví dụ: TBC của 4 số là 25 thì tổng là 100.',gen:'genTBCNguoc'},
+ {id:17,title:'Bài toán tổng - hiệu',group:'word',desc:'Tìm hai số khi biết tổng và hiệu.',example:'Ví dụ: Tổng 50, hiệu 10 thì số lớn là 30, số bé là 20.',gen:'genTongHieu'},
+ {id:18,title:'Bài toán tuổi dạng tổng - hiệu',group:'word',desc:'Tính tuổi hiện nay, trước đây hoặc sau này khi biết tổng và hiệu.',example:'Ví dụ: Tổng tuổi 40, anh hơn em 6 tuổi thì em 17 tuổi.',gen:'genTuoiTongHieu'},
+ {id:19,title:'Phép nhân với số tự nhiên',group:'calc',desc:'Nhân số có nhiều chữ số với số có một hoặc hai chữ số.',example:'Ví dụ: 2 315 × 4 = 9 260.',gen:'genNhanTuNhien'},
+ {id:20,title:'Nhân nhẩm và tính thuận tiện',group:'calc',desc:'Nhân với 10, 100, 1 000; ghép thừa số để tính nhanh.',example:'Ví dụ: 25 × 4 × 17 = 100 × 17 = 1 700.',gen:'genNhanNhanh'},
+ {id:21,title:'Phép chia với số tự nhiên',group:'calc',desc:'Chia số nhiều chữ số cho số có một hoặc hai chữ số.',example:'Ví dụ: 9 600 : 8 = 1 200.',gen:'genChiaTuNhien'},
+ {id:22,title:'Chia có dư',group:'calc',desc:'Tìm thương, số dư và kiểm tra số dư nhỏ hơn số chia.',example:'Ví dụ: 37 : 5 = 7 dư 2.',gen:'genChiaDu'},
+ {id:23,title:'Tìm thành phần phép nhân, phép chia',group:'calc',desc:'Tìm thừa số, số bị chia hoặc số chia chưa biết.',example:'Ví dụ: x × 6 = 72 thì x = 72 : 6.',gen:'genTimXNChia'},
+ {id:24,title:'Biểu thức nhiều bước với nhân chia',group:'calc',desc:'Tính biểu thức có ngoặc, nhân, chia, cộng, trừ.',example:'Ví dụ: (120 + 80) : 5 = 40.',gen:'genBieuThucNhieuBuoc'},
+ {id:25,title:'Dãy số cách đều: tìm số tiếp theo',group:'sequence',desc:'Xác định khoảng cách giữa hai số liên tiếp.',example:'Ví dụ: 5, 8, 11, 14, ... số tiếp theo là 17.',gen:'genDaySoTiep'},
+ {id:26,title:'Dãy số cách đều: số số hạng',group:'sequence',desc:'Dùng công thức (số cuối - số đầu) : khoảng cách + 1.',example:'Ví dụ: Dãy 2, 5, 8, ..., 20 có 7 số hạng.',gen:'genSoSoHang'},
+ {id:27,title:'Tổng dãy số cách đều',group:'sequence',desc:'Tính tổng bằng (số đầu + số cuối) × số số hạng : 2.',example:'Ví dụ: 1 + 2 + ... + 10 = 55.',gen:'genTongDay'},
+ {id:28,title:'Dãy số viết theo quy luật',group:'sequence',desc:'Tìm quy luật tăng, giảm, nhân hoặc xen kẽ.',example:'Ví dụ: 2, 4, 8, 16, ... số tiếp theo là 32.',gen:'genQuyLuat'},
+ {id:29,title:'Bài toán trồng cây',group:'sequence',desc:'Phân biệt trồng hai đầu, một đầu, vòng tròn/khép kín.',example:'Ví dụ: Đường dài 20 m, cách 5 m trồng 1 cây cả hai đầu thì có 5 cây.',gen:'genTrongCay'},
+ {id:30,title:'Dấu hiệu chia hết cho 2, 3, 5, 9',group:'divisibility',desc:'Nhìn chữ số tận cùng hoặc tổng các chữ số.',example:'Ví dụ: 135 chia hết cho 5 và 9, không chia hết cho 2.',gen:'genDauHieuChiaHet'},
+ {id:31,title:'Tìm chữ số để số chia hết',group:'divisibility',desc:'Điền chữ số còn thiếu để số chia hết cho 3, 5 hoặc 9.',example:'Ví dụ: 12□ chia hết cho 3 thì □ có thể là 0, 3, 6, 9.',gen:'genDienChuSoChiaHet'},
+ {id:32,title:'Xét chữ số tận cùng',group:'divisibility',desc:'Tìm chữ số tận cùng của tích, tổng hoặc lũy thừa đơn giản.',example:'Ví dụ: 7 × 7 có tận cùng là 9.',gen:'genTanCung'},
+ {id:33,title:'Chia hết và chia có dư nâng cao',group:'divisibility',desc:'Vận dụng dạng a = b × q + r.',example:'Ví dụ: Một số chia 6 dư 4 thì số đó có dạng 6 × q + 4.',gen:'genChiaDuNangCao'},
+ {id:34,title:'Chu vi, diện tích hình chữ nhật',group:'geometry',desc:'Chu vi = (dài + rộng) × 2; diện tích = dài × rộng.',example:'Ví dụ: HCN dài 8 cm, rộng 5 cm có diện tích 40 cm².',gen:'genHCN'},
+ {id:35,title:'Chu vi, diện tích hình vuông',group:'geometry',desc:'Chu vi = cạnh × 4; diện tích = cạnh × cạnh.',example:'Ví dụ: Hình vuông cạnh 6 cm có chu vi 24 cm.',gen:'genHV'},
+ {id:36,title:'Bài toán hình học có lời văn',group:'geometry',desc:'Vận dụng chu vi, diện tích trong tình huống thực tế.',example:'Ví dụ: Lát gạch nền hình chữ nhật thì cần tính diện tích nền.',gen:'genHinhHocLoiVan'},
+ {id:37,title:'Mã hóa, vị trí chữ cái theo quy luật',group:'sequence',desc:'Dạng suy luận vị trí lặp lại trong chuỗi chữ cái.',example:'Ví dụ: Chuỗi A B C A B C... chữ thứ 5 là B.',gen:'genChuCai'},
+ {id:38,title:'Bài toán nhiều bước',group:'word',desc:'Đọc đề, tìm dữ kiện trung gian rồi mới trả lời câu hỏi cuối.',example:'Ví dụ: Tìm số quyển sách còn lại sau khi bán hai lần.',gen:'genLoiVanNhieuBuoc'},
+ {id:39,title:'Tìm số theo điều kiện chữ số',group:'number',desc:'Tìm số khi biết tổng chữ số, hiệu chữ số hoặc điều kiện chia hết.',example:'Ví dụ: Số có hai chữ số, tổng chữ số bằng 9 và tận cùng là 5 thì số đó là 45.',gen:'genTimSoChuSo'},
+ {id:40,title:'Tính ngược từ cuối',group:'mixed',desc:'Làm ngược phép tính từ kết quả cuối để tìm số ban đầu.',example:'Ví dụ: Gấp 3 lần rồi bớt 5 được 16, làm ngược: 16 + 5 rồi chia 3.',gen:'genTinhNguoc'},
+ {id:41,title:'Bài toán rút về đơn vị, tỉ lệ đơn giản',group:'word',desc:'Tìm giá trị của 1 phần rồi tính nhiều phần.',example:'Ví dụ: 5 quyển vở giá 40 000 đồng thì 1 quyển giá 8 000 đồng.',gen:'genRutDonVi'},
+ {id:42,title:'Tổ hợp và đếm cách lập số',group:'number',desc:'Đếm số cách lập số từ các chữ số cho trước.',example:'Ví dụ: Từ 1, 2, 3 lập được 6 số có 3 chữ số khác nhau.',gen:'genDemCachLapSo'}
+];
+
+function safeHint(qq){
+ const h={
+ 1:'Tách số thành từng hàng từ phải sang trái: đơn vị, chục, trăm, nghìn, chục nghìn...',
+ 2:'Số liền trước bớt 1; số liền sau thêm 1. Số chẵn có tận cùng 0,2,4,6,8.',
+ 3:'Muốn số lớn nhất, xếp chữ số lớn ở hàng cao. Muốn số nhỏ nhất, xếp chữ số nhỏ ở hàng cao nhưng hàng đầu không được là 0.',
+ 4:'Viết mỗi chữ số nhân với giá trị hàng của nó rồi cộng lại.',
+ 5:'So sánh số chữ số trước; nếu bằng nhau thì so sánh từ trái sang phải.',
+ 6:'Thay chữ bằng số đã cho, sau đó tính như biểu thức bình thường.',
+ 7:'Nhớ thứ tự: ngoặc trước, nhân/chia trước, cộng/trừ sau.',
+ 8:'Tìm hai số cộng lại được tròn trăm hoặc tròn nghìn để ghép trước.',
+ 9:'Làm ngược phép tính: cộng đổi thành trừ, trừ đổi thành cộng tùy vị trí x.',
+ 10:'Đặt các chữ số cùng hàng thẳng cột, tính từ phải sang trái.',
+ 11:'Nhớ 1 tấn = 1000 kg; 1 tạ = 100 kg; 1 yến = 10 kg; 1 kg = 1000 g.',
+ 12:'Nhớ 1 giờ = 60 phút; 1 phút = 60 giây; 1 thế kỉ = 100 năm.',
+ 13:'Nhớ 1 km = 1000 m; 1 m = 10 dm = 100 cm = 1000 mm.',
+ 14:'Với diện tích, mỗi bậc thường gấp/kém 100 lần: 1 m² = 100 dm².',
+ 15:'Tính tổng các số rồi chia cho số lượng số hạng.',
+ 16:'Tổng = trung bình cộng × số số hạng. Sau đó tìm số còn thiếu nếu cần.',
+ 17:'Số lớn = (tổng + hiệu) : 2; số bé = (tổng - hiệu) : 2.',
+ 18:'Hiệu tuổi không đổi theo thời gian; dùng tổng và hiệu để tìm tuổi.',
+ 19:'Nhân từ phải sang trái, nhớ khi tích từng hàng lớn hơn 9.',
+ 20:'Tận dụng 25 × 4 = 100, 125 × 8 = 1000, nhân với 10/100 thì thêm chữ số 0.',
+ 21:'Có thể kiểm tra phép chia bằng thương × số chia.',
+ 22:'Tìm bội lớn nhất của số chia không vượt quá số bị chia, phần còn lại là số dư.',
+ 23:'Dựa vào quan hệ: thừa số = tích : thừa số kia; số bị chia = thương × số chia.',
+ 24:'Tính trong ngoặc trước, sau đó làm nhân/chia rồi cộng/trừ.',
+ 25:'Lấy số sau trừ số trước để tìm khoảng cách của dãy.',
+ 26:'Công thức: (số cuối - số đầu) : khoảng cách + 1.',
+ 27:'Tính số số hạng trước, rồi dùng (đầu + cuối) × số số hạng : 2.',
+ 28:'Quan sát xem dãy cộng thêm, trừ đi, nhân lên hay xen kẽ quy luật nào.',
+ 29:'Trồng cả hai đầu: số cây = số khoảng + 1; trồng vòng tròn: số cây = số khoảng.',
+ 30:'Chia hết cho 2 xét chữ số tận cùng chẵn; cho 5 tận cùng 0 hoặc 5; cho 3/9 xét tổng chữ số.',
+ 31:'Tính tổng các chữ số đã biết rồi thử chữ số còn thiếu để tổng chia hết theo yêu cầu.',
+ 32:'Chỉ cần xét chữ số tận cùng qua từng phép nhân hoặc cộng.',
+ 33:'Dùng công thức số bị chia = số chia × thương + số dư.',
+ 34:'Hình chữ nhật: chu vi = (dài + rộng) × 2; diện tích = dài × rộng.',
+ 35:'Hình vuông: chu vi = cạnh × 4; diện tích = cạnh × cạnh.',
+ 36:'Xác định đề hỏi chu vi hay diện tích trước rồi mới chọn công thức.',
+ 37:'Tìm độ dài của chu kì lặp, sau đó lấy vị trí cần tìm chia cho độ dài chu kì để xét phần dư.',
+ 38:'Gạch chân câu hỏi cuối, sau đó tìm dữ kiện trung gian theo thứ tự.',
+ 39:'Gọi số cần tìm theo hàng chục/hàng đơn vị, dùng điều kiện để thử có hệ thống.',
+ 40:'Làm ngược từ kết quả cuối: cộng ↔ trừ, nhân ↔ chia.',
+ 41:'Tìm giá trị của 1 phần trước, sau đó nhân với số phần cần tìm.',
+ 42:'Nếu lập số có các chữ số khác nhau, mỗi vị trí có một số lựa chọn; nhân các số lựa chọn lại.'
+ };
+ return h[qq.topicId] || 'Đọc kỹ đề, xác định dạng bài rồi làm từng bước.';
+}
+
+const GEN = {
+ genHangLop(topic){let n=r(10000,999999), s=String(n), idx=r(0,s.length-1), names=['đơn vị','chục','trăm','nghìn','chục nghìn','trăm nghìn'];let pos=s.length-1-idx;return q(topic,`Trong số ${fmt(n)}, chữ số hàng ${names[pos]} là bao nhiêu?`,s[idx],'',safeHint({topicId:1}),`Số ${fmt(n)} có chữ số hàng ${names[pos]} là ${s[idx]}.`);},
+ genChanLeLien(topic){let n=r(1000,99999), mode=r(1,3); if(mode===1)return q(topic,`Số liền sau của ${fmt(n)} là bao nhiêu?`,n+1,'',safeHint({topicId:2}),`${fmt(n)} + 1 = ${fmt(n+1)}.`); if(mode===2)return q(topic,`Số liền trước của ${fmt(n)} là bao nhiêu?`,n-1,'',safeHint({topicId:2}),`${fmt(n)} - 1 = ${fmt(n-1)}.`); return q(topic,`Số ${fmt(n)} là số chẵn hay số lẻ? Nhập C nếu là chẵn, L nếu là lẻ.`,n%2===0?'C':'L','',safeHint({topicId:2}),`Chữ số tận cùng là ${String(n).slice(-1)}, nên số này là ${n%2===0?'chẵn':'lẻ'}.`,'text');},
+ genLapSo(topic){let ds=shuffle([r(1,9),r(0,9),r(0,9),r(0,9)]); while(new Set(ds).size<4){ds=shuffle([r(1,9),r(0,9),r(0,9),r(0,9)])} let mode=r(1,2); if(mode===1){let ans=Number(ds.slice().sort((a,b)=>b-a).join(''));return q(topic,`Từ các chữ số ${ds.join(', ')}, viết số lớn nhất có 4 chữ số khác nhau.`,ans,'',safeHint({topicId:3}),`Xếp các chữ số theo thứ tự giảm dần: ${ans}.`)} let arr=ds.slice().sort((a,b)=>a-b); if(arr[0]===0){let k=arr.findIndex(x=>x>0); [arr[0],arr[k]]=[arr[k],arr[0]]} let ans=Number(arr.join('')); return q(topic,`Từ các chữ số ${ds.join(', ')}, viết số nhỏ nhất có 4 chữ số khác nhau.`,ans,'',safeHint({topicId:3}),`Xếp tăng dần, chữ số đầu không được là 0: ${ans}.`);},
+ genPhanTichSo(topic){let n=r(10000,99999), a=Math.floor(n/10000), b=Math.floor(n/1000)%10, c=Math.floor(n/100)%10, d=Math.floor(n/10)%10, e=n%10; let ans=a*10000+b*1000+c*100+d*10+e; return q(topic,`Tính giá trị của biểu thức cấu tạo số: ${a}×10000 + ${b}×1000 + ${c}×100 + ${d}×10 + ${e}`,ans,'',safeHint({topicId:4}),`Biểu thức chính là phân tích của số ${fmt(ans)}.`);},
+ genSoSanhSo(topic){let a=r(10000,999999), b=r(10000,999999); return q(topic,`Điền dấu thích hợp: ${fmt(a)} □ ${fmt(b)}`,sign(a,b),'',safeHint({topicId:5}),`${fmt(a)} ${sign(a,b)} ${fmt(b)}.`,'text');},
+ genBieuThucChu(topic){let a=r(5,50), b=r(2,20), c=r(10,90), mode=r(1,2); if(mode===1)return q(topic,`Tính giá trị của biểu thức a × ${b} + ${c}, biết a = ${a}.`,a*b+c,'',safeHint({topicId:6}),`Thay a = ${a}: ${a} × ${b} + ${c} = ${a*b+c}.`); return q(topic,`Tính giá trị của biểu thức ${c} + a : ${b}, biết a = ${a*b}.`,c+a,'',safeHint({topicId:6}),`Thay a = ${a*b}: ${c} + ${a*b} : ${b} = ${c} + ${a} = ${c+a}.`);},
+ genGiaTriBieuThuc(topic){let a=r(100,900), b=r(3,9), c=r(20,80), d=r(2,8); let ans=a + b*c - d; return q(topic,`Tính: ${a} + ${b} × ${c} - ${d}`,ans,'',safeHint({topicId:7}),`Làm nhân trước: ${b} × ${c} = ${b*c}. Sau đó ${a} + ${b*c} - ${d} = ${ans}.`, 'number', true);},
+ genTinhNhanhCongTru(topic){let a=choice([125,250,375,625,750]), b=1000-a, c=r(100,900); let ans=a+b+c; return q(topic,`Tính bằng cách thuận tiện: ${a} + ${c} + ${b}`,ans,'',safeHint({topicId:8}),`Ghép ${a} + ${b} = 1000. Tổng là ${fmt(1000+c)}.`, 'number', true);},
+ genTimXCongTru(topic){let x=r(1000,5000), a=r(100,900), mode=r(1,3); if(mode===1)return q(topic,`Tìm x, biết: x + ${fmt(a)} = ${fmt(x+a)}`,x,'',safeHint({topicId:9}),`x = ${fmt(x+a)} - ${fmt(a)} = ${fmt(x)}.`,'number',true); if(mode===2)return q(topic,`Tìm x, biết: x - ${fmt(a)} = ${fmt(x-a)}`,x,'',safeHint({topicId:9}),`x = ${fmt(x-a)} + ${fmt(a)} = ${fmt(x)}.`,'number',true); return q(topic,`Tìm x, biết: ${fmt(x+a)} - x = ${fmt(a)}`,x,'',safeHint({topicId:9}),`x = ${fmt(x+a)} - ${fmt(a)} = ${fmt(x)}.`,'number',true);},
+ genCongTruNhieuChuSo(topic){let a=r(10000,900000), b=r(1000,90000); if(Math.random()<.5)return q(topic,`Tính: ${fmt(a)} + ${fmt(b)}`,a+b,'',safeHint({topicId:10}),`${fmt(a)} + ${fmt(b)} = ${fmt(a+b)}.`); if(a<b){let t=a;a=b;b=t} return q(topic,`Tính: ${fmt(a)} - ${fmt(b)}`,a-b,'',safeHint({topicId:10}),`${fmt(a)} - ${fmt(b)} = ${fmt(a-b)}.`);},
+ genKhoiLuong(topic){let mode=r(1,3); if(mode===1){let t=r(1,9);return q(topic,`${t} tấn bằng bao nhiêu ki-lô-gam?`,t*1000,'kg',safeHint({topicId:11}),`${t} tấn = ${t} × 1000 = ${t*1000} kg.`)} if(mode===2){let kg=r(2,20);return q(topic,`${kg} kg bằng bao nhiêu gam?`,kg*1000,'g',safeHint({topicId:11}),`${kg} kg = ${kg*1000} g.`)} let ta=r(1,9), yen=r(1,9); return q(topic,`${ta} tạ ${yen} yến bằng bao nhiêu ki-lô-gam?`,ta*100+yen*10,'kg',safeHint({topicId:11}),`${ta} tạ = ${ta*100} kg, ${yen} yến = ${yen*10} kg. Tổng là ${ta*100+yen*10} kg.`);},
+ genThoiGian(topic){let mode=r(1,3); if(mode===1){let h=r(2,8);return q(topic,`${h} giờ bằng bao nhiêu phút?`,h*60,'phút',safeHint({topicId:12}),`${h} × 60 = ${h*60} phút.`)} if(mode===2){let m=r(2,10);return q(topic,`${m} phút bằng bao nhiêu giây?`,m*60,'giây',safeHint({topicId:12}),`${m} × 60 = ${m*60} giây.`)} let c=r(2,8);return q(topic,`${c} thế kỉ bằng bao nhiêu năm?`,c*100,'năm',safeHint({topicId:12}),`${c} × 100 = ${c*100} năm.`);},
+ genDoDai(topic){let mode=r(1,3); if(mode===1){let km=r(2,15);return q(topic,`${km} km bằng bao nhiêu mét?`,km*1000,'m',safeHint({topicId:13}),`${km} km = ${km*1000} m.`)} if(mode===2){let m=r(2,30);return q(topic,`${m} m bằng bao nhiêu xăng-ti-mét?`,m*100,'cm',safeHint({topicId:13}),`${m} m = ${m*100} cm.`)} let m=r(1,12), cm=r(1,99); return q(topic,`${m} m ${cm} cm bằng bao nhiêu xăng-ti-mét?`,m*100+cm,'cm',safeHint({topicId:13}),`${m} m = ${m*100} cm; cộng thêm ${cm} cm được ${m*100+cm} cm.`);},
+ genDienTichDonVi(topic){let mode=r(1,2); if(mode===1){let m=r(1,20);return q(topic,`${m} m² bằng bao nhiêu dm²?`,m*100,'dm²',safeHint({topicId:14}),`${m} m² = ${m} × 100 = ${m*100} dm².`)} let dm=r(1,30);return q(topic,`${dm} dm² bằng bao nhiêu cm²?`,dm*100,'cm²',safeHint({topicId:14}),`${dm} dm² = ${dm*100} cm².`);},
+ genTBC(topic){let a=r(10,90), b=r(10,90), c=r(10,90); let s=a+b+c, rem=s%3; c+= (3-rem)%3; s=a+b+c; return q(topic,`Tìm trung bình cộng của ${a}, ${b}, ${c}.`,s/3,'',safeHint({topicId:15}),`Tổng là ${s}. Trung bình cộng là ${s} : 3 = ${s/3}.`);},
+ genTBCNguoc(topic){let avg=r(20,120), n=choice([3,4,5]); if(Math.random()<.5)return q(topic,`Trung bình cộng của ${n} số là ${avg}. Tổng của ${n} số đó là bao nhiêu?`,avg*n,'',safeHint({topicId:16}),`Tổng = ${avg} × ${n} = ${avg*n}.`); let a=avg-r(1,10), b=avg+r(1,10), c=avg*3-a-b; return q(topic,`Trung bình cộng của 3 số là ${avg}. Hai số đầu là ${a} và ${b}. Số thứ ba là bao nhiêu?`,c,'',safeHint({topicId:16}),`Tổng 3 số là ${avg} × 3 = ${avg*3}. Số thứ ba = ${avg*3} - ${a} - ${b} = ${c}.`, 'number', true);},
+ genTongHieu(topic){let small=r(20,300), diff=r(10,200), big=small+diff, total=small+big; return q(topic,`Tổng của hai số là ${total}, hiệu của hai số là ${diff}. Tìm số lớn.`,big,'',safeHint({topicId:17}),`Số lớn = (${total} + ${diff}) : 2 = ${big}.`, 'number', true);},
+ genTuoiTongHieu(topic){let em=r(6,18), diff=r(2,12), anh=em+diff, total=em+anh; return q(topic,`Tổng số tuổi của hai anh em là ${total} tuổi. Anh hơn em ${diff} tuổi. Hỏi em bao nhiêu tuổi?`,em,'tuổi',safeHint({topicId:18}),`Tuổi em = (${total} - ${diff}) : 2 = ${em} tuổi.`,'number',true);},
+ genNhanTuNhien(topic){let a=r(120,5000), b=r(2,9); return q(topic,`Tính: ${fmt(a)} × ${b}`,a*b,'',safeHint({topicId:19}),`${fmt(a)} × ${b} = ${fmt(a*b)}.`);},
+ genNhanNhanh(topic){let mode=r(1,3); if(mode===1){let a=r(12,999);return q(topic,`Tính nhẩm: ${a} × 100`,a*100,'',safeHint({topicId:20}),`Nhân với 100 thì thêm hai chữ số 0: ${fmt(a*100)}.`)} if(mode===2){let a=r(5,99);return q(topic,`Tính nhanh: 25 × 4 × ${a}`,100*a,'',safeHint({topicId:20}),`25 × 4 = 100, nên kết quả là ${100*a}.`,'number',true)} let a=r(2,30);return q(topic,`Tính nhanh: 125 × 8 × ${a}`,1000*a,'',safeHint({topicId:20}),`125 × 8 = 1000, nên kết quả là ${fmt(1000*a)}.`,'number',true);},
+ genChiaTuNhien(topic){let b=r(2,12), ans=r(100,2000), a=ans*b; return q(topic,`Tính: ${fmt(a)} : ${b}`,ans,'',safeHint({topicId:21}),`${fmt(a)} : ${b} = ${fmt(ans)}.`);},
+ genChiaDu(topic){let div=r(3,12), thuong=r(20,200), du=r(1,div-1), n=div*thuong+du; return q(topic,`${n} chia cho ${div} dư bao nhiêu?`,du,'',safeHint({topicId:22}),`${n} = ${div} × ${thuong} + ${du}, nên số dư là ${du}.`);},
+ genTimXNChia(topic){let mode=r(1,3); if(mode===1){let x=r(10,300), a=r(2,9);return q(topic,`Tìm x, biết: x × ${a} = ${x*a}`,x,'',safeHint({topicId:23}),`x = ${x*a} : ${a} = ${x}.`,'number',true)} if(mode===2){let x=r(100,5000), a=r(2,20);return q(topic,`Tìm x, biết: x : ${a} = ${Math.floor(x/a)}. Biết x chia hết cho ${a}.`,Math.floor(x/a)*a,'',safeHint({topicId:23}),`Số bị chia = thương × số chia = ${Math.floor(x/a)} × ${a} = ${Math.floor(x/a)*a}.`,'number',true)} let a=r(2,12), b=r(10,200);return q(topic,`Tìm x, biết: ${a*b} : x = ${a}`,b,'',safeHint({topicId:23}),`x = ${a*b} : ${a} = ${b}.`,'number',true);},
+ genBieuThucNhieuBuoc(topic){let a=r(50,300), b=r(20,200), c=r(2,10), d=r(10,100); let ans=(a+b)*c-d; return q(topic,`Tính: (${a} + ${b}) × ${c} - ${d}`,ans,'',safeHint({topicId:24}),`Trong ngoặc: ${a}+${b}=${a+b}. Nhân ${c} rồi trừ ${d}: ${ans}.`,'number',true);},
+ genDaySoTiep(topic){let start=r(2,50), step=r(2,15); let arr=[start,start+step,start+2*step,start+3*step]; return q(topic,`Điền số tiếp theo: ${arr.join(', ')}, ...`,start+4*step,'',safeHint({topicId:25}),`Dãy tăng đều ${step} đơn vị, số tiếp theo là ${start+4*step}.`);},
+ genSoSoHang(topic){let start=r(1,20), step=r(2,10), count=r(5,20), end=start+step*(count-1); return q(topic,`Dãy số ${start}, ${start+step}, ${start+2*step}, ..., ${end} có bao nhiêu số hạng?`,count,'',safeHint({topicId:26}),`Số số hạng = (${end} - ${start}) : ${step} + 1 = ${count}.`,'number',true);},
+ genTongDay(topic){let start=r(1,20), step=r(1,5), count=r(5,15), end=start+step*(count-1), sum=(start+end)*count/2; return q(topic,`Tính tổng dãy: ${start} + ${start+step} + ${start+2*step} + ... + ${end}`,sum,'',safeHint({topicId:27}),`Có ${count} số hạng. Tổng = (${start} + ${end}) × ${count} : 2 = ${sum}.`,'number',true);},
+ genQuyLuat(topic){let mode=r(1,2); if(mode===1){let start=r(2,9), mul=r(2,4);let arr=[start,start*mul,start*mul*mul,start*mul*mul*mul];return q(topic,`Điền số tiếp theo: ${arr.join(', ')}, ...`,arr[3]*mul,'',safeHint({topicId:28}),`Mỗi số gấp ${mul} lần số trước, nên số tiếp theo là ${arr[3]*mul}.`)} let a=r(1,10), b=r(2,8); let arr=[a,a+b,a+b*3,a+b*6]; return q(topic,`Điền số tiếp theo: ${arr.join(', ')}, ...`,a+b*10,'',safeHint({topicId:28}),`Khoảng cách tăng dần: +${b}, +${2*b}, +${3*b}, nên tiếp theo +${4*b}.`,'number',true);},
+ genTrongCay(topic){let kc=r(2,10), khoang=r(5,20), dai=kc*khoang, mode=r(1,2); if(mode===1)return q(topic,`Một đoạn đường dài ${dai} m, cứ ${kc} m trồng 1 cây ở cả hai đầu. Hỏi trồng được bao nhiêu cây?`,khoang+1,'cây',safeHint({topicId:29}),`Số khoảng = ${dai} : ${kc} = ${khoang}. Trồng cả hai đầu nên số cây = ${khoang} + 1 = ${khoang+1}.`,'number',true); return q(topic,`Một vòng tròn dài ${dai} m, cứ ${kc} m trồng 1 cây. Hỏi trồng được bao nhiêu cây?`,khoang,'cây',safeHint({topicId:29}),`Trồng vòng tròn thì số cây bằng số khoảng: ${dai} : ${kc} = ${khoang}.`,'number',true);},
+ genDauHieuChiaHet(topic){let n=r(100,9999), d=choice([2,3,5,9]); let ok=n%d===0?'C':'K'; return q(topic,`Số ${n} có chia hết cho ${d} không? Nhập C nếu có, K nếu không.`,ok,'',safeHint({topicId:30}),`Kiểm tra theo dấu hiệu chia hết: ${n} ${ok==='C'?'chia hết':'không chia hết'} cho ${d}.`,'text');},
+ genDienChuSoChiaHet(topic){let a=r(1,9), b=r(0,9), d=choice([3,9]); let digits=[]; for(let x=0;x<=9;x++){if((a+b+x)%d===0)digits.push(x)} let ans=digits[0]; return q(topic,`Điền một chữ số vào □ để số ${a}${b}□ chia hết cho ${d}. Nhập chữ số nhỏ nhất có thể.`,ans,'',safeHint({topicId:31}),`Tổng các chữ số đã biết là ${a+b}. Thử chữ số nhỏ nhất để tổng chia hết cho ${d}, được ${ans}.`,'number',true);},
+ genTanCung(topic){let a=r(2,9), b=r(2,9), c=r(2,9), ans=(a*b*c)%10; return q(topic,`Tìm chữ số tận cùng của tích ${a} × ${b} × ${c}.`,ans,'',safeHint({topicId:32}),`Chỉ xét chữ số tận cùng: ${a} × ${b} × ${c} = ${a*b*c}, tận cùng là ${ans}.`);},
+ genChiaDuNangCao(topic){let div=r(4,12), rem=r(1,div-1), thuong=r(50,200), n=div*thuong+rem; return q(topic,`Một số chia cho ${div} được thương là ${thuong} và số dư là ${rem}. Tìm số đó.`,n,'',safeHint({topicId:33}),`Số đó = ${div} × ${thuong} + ${rem} = ${n}.`);},
+ genHCN(topic){let d=r(8,30), w=r(3,d-1), mode=r(1,2); if(mode===1)return q(topic,`Hình chữ nhật có chiều dài ${d} cm, chiều rộng ${w} cm. Tính chu vi hình chữ nhật.`,(d+w)*2,'cm',safeHint({topicId:34}),`Chu vi = (${d} + ${w}) × 2 = ${(d+w)*2} cm.`); return q(topic,`Hình chữ nhật có chiều dài ${d} cm, chiều rộng ${w} cm. Tính diện tích hình chữ nhật.`,d*w,'cm²',safeHint({topicId:34}),`Diện tích = ${d} × ${w} = ${d*w} cm².`);},
+ genHV(topic){let a=r(4,25), mode=r(1,2); if(mode===1)return q(topic,`Hình vuông có cạnh ${a} cm. Tính chu vi hình vuông.`,a*4,'cm',safeHint({topicId:35}),`Chu vi = ${a} × 4 = ${a*4} cm.`); return q(topic,`Hình vuông có cạnh ${a} cm. Tính diện tích hình vuông.`,a*a,'cm²',safeHint({topicId:35}),`Diện tích = ${a} × ${a} = ${a*a} cm².`);},
+ genHinhHocLoiVan(topic){let d=r(8,25), w=r(5,d-2), price=choice([2,3,4,5]); return q(topic,`Một mảnh vườn hình chữ nhật dài ${d} m, rộng ${w} m. Mỗi mét vuông thu được ${price} kg rau. Hỏi cả mảnh vườn thu được bao nhiêu kg rau?`,d*w*price,'kg',safeHint({topicId:36}),`Diện tích vườn = ${d} × ${w} = ${d*w} m². Số rau = ${d*w} × ${price} = ${d*w*price} kg.`,'number',true);},
+ genChuCai(topic){let seq=choice(['TOAN','VIETNAM','HOCTOT','ABCD']); let pos=r(seq.length*3+1, seq.length*15); let ch=seq[(pos-1)%seq.length]; return q(topic,`Viết lặp lại dãy chữ ${seq} thành một dãy dài. Chữ cái ở vị trí thứ ${pos} là chữ gì?`,ch,'',safeHint({topicId:37}),`Dãy có chu kì ${seq.length}. Vị trí ${pos} ứng với chữ ${ch}.`,'text',true);},
+ genLoiVanNhieuBuoc(topic){let start=r(200,900), sold1=r(50,150), sold2=r(30,150); return q(topic,`Một cửa hàng có ${start} quyển vở. Buổi sáng bán ${sold1} quyển, buổi chiều bán ${sold2} quyển. Hỏi cửa hàng còn lại bao nhiêu quyển vở?`,start-sold1-sold2,'quyển',safeHint({topicId:38}),`Còn lại = ${start} - ${sold1} - ${sold2} = ${start-sold1-sold2} quyển.`);},
+ genTimSoChuSo(topic){let tens=r(1,9), ones=r(0,9), n=tens*10+ones, total=tens+ones; return q(topic,`Tìm số có hai chữ số, biết chữ số hàng chục là ${tens} và tổng hai chữ số là ${total}.`,n,'',safeHint({topicId:39}),`Chữ số hàng đơn vị = ${total} - ${tens} = ${ones}. Số cần tìm là ${n}.`,'number',true);},
+ genTinhNguoc(topic){let x=r(5,60), a=r(2,5), b=r(5,40), result=x*a+b; return q(topic,`Một số sau khi gấp ${a} lần rồi cộng thêm ${b} thì được ${result}. Tìm số ban đầu.`,x,'',safeHint({topicId:40}),`Làm ngược: (${result} - ${b}) : ${a} = ${x}.`,'number',true);},
+ genRutDonVi(topic){let unit=r(3000,15000), n=r(3,9), m=r(2,12), total=unit*n; return q(topic,`${n} quyển vở giá ${fmt(total)} đồng. Hỏi ${m} quyển vở như thế giá bao nhiêu đồng?`,unit*m,'đồng',safeHint({topicId:41}),`Một quyển giá ${fmt(total)} : ${n} = ${fmt(unit)} đồng. ${m} quyển giá ${fmt(unit*m)} đồng.`,'number',true);},
+ genDemCachLapSo(topic){let ds=shuffle([r(1,9),r(0,9),r(0,9),r(0,9)]); while(new Set(ds).size<4){ds=shuffle([r(1,9),r(0,9),r(0,9),r(0,9)])} let ans=ds.includes(0)? (3*3*2):(4*3*2); return q(topic,`Từ các chữ số ${ds.join(', ')}, lập được bao nhiêu số có 3 chữ số khác nhau?`,ans,'số',safeHint({topicId:42}),`${ds.includes(0)?'Có chữ số 0 nên hàng trăm có 3 cách; hai hàng sau còn 3 và 2 cách.':'Không có chữ số 0 nên có 4 × 3 × 2 cách.'} Kết quả là ${ans}.`,'number',true);}
+};
+
+function renderTopics(){
+ const box=document.getElementById('topicGrid');
+ box.innerHTML = TOPICS.map(t=>`<div class="topic-card"><b>${t.id}. ${esc(t.title)}</b><span>${esc(t.desc)}</span><div class="topic-example"><b>Ví dụ:</b> ${esc(t.example)}</div></div>`).join('');
+}
+function showTab(id){
+ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+}
+function showTest(){showTab('test')}
+function pickTopics(){
+ const order=['number','calc','word','measure','sequence','divisibility','geometry','calc','number','word','measure','sequence','calc','divisibility','mixed'];
+ const used=new Set(); const picked=[];
+ for(const g of order){
+   let pool=TOPICS.filter(t=>t.group===g && !used.has(t.id));
+   if(!pool.length) pool=TOPICS.filter(t=>!used.has(t.id));
+   const t=choice(pool); used.add(t.id); picked.push(t);
+ }
+ return picked;
+}
+function newTest(){
+ currentQuestions = pickTopics().map(t=>GEN[t.gen](t));
+ alreadySubmitted=false; secondsLeft=60*60; startTimer(); renderQuestions(); document.getElementById('lastScore').textContent='Chưa chấm'; showTest();
+}
+function startTimer(){
+ if(timerHandle) clearInterval(timerHandle);
+ updateTimer();
+ timerHandle=setInterval(()=>{secondsLeft--; updateTimer(); if(secondsLeft<=0){clearInterval(timerHandle); submitTest(true)}},1000);
+}
+function updateTimer(){
+ const m=Math.max(0,Math.floor(secondsLeft/60)), s=Math.max(0,secondsLeft%60);
+ const el=document.getElementById('timer'); if(!el) return;
+ el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+ el.classList.toggle('danger', secondsLeft<=5*60);
+}
+function renderQuestions(){
+ const box=document.getElementById('questions');
+ document.getElementById('qCount').textContent=currentQuestions.length;
+ box.innerHTML = currentQuestions.map((qq,i)=>`
+  <div class="question" data-index="${i}">
+   <div class="qtop"><b>Câu ${i+1}</b><span class="badge">${esc(qq.topicTitle)}${qq.hard?' · Khó':''}</span></div>
+   <div class="qtext">${esc(qq.question)}</div>
+   <div class="answer-row"><input class="answer" id="ans_${i}" autocomplete="off" placeholder="Nhập đáp án"><span class="unit">${esc(qq.unit)}</span></div>
+   <details><summary>Xem gợi ý</summary><div>${esc(qq.hint)}</div><div class="hint-example">Gợi ý này không dùng số của câu đang làm; hãy làm theo phương pháp, chưa xem đáp án.</div></details>
+   <div class="result" id="res_${i}"></div>
+  </div>`).join('');
+}
+function submitTest(auto=false){
+ if(alreadySubmitted) return;
+ alreadySubmitted=true; if(timerHandle) clearInterval(timerHandle);
+ let correct=0; const wrong=[];
+ currentQuestions.forEach((qq,i)=>{
+   const input=document.getElementById('ans_'+i); const val=input?input.value:'';
+   const ok=isCorrect(val, qq.answer); if(ok) correct++;
+   const res=document.getElementById('res_'+i);
+   if(res){res.innerHTML = ok ? `<span class="ok">Đúng</span>` : `<span class="wrong">Sai</span><div class="solution">Đáp án đúng: <b>${esc(qq.answer)} ${esc(qq.unit)}</b><br>${esc(qq.solution)}</div>`;}
+   if(!ok) wrong.push({no:i+1, topic:qq.topicTitle, question:qq.question, userAnswer:val, correctAnswer:qq.answer, unit:qq.unit, solution:qq.solution});
+ });
+ const score = Math.round(correct/currentQuestions.length*100)/10;
+ document.getElementById('lastScore').textContent=`${correct}/${currentQuestions.length} (${score} điểm)`;
+ saveHistory({time:new Date().toLocaleString('vi-VN'), score, correct, total:currentQuestions.length, auto, wrong});
+}
+function saveHistory(item){
+ let h=[]; try{h=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){}
+ h.unshift(item); h=h.slice(0,50); localStorage.setItem(STORAGE_KEY,JSON.stringify(h));
+}
+function renderHistory(){
+ const box=document.getElementById('historyList'); let h=[]; try{h=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){}
+ if(!h.length){box.innerHTML='<div class="card">Chưa có lịch sử làm bài.</div>';return;}
+ box.innerHTML=h.map((it,idx)=>`<div class="history-item"><b>Lần ${idx+1}: ${esc(it.time)}</b><div>Điểm: <b>${it.correct}/${it.total}</b> (${it.score} điểm) ${it.auto?'· Tự chấm khi hết giờ':''}</div>${it.wrong.length?`<details><summary>Xem ${it.wrong.length} câu sai</summary>${it.wrong.map(w=>`<div class="wrong-box"><b>Câu ${w.no} · ${esc(w.topic)}</b><br>Đề bài: ${esc(w.question)}<br>Bài làm: <b>${esc(w.userAnswer||'(chưa nhập)')}</b><br>Đáp án đúng: <b>${esc(w.correctAnswer)} ${esc(w.unit)}</b><br>${esc(w.solution)}</div>`).join('')}</details>`:'<div class="ok">Không có câu sai.</div>'}</div>`).join('');
+}
+function clearHistory(){
+ if(confirm('Xóa toàn bộ lịch sử làm bài trên trình duyệt này?')){localStorage.removeItem(STORAGE_KEY); renderHistory();}
+}
+if(typeof document!=='undefined'){
+ window.addEventListener('DOMContentLoaded',()=>{renderTopics(); newTest();});
+}
+if(typeof module!=='undefined') module.exports={TOPICS,GEN,pickTopics,isCorrect};
+</script>
+</body>
+</html>
