@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>App Quản Lý Gia Công HEV V7</title>
-    <!-- Nhúng thư viện xử lý file Excel chuẩn -->
+    <title>App Quản Lý Gia Công HEV V8 (1000 Data)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -45,7 +44,6 @@
         .btn-danger { background: var(--danger); color: white; }
         .btn-success { background: var(--success); color: white; }
 
-        /* TỔNG HỢP & BÁO CÁO */
         .summary-view { display: none; background: var(--surface); padding: 20px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .sum-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-top: 15px; }
         .s-card { padding: 15px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
@@ -57,7 +55,6 @@
         .facility-table th, .facility-table td { padding: 10px; border-bottom: 1px solid var(--border); text-align: left; font-size: 13px; }
         .facility-table th { background: #f8fafc; color: var(--text-muted); }
 
-        /* BẢNG & THẺ */
         .desktop-view { background: var(--surface); border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden; display: table; width: 100%; border-collapse: collapse; }
         .desktop-view th, .desktop-view td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; }
         .desktop-view th { background: #f1f5f9; color: var(--text-muted); font-weight: 600; font-size: 13px; }
@@ -104,13 +101,19 @@
 
 <div id="loginView" class="login-screen">
     <div class="login-box">
-        <h2 style="margin-bottom: 25px; color: var(--primary); text-align: center;">Hệ Thống HEV V7</h2>
+        <h2 style="margin-bottom: 25px; color: var(--primary); text-align: center;">Hệ Thống HEV (1000 Data)</h2>
         <div class="form-group" style="text-align: left;">
             <label>Chọn tài khoản truy cập:</label>
             <select id="roleSelect">
                 <option value="ADMIN">👑 Quản trị viên (Admin)</option>
                 <option value="F0040">🏭 Tổ thợ F0040</option>
                 <option value="F0041">🏭 Tổ thợ F0041</option>
+                <option value="F0042">🏭 Tổ thợ F0042</option>
+                <option value="F0043">🏭 Tổ thợ F0043</option>
+                <option value="F0044">🏭 Tổ thợ F0044</option>
+                <option value="F0045">🏭 Tổ thợ F0045</option>
+                <option value="F0046">🏭 Tổ thợ F0046</option>
+                <option value="F0047">🏭 Tổ thợ F0047</option>
             </select>
         </div>
         <button class="btn btn-primary" style="width: 100%; padding: 12px; justify-content: center;" onclick="login()">Đăng Nhập</button>
@@ -147,6 +150,12 @@
                         <option value="ALL">🏢 Cơ sở</option>
                         <option value="F0040">F0040</option>
                         <option value="F0041">F0041</option>
+                        <option value="F0042">F0042</option>
+                        <option value="F0043">F0043</option>
+                        <option value="F0044">F0044</option>
+                        <option value="F0045">F0045</option>
+                        <option value="F0046">F0046</option>
+                        <option value="F0047">F0047</option>
                     </select>
                 </div>
                 <div class="time-filters">
@@ -176,11 +185,11 @@
 
         <!-- VÙNG TỔNG HỢP VÀ CÔNG CỤ NHẬP/XUẤT (Chỉ Admin) -->
         <div id="summaryArea" class="summary-view">
-            <!-- Công cụ Nhập Xuất Gọn Gàng Ở Đây -->
             <div class="toolbar" style="background: #e0f2fe; border: 1px dashed #0284c7;">
                 <input type="file" id="excelUpload" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleExcelUpload(event)">
                 <button class="btn btn-primary" onclick="document.getElementById('excelUpload').click()">📥 Nhập File Excel</button>
                 <button class="btn btn-success" onclick="openExportModal()">📤 Xuất Báo Cáo Excel</button>
+                <button class="btn btn-warning" onclick="resetSampleData()" title="Sinh lại 1000 dữ liệu">🔄 Tạo lại 1000 mẫu</button>
             </div>
 
             <h3 style="color: var(--primary); margin-bottom: 15px; margin-top: 20px;">📊 TỔNG HỢP TỈ LỆ NỢ CHUNG</h3>
@@ -211,7 +220,6 @@
                 <div class="progress-bar" id="debtProgressBar" style="width: 0%;">0%</div>
             </div>
 
-            <!-- BẢNG TỈ LỆ NỢ THEO TỪNG CƠ SỞ -->
             <h3 style="color: var(--primary); margin-bottom: 10px; margin-top: 30px;">🏢 CHI TIẾT THEO TỪNG CƠ SỞ</h3>
             <div style="overflow-x: auto;">
                 <table class="facility-table">
@@ -224,9 +232,7 @@
                             <th>Tỉ Lệ Nợ</th>
                         </tr>
                     </thead>
-                    <tbody id="facilitySummaryBody">
-                        <!-- Render by JS -->
-                    </tbody>
+                    <tbody id="facilitySummaryBody"></tbody>
                 </table>
             </div>
         </div>
@@ -290,20 +296,74 @@
         return `${d}/${m}/${y}`;
     }
 
+    // TỰ ĐỘNG SINH 1000 DỮ LIỆU MẪU - 8 CƠ SỞ
+    function generateSampleData() {
+        const generated = [];
+        const facilities = ["F0040", "F0041", "F0042", "F0043", "F0044", "F0045", "F0046", "F0047"];
+        const products = [
+            "CON-0048-011-US-4808T", "D00ASM001-FULL", "AWW014ACKKC0", 
+            "HEV-WIRE-MAIN", "HEV-PIN-ASSY", "CAB-SENSOR-X", "BATT-CABLE-3P",
+            "POW-CORD-5M", "TERM-RING-04", "SHIELD-TAPE-B"
+        ];
+        const statuses = ["PENDING", "PENDING", "DONE", "DEBT"];
+
+        for(let i = 1; i <= 1000; i++) {
+            let status = statuses[Math.floor(Math.random() * statuses.length)];
+            let d = new Date(TODAY);
+            // Random khoảng 40 ngày (trước 20, sau 20 ngày)
+            d.setDate(d.getDate() + (Math.floor(Math.random() * 40) - 20)); 
+            let dateStr = d.toISOString().split('T')[0];
+
+            let qty = Math.floor(Math.random() * 50) * 100 + 500;
+            let debtQty = 0;
+            let debtDate = "";
+
+            if(status === 'DEBT') {
+                debtQty = Math.floor(Math.random() * (qty - 100)) + 50;
+                let dd = new Date(d);
+                dd.setDate(dd.getDate() + 3);
+                debtDate = dd.toISOString().split('T')[0];
+            }
+
+            generated.push({
+                id: i,
+                facility: facilities[i % facilities.length],
+                code: products[Math.floor(Math.random() * products.length)],
+                lot: `US26-${1000 + i}`,
+                qty: qty,
+                date: dateStr,
+                status: status,
+                debtQty: debtQty,
+                debtDate: debtDate
+            });
+        }
+        return generated;
+    }
+
     function initData() {
-        const savedData = localStorage.getItem('hevLotsDataV7');
+        // Đổi tên key để reset sạch sẽ dữ liệu cũ
+        const savedData = localStorage.getItem('hevLotsDataV8_1000');
         if (savedData) { lotsData = JSON.parse(savedData); } 
         else {
-            lotsData = [
-                { id: 1, facility: "F0040", code: "CON-0048-011", lot: "US261302-10", qty: 8000, date: "2026-10-01", status: "DONE", debtQty: 0, debtDate: "" },
-                { id: 2, facility: "F0040", code: "D00ASM001", lot: "BV264744-04", qty: 7000, date: "2026-10-05", status: "DEBT", debtQty: 2000, debtDate: "2026-10-08" },
-                { id: 3, facility: "F0041", code: "AWW014ACKKC0", lot: "PW265509-01", qty: 4000, date: "2026-10-06", status: "PENDING", debtQty: 0, debtDate: "" }
-            ];
+            lotsData = generateSampleData();
             saveData();
         }
     }
 
-    function saveData() { localStorage.setItem('hevLotsDataV7', JSON.stringify(lotsData)); }
+    function saveData() { localStorage.setItem('hevLotsDataV8_1000', JSON.stringify(lotsData)); }
+
+    function resetSampleData() {
+        if(confirm("Làm mới lại toàn bộ 1000 dữ liệu ngẫu nhiên của 8 cơ sở?")) {
+            lotsData = generateSampleData();
+            saveData();
+            if(currentTab === 'SUMMARY') {
+                renderSummary('ALL', document.querySelector('#summaryArea .time-btn'));
+            } else {
+                renderTable();
+            }
+            alert("Đã khởi tạo thành công 1000 dữ liệu mới!");
+        }
+    }
 
     function getWeekRange(offset = 0) {
         let curr = new Date(TODAY); 
@@ -361,7 +421,7 @@
         if (status === 'SUMMARY') {
             document.getElementById('dataArea').classList.add('hidden');
             document.getElementById('summaryArea').style.display = 'block';
-            renderSummary('ALL', document.querySelector('#summaryArea .time-btn')); // Default to ALL in summary
+            renderSummary('ALL', document.querySelector('#summaryArea .time-btn')); 
         } else {
             document.getElementById('dataArea').classList.remove('hidden');
             document.getElementById('summaryArea').style.display = 'none';
@@ -376,6 +436,7 @@
         renderTable();
     }
 
+    // TỐI ƯU RENDER 1000 ITEMS
     function renderTable() {
         const search = document.getElementById('searchInput').value.toLowerCase();
         const facFilter = document.getElementById('facilityFilter').value;
@@ -388,6 +449,10 @@
         document.querySelectorAll('.col-chk').forEach(el => {
             (isDeleteMode && currentUser === 'ADMIN') ? el.classList.remove('hidden') : el.classList.add('hidden');
         });
+
+        // Tối ưu DOM: gom thẻ vào Fragment để tăng tốc vẽ 1000 dòng
+        const dFrag = document.createDocumentFragment();
+        const mFrag = document.createDocumentFragment();
 
         lotsData.forEach(item => {
             if (currentUser !== 'ADMIN' && item.facility !== currentUser) return;
@@ -412,7 +477,7 @@
                 statusBadge = `<span class="text-success">✅ Đã xong</span>`; actionBtn = `<span style="color:var(--text-muted)">Đã lưu</span>`;
                 mobileBgClass = "m-status-done"; labelText = "Đạt"; valText = item.qty.toLocaleString();
             } else if (item.status === 'DEBT') {
-                statusBadge = `<span class="text-danger">⚠️️ Đang Nợ</span>`; actionBtn = `<button class="btn btn-warning" onclick="openModal(${item.id})">Sửa Nợ</button>`;
+                statusBadge = `<span class="text-danger">⚠ Đang Nợ</span>`; actionBtn = `<button class="btn btn-warning" onclick="openModal(${item.id})">Sửa Nợ</button>`;
                 debtDisplayDesktop = `<br><span class="text-danger">Nợ: ${item.debtQty.toLocaleString()}</span>`; dateDisplayDesktop += `<br><span class="text-danger">Trả Nợ: ${formatDate(item.debtDate)}</span>`;
                 mobileBgClass = "m-status-debt"; labelText = "Nợ"; valText = item.debtQty.toLocaleString(); dateVal = formatDate(item.debtDate);
             } else {
@@ -432,7 +497,7 @@
                 <td>${statusBadge}</td>
                 <td>${actionBtn}</td>
             `;
-            desktopBody.appendChild(tr);
+            dFrag.appendChild(tr);
 
             const mobileCard = document.createElement('div');
             mobileCard.className = `m-card ${mobileBgClass} ${isAdmin && isDeleteMode ? 'has-chk' : ''}`;
@@ -444,13 +509,14 @@
                 <div class="m-row"><div class="m-code">${item.code}</div><div class="m-date ${isOverdue ? 'text-danger' : ''}">${dateVal}</div></div>
                 <div class="m-row"><div class="m-lot">${item.lot}</div><div class="m-qty"><span>${labelText}</span> <strong>${valText}</strong></div></div>
             `;
-            mobileList.appendChild(mobileCard);
+            mFrag.appendChild(mobileCard);
         });
 
+        desktopBody.appendChild(dFrag);
+        mobileList.appendChild(mFrag);
         document.getElementById('debtCount').innerText = debtCount > 0 ? `(${debtCount})` : "";
     }
 
-    // TỔNG HỢP & BÁO CÁO NHÓM THEO CƠ SỞ
     function renderSummary(mode, el) {
         document.querySelectorAll('#summaryArea .time-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
@@ -460,7 +526,6 @@
 
         lotsData.forEach(item => {
             if(isDateMatch(item.date, mode)) {
-                // 1. Tính tổng toàn bộ
                 totalQty += item.qty;
                 if(item.status === 'DONE') totalDone += item.qty;
                 else if(item.status === 'DEBT') {
@@ -468,22 +533,16 @@
                     totalDone += (item.qty - item.debtQty); 
                 }
 
-                // 2. Tính tổng nhóm theo từng Cơ Sở
-                if(!facilityStats[item.facility]) {
-                    facilityStats[item.facility] = { total: 0, done: 0, debt: 0 };
-                }
+                if(!facilityStats[item.facility]) { facilityStats[item.facility] = { total: 0, done: 0, debt: 0 }; }
                 facilityStats[item.facility].total += item.qty;
-                
-                if(item.status === 'DONE') {
-                    facilityStats[item.facility].done += item.qty;
-                } else if(item.status === 'DEBT') {
+                if(item.status === 'DONE') { facilityStats[item.facility].done += item.qty; } 
+                else if(item.status === 'DEBT') {
                     facilityStats[item.facility].debt += item.debtQty;
                     facilityStats[item.facility].done += (item.qty - item.debtQty);
                 }
             }
         });
 
-        // Đổ dữ liệu Tổng quan
         document.getElementById('sumTotal').innerText = totalQty.toLocaleString();
         document.getElementById('sumDone').innerText = totalDone.toLocaleString();
         document.getElementById('sumDebt').innerText = totalDebt.toLocaleString();
@@ -493,14 +552,13 @@
         let pBar = document.getElementById('debtProgressBar');
         pBar.style.width = percent + "%"; pBar.innerText = percent > 5 ? percent + "%" : "";
 
-        // Đổ dữ liệu Chi tiết theo Cơ sở
         const facBody = document.getElementById('facilitySummaryBody');
         facBody.innerHTML = '';
         
-        for (let fac in facilityStats) {
+        let facArray = Object.keys(facilityStats).sort(); // Sort tên cơ sở A-Z
+        for (let fac of facArray) {
             let stat = facilityStats[fac];
             let facPercent = stat.total === 0 ? 0 : Math.round((stat.debt / stat.total) * 100);
-            
             let colorClass = facPercent > 0 ? "var(--danger)" : "var(--success)";
             
             facBody.innerHTML += `
@@ -514,12 +572,11 @@
             `;
         }
         
-        if (Object.keys(facilityStats).length === 0) {
+        if (facArray.length === 0) {
             facBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Không có dữ liệu trong thời gian này</td></tr>`;
         }
     }
 
-    // CHỨC NĂNG XÓA
     function toggleDeleteMode() {
         isDeleteMode = !isDeleteMode;
         document.getElementById('btnToggleDelete').classList.toggle('btn-outline');
@@ -542,7 +599,6 @@
         }
     }
 
-    // NHẬP EXCEL
     function handleExcelUpload(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -584,19 +640,14 @@
             });
             
             saveData(); 
-            // Nếu đang ở tab Tổng Hợp thì render lại tab Tổng Hợp
-            if(currentTab === 'SUMMARY') {
-                renderSummary('ALL', document.querySelector('#summaryArea .time-btn'));
-            } else {
-                renderTable();
-            }
+            if(currentTab === 'SUMMARY') { renderSummary('ALL', document.querySelector('#summaryArea .time-btn')); } 
+            else { renderTable(); }
             alert(`Nhập Excel thành công!\n- Đã thêm mới: ${added} lô\n- Cập nhật số lượng: ${updated} lô trùng.`);
             document.getElementById('excelUpload').value = ""; 
         };
         reader.readAsArrayBuffer(file);
     }
 
-    // XUẤT EXCEL
     function openExportModal() { document.getElementById('exportModal').style.display = 'flex'; }
     
     function executeExport() {
@@ -619,7 +670,6 @@
         closeModal('exportModal');
     }
 
-    // MODAL BÁO CÁO
     function openModal(id) {
         if(isDeleteMode) return; 
         const item = lotsData.find(x => x.id === id);
