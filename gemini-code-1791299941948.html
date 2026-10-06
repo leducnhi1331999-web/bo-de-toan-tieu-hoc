@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>App Quản Lý Gia Công HEV V7</title>
+    <!-- Nhúng thư viện xử lý file Excel chuẩn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary: #0284c7; --primary-hover: #0369a1; 
+            --success: #16a34a; --warning: #d97706; --danger: #dc2626;
+            --bg: #f8fafc; --surface: #ffffff; 
+            --text: #0f172a; --text-muted: #64748b; --border: #cbd5e1;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); font-size: 14px; -webkit-tap-highlight-color: transparent; }
+        
+        .topbar { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 40; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .topbar h2 { font-size: 16px; margin: 0; font-weight: 600; }
+        .btn-logout { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+
+        .tabs { display: flex; background: var(--surface); border-radius: 10px; overflow: hidden; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .tab-btn { flex: 1; padding: 12px 2px; text-align: center; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; font-size: 12px; }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: #f0f9ff; }
+
+        .filter-card { background: var(--surface); padding: 15px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 15px; display: flex; gap: 10px; flex-direction: column; }
+        .search-row { display: flex; gap: 10px; width: 100%; }
+        .search-row input, .search-row select { padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; }
+        .search-row input { flex: 1; }
+        
+        .time-filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
+        .time-filters::-webkit-scrollbar { display: none; }
+        .time-btn { padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .time-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; padding: 10px; background: #f1f5f9; border-radius: 8px; }
+        
+        .btn { padding: 8px 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; text-align: center; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-outline { background: white; border: 1px solid var(--border); color: var(--text); }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-success { background: var(--success); color: white; }
+
+        /* TỔNG HỢP & BÁO CÁO */
+        .summary-view { display: none; background: var(--surface); padding: 20px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .sum-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-top: 15px; }
+        .s-card { padding: 15px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
+        .s-card h4 { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; }
+        .s-card .s-val { font-size: 24px; font-weight: bold; color: var(--text); }
+        .progress-container { width: 100%; height: 20px; background: #fee2e2; border-radius: 10px; overflow: hidden; margin-top: 15px; }
+        .progress-bar { height: 100%; background: var(--danger); display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: bold; transition: width 0.5s; }
+        .facility-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .facility-table th, .facility-table td { padding: 10px; border-bottom: 1px solid var(--border); text-align: left; font-size: 13px; }
+        .facility-table th { background: #f8fafc; color: var(--text-muted); }
+
+        /* BẢNG & THẺ */
+        .desktop-view { background: var(--surface); border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden; display: table; width: 100%; border-collapse: collapse; }
+        .desktop-view th, .desktop-view td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; }
+        .desktop-view th { background: #f1f5f9; color: var(--text-muted); font-weight: 600; font-size: 13px; }
+        .d-badge { background: #e0f2fe; color: #0284c7; padding: 4px 8px; border-radius: 6px; font-family: monospace; font-weight: 700; font-size: 13px; display: inline-block;}
+        
+        .mobile-view { display: none; flex-direction: column; gap: 10px; }
+        .m-card { border-radius: 10px; padding: 14px 16px; border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: pointer; position: relative; }
+        .m-status-pending { background-color: #fffbeb; border-color: #fef3c7; border-left: 4px solid #f59e0b; }
+        .m-status-debt { background-color: #fef2f2; border-color: #fee2e2; border-left: 4px solid #ef4444; }
+        .m-status-done { background-color: #f0fdf4; border-color: #dcfce7; border-left: 4px solid #22c55e; opacity: 0.8; }
+        .m-card.overdue { animation: pulseRed 2s infinite; }
+        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(220, 38, 38, 0); } 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); } }
+
+        .m-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .m-code { font-weight: 600; color: #0f172a; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 65%; }
+        .m-date { font-size: 14px; font-weight: 500; }
+        .m-lot { background: #e0f2fe; color: #0284c7; padding: 4px 8px; border-radius: 6px; font-size: 13px; font-weight: 600; font-family: sans-serif; }
+        .m-qty { font-size: 15px; font-weight: 600; }
+        .m-qty span { color: #64748b; margin-right: 4px; font-size: 13px; font-weight: 400; }
+
+        .chk-box { transform: scale(1.3); cursor: pointer; }
+        .m-chk { position: absolute; top: 12px; left: 12px; z-index: 20; transform: scale(1.5); }
+        .has-chk { padding-left: 40px !important; }
+
+        @media screen and (max-width: 768px) { .desktop-view { display: none; } .mobile-view { display: flex; } }
+        .hidden { display: none !important; }
+        .text-danger { color: var(--danger); font-weight: 600; }
+        .text-success { color: var(--success); font-weight: 600; }
+        .text-warning { color: var(--warning); font-weight: 600; }
+
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 100; padding: 15px;}
+        .modal-content { background: white; padding: 25px; border-radius: 15px; width: 100%; max-width: 400px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: var(--text-muted); font-size: 13px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-actions .btn { flex: 1; padding: 12px; }
+        
+        .login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .login-box { background: white; padding: 30px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+<div id="loginView" class="login-screen">
+    <div class="login-box">
+        <h2 style="margin-bottom: 25px; color: var(--primary); text-align: center;">Hệ Thống HEV V7</h2>
+        <div class="form-group" style="text-align: left;">
+            <label>Chọn tài khoản truy cập:</label>
+            <select id="roleSelect">
+                <option value="ADMIN">👑 Quản trị viên (Admin)</option>
+                <option value="F0040">🏭 Tổ thợ F0040</option>
+                <option value="F0041">🏭 Tổ thợ F0041</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" style="width: 100%; padding: 12px; justify-content: center;" onclick="login()">Đăng Nhập</button>
+    </div>
+</div>
+
+<div id="appView" class="hidden">
+    <div class="topbar">
+        <h2 id="userInfo">App Gia Công</h2>
+        <button class="btn-logout" onclick="logout()">Thoát</button>
+    </div>
+
+    <div class="container">
+        <!-- TABS NAV -->
+        <div class="tabs">
+            <div class="tab-btn active" onclick="changeTab('ALL', this)">Tất cả</div>
+            <div class="tab-btn" onclick="changeTab('PENDING', this)">Đang Làm</div>
+            <div class="tab-btn" onclick="changeTab('DEBT', this)">Hàng Nợ <span id="debtCount" style="color:red"></span></div>
+            <div class="tab-btn" onclick="changeTab('DONE', this)">Đã Xong</div>
+            <div class="tab-btn admin-only hidden" onclick="changeTab('SUMMARY', this)">📊 Tổng Hợp</div>
+        </div>
+
+        <!-- VÙNG DANH SÁCH DỮ LIỆU -->
+        <div id="dataArea">
+            <div id="deleteToolbar" class="toolbar admin-only hidden">
+                <button class="btn btn-outline" id="btnToggleDelete" onclick="toggleDeleteMode()">🗑 Chế độ Xóa nhiều lô</button>
+                <button class="btn btn-danger hidden" id="btnDeleteSelected" onclick="deleteSelected()">Xóa Lô Đã Chọn</button>
+            </div>
+
+            <div class="filter-card">
+                <div class="search-row">
+                    <input type="text" id="searchInput" placeholder="🔍 Tìm Mã hàng, Số Lô..." onkeyup="renderTable()">
+                    <select id="facilityFilter" class="admin-only hidden" onchange="renderTable()" style="max-width: 120px;">
+                        <option value="ALL">🏢 Cơ sở</option>
+                        <option value="F0040">F0040</option>
+                        <option value="F0041">F0041</option>
+                    </select>
+                </div>
+                <div class="time-filters">
+                    <button class="time-btn active" onclick="setTimeFilter('ALL', this)">Tất cả</button>
+                    <button class="time-btn" onclick="setTimeFilter('THIS_WEEK', this)">Tuần này</button>
+                    <button class="time-btn" onclick="setTimeFilter('LAST_WEEK', this)">Tuần trước</button>
+                </div>
+            </div>
+
+            <table class="desktop-view">
+                <thead>
+                    <tr>
+                        <th class="col-chk hidden" style="width: 40px;"><input type="checkbox" onchange="toggleAllChk(this)"></th>
+                        <th class="admin-only hidden">Cơ sở</th>
+                        <th>Mã SP / Số Lô</th>
+                        <th>Giao / Nợ</th>
+                        <th>Hạn trả</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="desktopTableBody"></tbody>
+            </table>
+
+            <div class="mobile-view" id="mobileList"></div>
+        </div>
+
+        <!-- VÙNG TỔNG HỢP VÀ CÔNG CỤ NHẬP/XUẤT (Chỉ Admin) -->
+        <div id="summaryArea" class="summary-view">
+            <!-- Công cụ Nhập Xuất Gọn Gàng Ở Đây -->
+            <div class="toolbar" style="background: #e0f2fe; border: 1px dashed #0284c7;">
+                <input type="file" id="excelUpload" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleExcelUpload(event)">
+                <button class="btn btn-primary" onclick="document.getElementById('excelUpload').click()">📥 Nhập File Excel</button>
+                <button class="btn btn-success" onclick="openExportModal()">📤 Xuất Báo Cáo Excel</button>
+            </div>
+
+            <h3 style="color: var(--primary); margin-bottom: 15px; margin-top: 20px;">📊 TỔNG HỢP TỈ LỆ NỢ CHUNG</h3>
+            <div class="time-filters" style="margin-bottom: 15px;">
+                <button class="time-btn active" onclick="renderSummary('ALL', this)">Toàn thời gian</button>
+                <button class="time-btn" onclick="renderSummary('YESTERDAY', this)">Hôm qua</button>
+                <button class="time-btn" onclick="renderSummary('THIS_WEEK', this)">Tuần này</button>
+                <button class="time-btn" onclick="renderSummary('LAST_WEEK', this)">Tuần trước</button>
+            </div>
+
+            <div class="sum-cards">
+                <div class="s-card" style="background: #f8fafc;">
+                    <h4>Tổng SP Phải Giao</h4>
+                    <div class="s-val" id="sumTotal">0</div>
+                </div>
+                <div class="s-card" style="background: #f0fdf4; border-color: #bbf7d0;">
+                    <h4>SP Đã Xong</h4>
+                    <div class="s-val text-success" id="sumDone">0</div>
+                </div>
+                <div class="s-card" style="background: #fef2f2; border-color: #fecaca;">
+                    <h4>SP Đang Nợ</h4>
+                    <div class="s-val text-danger" id="sumDebt">0</div>
+                </div>
+            </div>
+            
+            <h4 style="margin-top: 20px; font-size: 13px;">Tỉ lệ Hàng Nợ Toàn Hệ Thống: <span id="debtPercentText" class="text-danger">0%</span></h4>
+            <div class="progress-container">
+                <div class="progress-bar" id="debtProgressBar" style="width: 0%;">0%</div>
+            </div>
+
+            <!-- BẢNG TỈ LỆ NỢ THEO TỪNG CƠ SỞ -->
+            <h3 style="color: var(--primary); margin-bottom: 10px; margin-top: 30px;">🏢 CHI TIẾT THEO TỪNG CƠ SỞ</h3>
+            <div style="overflow-x: auto;">
+                <table class="facility-table">
+                    <thead>
+                        <tr>
+                            <th>Tên Cơ Sở</th>
+                            <th>Tổng Giao</th>
+                            <th>Đã Xong</th>
+                            <th>Đang Nợ</th>
+                            <th>Tỉ Lệ Nợ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="facilitySummaryBody">
+                        <!-- Render by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BÁO CÁO -->
+<div id="reportModal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-bottom: 20px; color: var(--primary);">📝 Báo Cáo Giao Nhận</h3>
+        <input type="hidden" id="m_id">
+        <div class="form-group"><label>Mã Hàng - Lô</label><input type="text" id="m_info" readonly></div>
+        <div class="form-group"><label>Giao (PCS)</label><input type="text" id="m_qty" readonly></div>
+        <div class="form-group">
+            <label>⚠ Số Lượng Nợ (Nhập 0 = Đã xong)</label>
+            <input type="number" id="m_debt" inputmode="numeric" oninput="checkDebt()">
+        </div>
+        <div class="form-group" id="debtDateGroup" style="display: none;">
+            <label>📅 Ngày hẹn trả nợ</label>
+            <input type="date" id="m_debt_date">
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-outline" onclick="closeModal('reportModal')">Hủy</button>
+            <button class="btn btn-primary" onclick="submitReport()">💾 Lưu</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL XUẤT EXCEL -->
+<div id="exportModal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-bottom: 20px; color: var(--success);">📤 Tùy Chọn Xuất Excel</h3>
+        <div class="form-group">
+            <label>Khoảng thời gian (Dựa trên Ngày hạn):</label>
+            <select id="exportPeriod">
+                <option value="ALL">Toàn bộ dữ liệu</option>
+                <option value="THIS_WEEK">Chỉ Tuần này</option>
+                <option value="LAST_WEEK">Chỉ Tuần trước</option>
+            </select>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-outline" onclick="closeModal('exportModal')">Hủy</button>
+            <button class="btn btn-success" onclick="executeExport()">📥 Tải Xuống</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentUser = null; 
+    let currentTab = 'ALL';
+    let currentFilterTime = 'ALL';
+    let isDeleteMode = false;
+    let lotsData = [];
+    
+    // Ngày hiện tại mô phỏng
+    const TODAY = new Date("2026-10-06T00:00:00"); 
+
+    const formatDate = (dateStr) => {
+        if(!dateStr) return "";
+        const [y, m, d] = dateStr.split('-');
+        return `${d}/${m}/${y}`;
+    }
+
+    function initData() {
+        const savedData = localStorage.getItem('hevLotsDataV7');
+        if (savedData) { lotsData = JSON.parse(savedData); } 
+        else {
+            lotsData = [
+                { id: 1, facility: "F0040", code: "CON-0048-011", lot: "US261302-10", qty: 8000, date: "2026-10-01", status: "DONE", debtQty: 0, debtDate: "" },
+                { id: 2, facility: "F0040", code: "D00ASM001", lot: "BV264744-04", qty: 7000, date: "2026-10-05", status: "DEBT", debtQty: 2000, debtDate: "2026-10-08" },
+                { id: 3, facility: "F0041", code: "AWW014ACKKC0", lot: "PW265509-01", qty: 4000, date: "2026-10-06", status: "PENDING", debtQty: 0, debtDate: "" }
+            ];
+            saveData();
+        }
+    }
+
+    function saveData() { localStorage.setItem('hevLotsDataV7', JSON.stringify(lotsData)); }
+
+    function getWeekRange(offset = 0) {
+        let curr = new Date(TODAY); 
+        let first = curr.getDate() - curr.getDay() + 1 + (offset * 7);
+        let firstDay = new Date(curr.setDate(first));
+        let lastDay = new Date(curr.setDate(curr.getDate() + 6));
+        return { start: firstDay, end: lastDay };
+    }
+
+    function isDateMatch(dateString, mode) {
+        if (!dateString || mode === 'ALL') return true;
+        let d = new Date(dateString); d.setHours(0,0,0,0);
+        let t = new Date(TODAY); t.setHours(0,0,0,0);
+
+        if (mode === 'YESTERDAY') {
+            let y = new Date(t); y.setDate(y.getDate() - 1);
+            return d.getTime() === y.getTime();
+        }
+        if (mode === 'THIS_WEEK' || mode === 'LAST_WEEK') {
+            let offset = mode === 'THIS_WEEK' ? 0 : -1;
+            let range = getWeekRange(offset);
+            range.start.setHours(0,0,0,0); range.end.setHours(23,59,59,999);
+            return d >= range.start && d <= range.end;
+        }
+        return true;
+    }
+
+    function checkOverdue(item) {
+        if (item.status === 'DONE') return false;
+        let targetDateStr = item.status === 'DEBT' ? item.debtDate : item.date;
+        if (!targetDateStr) return false;
+        return new Date(targetDateStr) < TODAY; 
+    }
+
+    function login() {
+        currentUser = document.getElementById('roleSelect').value;
+        document.getElementById('loginView').classList.add('hidden');
+        document.getElementById('appView').classList.remove('hidden');
+        document.getElementById('userInfo').innerText = currentUser === 'ADMIN' ? '👑 Admin' : `🏭 Cơ sở ${currentUser}`;
+        
+        document.querySelectorAll('.admin-only').forEach(el => {
+            currentUser === 'ADMIN' ? el.classList.remove('hidden') : el.classList.add('hidden');
+        });
+        
+        initData(); renderTable();
+    }
+
+    function logout() { location.reload(); }
+
+    function changeTab(status, el) {
+        currentTab = status;
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        el.classList.add('active');
+        
+        if (status === 'SUMMARY') {
+            document.getElementById('dataArea').classList.add('hidden');
+            document.getElementById('summaryArea').style.display = 'block';
+            renderSummary('ALL', document.querySelector('#summaryArea .time-btn')); // Default to ALL in summary
+        } else {
+            document.getElementById('dataArea').classList.remove('hidden');
+            document.getElementById('summaryArea').style.display = 'none';
+            renderTable();
+        }
+    }
+
+    function setTimeFilter(val, el) {
+        currentFilterTime = val;
+        document.querySelectorAll('#dataArea .time-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        renderTable();
+    }
+
+    function renderTable() {
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const facFilter = document.getElementById('facilityFilter').value;
+        const desktopBody = document.getElementById('desktopTableBody');
+        const mobileList = document.getElementById('mobileList');
+        
+        desktopBody.innerHTML = ''; mobileList.innerHTML = '';
+        let debtCount = 0; let showCount = 0;
+
+        document.querySelectorAll('.col-chk').forEach(el => {
+            (isDeleteMode && currentUser === 'ADMIN') ? el.classList.remove('hidden') : el.classList.add('hidden');
+        });
+
+        lotsData.forEach(item => {
+            if (currentUser !== 'ADMIN' && item.facility !== currentUser) return;
+            if (item.status === 'DEBT') debtCount++;
+            if (currentTab !== 'ALL' && currentTab !== 'SUMMARY' && item.status !== currentTab) return;
+            if (currentUser === 'ADMIN' && facFilter !== 'ALL' && item.facility !== facFilter) return;
+            if (search && !item.code.toLowerCase().includes(search) && !item.lot.toLowerCase().includes(search)) return;
+            if (currentFilterTime !== 'ALL' && !isDateMatch(item.date, currentFilterTime)) return;
+
+            showCount++;
+            const isAdmin = currentUser === 'ADMIN';
+            const isOverdue = checkOverdue(item); 
+            
+            let chkHtmlDesktop = (isAdmin && isDeleteMode) ? `<td class="col-chk"><input type="checkbox" class="chk-box lot-chk" value="${item.id}"></td>` : `<td class="col-chk hidden"></td>`;
+            let chkHtmlMobile = (isAdmin && isDeleteMode) ? `<input type="checkbox" class="m-chk lot-chk" value="${item.id}" onclick="event.stopPropagation()">` : ``;
+
+            let statusBadge = "", actionBtn = "", debtDisplayDesktop = "", mobileBgClass = "", labelText = "", valText = "";
+            let dateDisplayDesktop = `<span style="color:var(--text-muted)">Giao:</span> ${formatDate(item.date)}`;
+            let dateVal = formatDate(item.date);
+
+            if (item.status === 'DONE') {
+                statusBadge = `<span class="text-success">✅ Đã xong</span>`; actionBtn = `<span style="color:var(--text-muted)">Đã lưu</span>`;
+                mobileBgClass = "m-status-done"; labelText = "Đạt"; valText = item.qty.toLocaleString();
+            } else if (item.status === 'DEBT') {
+                statusBadge = `<span class="text-danger">⚠️️ Đang Nợ</span>`; actionBtn = `<button class="btn btn-warning" onclick="openModal(${item.id})">Sửa Nợ</button>`;
+                debtDisplayDesktop = `<br><span class="text-danger">Nợ: ${item.debtQty.toLocaleString()}</span>`; dateDisplayDesktop += `<br><span class="text-danger">Trả Nợ: ${formatDate(item.debtDate)}</span>`;
+                mobileBgClass = "m-status-debt"; labelText = "Nợ"; valText = item.debtQty.toLocaleString(); dateVal = formatDate(item.debtDate);
+            } else {
+                statusBadge = `<span class="text-warning">⏳ Đang làm</span>`; actionBtn = `<button class="btn btn-primary" onclick="openModal(${item.id})">Báo cáo</button>`;
+                mobileBgClass = "m-status-pending"; labelText = "Giao"; valText = item.qty.toLocaleString();
+            }
+
+            if(isOverdue) { statusBadge += `<br><span style="color:red; font-size:12px; font-weight:bold;">🚨 QUÁ HẠN</span>`; mobileBgClass += " overdue"; }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                ${chkHtmlDesktop}
+                ${isAdmin ? `<td><strong>${item.facility}</strong></td>` : ''}
+                <td><strong>${item.code}</strong><br><span class="d-badge" style="margin-top:4px">${item.lot}</span></td>
+                <td>Giao: ${item.qty.toLocaleString()} ${debtDisplayDesktop}</td>
+                <td>${dateDisplayDesktop}</td>
+                <td>${statusBadge}</td>
+                <td>${actionBtn}</td>
+            `;
+            desktopBody.appendChild(tr);
+
+            const mobileCard = document.createElement('div');
+            mobileCard.className = `m-card ${mobileBgClass} ${isAdmin && isDeleteMode ? 'has-chk' : ''}`;
+            if(!isDeleteMode) mobileCard.setAttribute('onclick', `openModal(${item.id})`);
+            
+            mobileCard.innerHTML = `
+                ${chkHtmlMobile}
+                ${isAdmin ? `<div style="font-size:11px; margin-bottom:6px; color:var(--text-muted);">🏢 CƠ SỞ: ${item.facility}</div>` : ''}
+                <div class="m-row"><div class="m-code">${item.code}</div><div class="m-date ${isOverdue ? 'text-danger' : ''}">${dateVal}</div></div>
+                <div class="m-row"><div class="m-lot">${item.lot}</div><div class="m-qty"><span>${labelText}</span> <strong>${valText}</strong></div></div>
+            `;
+            mobileList.appendChild(mobileCard);
+        });
+
+        document.getElementById('debtCount').innerText = debtCount > 0 ? `(${debtCount})` : "";
+    }
+
+    // TỔNG HỢP & BÁO CÁO NHÓM THEO CƠ SỞ
+    function renderSummary(mode, el) {
+        document.querySelectorAll('#summaryArea .time-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+
+        let totalQty = 0; let totalDone = 0; let totalDebt = 0;
+        let facilityStats = {};
+
+        lotsData.forEach(item => {
+            if(isDateMatch(item.date, mode)) {
+                // 1. Tính tổng toàn bộ
+                totalQty += item.qty;
+                if(item.status === 'DONE') totalDone += item.qty;
+                else if(item.status === 'DEBT') {
+                    totalDebt += item.debtQty;
+                    totalDone += (item.qty - item.debtQty); 
+                }
+
+                // 2. Tính tổng nhóm theo từng Cơ Sở
+                if(!facilityStats[item.facility]) {
+                    facilityStats[item.facility] = { total: 0, done: 0, debt: 0 };
+                }
+                facilityStats[item.facility].total += item.qty;
+                
+                if(item.status === 'DONE') {
+                    facilityStats[item.facility].done += item.qty;
+                } else if(item.status === 'DEBT') {
+                    facilityStats[item.facility].debt += item.debtQty;
+                    facilityStats[item.facility].done += (item.qty - item.debtQty);
+                }
+            }
+        });
+
+        // Đổ dữ liệu Tổng quan
+        document.getElementById('sumTotal').innerText = totalQty.toLocaleString();
+        document.getElementById('sumDone').innerText = totalDone.toLocaleString();
+        document.getElementById('sumDebt').innerText = totalDebt.toLocaleString();
+
+        let percent = totalQty === 0 ? 0 : Math.round((totalDebt / totalQty) * 100);
+        document.getElementById('debtPercentText').innerText = percent + "%";
+        let pBar = document.getElementById('debtProgressBar');
+        pBar.style.width = percent + "%"; pBar.innerText = percent > 5 ? percent + "%" : "";
+
+        // Đổ dữ liệu Chi tiết theo Cơ sở
+        const facBody = document.getElementById('facilitySummaryBody');
+        facBody.innerHTML = '';
+        
+        for (let fac in facilityStats) {
+            let stat = facilityStats[fac];
+            let facPercent = stat.total === 0 ? 0 : Math.round((stat.debt / stat.total) * 100);
+            
+            let colorClass = facPercent > 0 ? "var(--danger)" : "var(--success)";
+            
+            facBody.innerHTML += `
+                <tr>
+                    <td><strong>${fac}</strong></td>
+                    <td>${stat.total.toLocaleString()}</td>
+                    <td class="text-success">${stat.done.toLocaleString()}</td>
+                    <td class="text-danger">${stat.debt.toLocaleString()}</td>
+                    <td><strong style="color: ${colorClass}">${facPercent}%</strong></td>
+                </tr>
+            `;
+        }
+        
+        if (Object.keys(facilityStats).length === 0) {
+            facBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Không có dữ liệu trong thời gian này</td></tr>`;
+        }
+    }
+
+    // CHỨC NĂNG XÓA
+    function toggleDeleteMode() {
+        isDeleteMode = !isDeleteMode;
+        document.getElementById('btnToggleDelete').classList.toggle('btn-outline');
+        document.getElementById('btnToggleDelete').classList.toggle('btn-primary');
+        if(isDeleteMode) document.getElementById('btnDeleteSelected').classList.remove('hidden');
+        else document.getElementById('btnDeleteSelected').classList.add('hidden');
+        renderTable();
+    }
+
+    function toggleAllChk(master) {
+        document.querySelectorAll('.chk-box').forEach(chk => chk.checked = master.checked);
+    }
+
+    function deleteSelected() {
+        let selectedIds = Array.from(document.querySelectorAll('.lot-chk:checked')).map(c => parseFloat(c.value));
+        if(selectedIds.length === 0) { alert("Vui lòng chọn ít nhất 1 lô để xóa!"); return; }
+        if(confirm(`Xác nhận xóa vĩnh viễn ${selectedIds.length} lô dữ liệu?`)) {
+            lotsData = lotsData.filter(item => !selectedIds.includes(item.id));
+            saveData(); toggleDeleteMode(); 
+        }
+    }
+
+    // NHẬP EXCEL
+    function handleExcelUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const excelData = XLSX.utils.sheet_to_json(firstSheet);
+            
+            let added = 0; let updated = 0;
+
+            excelData.forEach(row => {
+                let facility = row["Cơ sở"] || "F0040";
+                let code = row["Mã hàng"] || row["Mã SP"] || "Unknown";
+                let lot = row["Số lô"] || row["Lot"] || "";
+                let qty = parseInt(row["Số lượng"] || row["SL"]) || 0;
+                
+                let dateStr = row["Ngày hạn"] || TODAY.toISOString().split('T')[0];
+                if(typeof dateStr === 'number') {
+                    let d = new Date((dateStr - (25567 + 2)) * 86400 * 1000);
+                    dateStr = d.toISOString().split('T')[0];
+                }
+
+                if(lot && qty > 0) {
+                    let existing = lotsData.find(x => x.lot === lot);
+                    if (existing) {
+                        existing.qty = qty; existing.date = dateStr; updated++;
+                    } else {
+                        lotsData.unshift({
+                            id: Date.now() + Math.random(),
+                            facility: facility, code: code, lot: lot, qty: qty, date: dateStr,
+                            status: "PENDING", debtQty: 0, debtDate: ""
+                        });
+                        added++;
+                    }
+                }
+            });
+            
+            saveData(); 
+            // Nếu đang ở tab Tổng Hợp thì render lại tab Tổng Hợp
+            if(currentTab === 'SUMMARY') {
+                renderSummary('ALL', document.querySelector('#summaryArea .time-btn'));
+            } else {
+                renderTable();
+            }
+            alert(`Nhập Excel thành công!\n- Đã thêm mới: ${added} lô\n- Cập nhật số lượng: ${updated} lô trùng.`);
+            document.getElementById('excelUpload').value = ""; 
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    // XUẤT EXCEL
+    function openExportModal() { document.getElementById('exportModal').style.display = 'flex'; }
+    
+    function executeExport() {
+        const period = document.getElementById('exportPeriod').value;
+        let exportData = lotsData;
+        if(period !== 'ALL') exportData = lotsData.filter(item => isDateMatch(item.date, period));
+        if(exportData.length === 0) { alert("Không có dữ liệu trong khoảng thời gian này để xuất!"); return; }
+
+        let flatData = exportData.map(item => ({
+            "Cơ sở": item.facility, "Mã Sản Phẩm": item.code, "Số Lô": item.lot, "Số Lượng Giao": item.qty,
+            "Ngày Hạn Trả": formatDate(item.date),
+            "Trạng Thái": item.status === 'DONE' ? 'Đã Xong' : (item.status === 'DEBT' ? 'Đang Nợ' : 'Đang Làm'),
+            "Số Lượng Nợ": item.debtQty, "Ngày Hẹn Trả Nợ": formatDate(item.debtDate)
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(flatData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Du_Lieu_Gia_Cong");
+        XLSX.writeFile(wb, `HEV_BaoCao_${period}_${new Date().getTime()}.xlsx`);
+        closeModal('exportModal');
+    }
+
+    // MODAL BÁO CÁO
+    function openModal(id) {
+        if(isDeleteMode) return; 
+        const item = lotsData.find(x => x.id === id);
+        document.getElementById('m_id').value = item.id; document.getElementById('m_info').value = `${item.code} - Lô: ${item.lot}`;
+        document.getElementById('m_qty').value = item.qty.toLocaleString(); 
+        document.getElementById('m_debt').value = item.debtQty > 0 ? item.debtQty : 0; document.getElementById('m_debt_date').value = item.debtDate || "";
+        checkDebt(); document.getElementById('reportModal').style.display = 'flex';
+    }
+
+    function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+    function checkDebt() {
+        const debt = parseInt(document.getElementById('m_debt').value) || 0;
+        document.getElementById('debtDateGroup').style.display = debt > 0 ? 'block' : 'none';
+    }
+
+    function submitReport() {
+        const id = parseFloat(document.getElementById('m_id').value);
+        const debt = parseInt(document.getElementById('m_debt').value) || 0;
+        const debtDate = document.getElementById('m_debt_date').value;
+        
+        if (debt > 0 && !debtDate) { alert("Vui lòng nhập Ngày hẹn trả nợ!"); return; }
+
+        const item = lotsData.find(x => x.id === id);
+        if (debt === 0) { item.status = 'DONE'; item.debtQty = 0; item.debtDate = ""; } 
+        else { item.status = 'DEBT'; item.debtQty = debt; item.debtDate = debtDate; }
+        
+        saveData(); renderTable(); closeModal('reportModal');
+    }
+</script>
+</body>
+</html>
