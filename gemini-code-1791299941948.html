@@ -3,117 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>App Quản Lý Gia Công HEV V8 (1000 Data)</title>
+    <title>HEV homework V12</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
             --primary: #0284c7; --primary-hover: #0369a1; 
-            --success: #16a34a; --warning: #d97706; --danger: #dc2626;
+            --success: #16a34a; --warning: #d97706; --danger: #dc2626; --info: #8b5cf6;
             --bg: #f8fafc; --surface: #ffffff; 
             --text: #0f172a; --text-muted: #64748b; --border: #cbd5e1;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: var(--bg); color: var(--text); font-size: 14px; -webkit-tap-highlight-color: transparent; }
         
-        .topbar { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 40; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .topbar h2 { font-size: 16px; margin: 0; font-weight: 600; }
-        .btn-logout { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .topbar { background: var(--primary); padding: 12px 15px; position: sticky; top: 0; z-index: 40; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 10px; }
+        .topbar-header { display: flex; justify-content: space-between; align-items: center; color: white; }
+        .topbar-header h2 { font-size: 15px; margin: 0; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .btn-logout { background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 10px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px; }
+        
+        .topbar-search { display: flex; gap: 8px; width: 100%; }
+        .topbar-search input { flex: 1; padding: 8px 12px; border: none; border-radius: 20px; font-size: 13px; outline: none; }
+        .topbar-search select { width: 90px; padding: 8px; border: none; border-radius: 20px; font-size: 12px; outline: none; background: white; color: var(--text); }
         
         .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
 
-        .tabs { display: flex; background: var(--surface); border-radius: 10px; overflow: hidden; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .tab-btn { flex: 1; padding: 12px 2px; text-align: center; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; font-size: 12px; }
+        .tabs { display: flex; background: var(--surface); border-radius: 10px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .tab-btn { flex: 1; padding: 10px 2px; text-align: center; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; font-size: 12px; }
         .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: #f0f9ff; }
+        .badge-count { background: var(--danger); color: white; border-radius: 20px; padding: 2px 6px; font-size: 10px; margin-left: 4px; display: none; }
 
-        .filter-card { background: var(--surface); padding: 15px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 15px; display: flex; gap: 10px; flex-direction: column; }
-        .search-row { display: flex; gap: 10px; width: 100%; }
-        .search-row input, .search-row select { padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; }
-        .search-row input { flex: 1; }
-        
-        .time-filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
+        .time-filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 12px; }
         .time-filters::-webkit-scrollbar { display: none; }
-        .time-btn { padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .time-btn { padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .time-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; padding: 10px; background: #f1f5f9; border-radius: 8px; }
-        
+        .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; padding: 10px; background: #f1f5f9; border-radius: 8px; }
         .btn { padding: 8px 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; text-align: center; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-outline { background: white; border: 1px solid var(--border); color: var(--text); }
-        .btn-warning { background: var(--warning); color: white; }
-        .btn-danger { background: var(--danger); color: white; }
         .btn-success { background: var(--success); color: white; }
-
-        .summary-view { display: none; background: var(--surface); padding: 20px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .sum-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-top: 15px; }
-        .s-card { padding: 15px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
-        .s-card h4 { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; }
-        .s-card .s-val { font-size: 24px; font-weight: bold; color: var(--text); }
-        .progress-container { width: 100%; height: 20px; background: #fee2e2; border-radius: 10px; overflow: hidden; margin-top: 15px; }
-        .progress-bar { height: 100%; background: var(--danger); display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: bold; transition: width 0.5s; }
-        .facility-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .facility-table th, .facility-table td { padding: 10px; border-bottom: 1px solid var(--border); text-align: left; font-size: 13px; }
-        .facility-table th { background: #f8fafc; color: var(--text-muted); }
+        .btn-info { background: var(--info); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
 
         .desktop-view { background: var(--surface); border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden; display: table; width: 100%; border-collapse: collapse; }
-        .desktop-view th, .desktop-view td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; }
+        .desktop-view th, .desktop-view td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
         .desktop-view th { background: #f1f5f9; color: var(--text-muted); font-weight: 600; font-size: 13px; }
         .d-badge { background: #e0f2fe; color: #0284c7; padding: 4px 8px; border-radius: 6px; font-family: monospace; font-weight: 700; font-size: 13px; display: inline-block;}
         
         .mobile-view { display: none; flex-direction: column; gap: 10px; }
-        .m-card { border-radius: 10px; padding: 14px 16px; border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: pointer; position: relative; }
+        .m-card { border-radius: 10px; padding: 12px; border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(0,0,0,0.05); position: relative; cursor: pointer; }
+        .m-card:active { transform: scale(0.98); }
         .m-status-pending { background-color: #fffbeb; border-color: #fef3c7; border-left: 4px solid #f59e0b; }
-        .m-status-debt { background-color: #fef2f2; border-color: #fee2e2; border-left: 4px solid #ef4444; }
+        .m-status-waiting { background-color: #f3e8ff; border-color: #e9d5ff; border-left: 4px solid #a855f7; }
         .m-status-done { background-color: #f0fdf4; border-color: #dcfce7; border-left: 4px solid #22c55e; opacity: 0.8; }
-        .m-card.overdue { animation: pulseRed 2s infinite; }
-        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(220, 38, 38, 0); } 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); } }
-
-        .m-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .m-code { font-weight: 600; color: #0f172a; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 65%; }
-        .m-date { font-size: 14px; font-weight: 500; }
-        .m-lot { background: #e0f2fe; color: #0284c7; padding: 4px 8px; border-radius: 6px; font-size: 13px; font-weight: 600; font-family: sans-serif; }
-        .m-qty { font-size: 15px; font-weight: 600; }
-        .m-qty span { color: #64748b; margin-right: 4px; font-size: 13px; font-weight: 400; }
+        
+        .m-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .m-row:last-child { margin-bottom: 0; }
+        .m-code { font-weight: 600; color: #0f172a; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 65%; }
+        .m-date { font-size: 12px; font-weight: 500; color: #64748b; }
+        .m-lot { background: rgba(2, 132, 199, 0.1); color: #0284c7; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: 600; font-family: monospace; }
+        .m-qty { font-size: 13px; font-weight: 600; }
 
         .chk-box { transform: scale(1.3); cursor: pointer; }
-        .m-chk { position: absolute; top: 12px; left: 12px; z-index: 20; transform: scale(1.5); }
-        .has-chk { padding-left: 40px !important; }
+        .m-chk { position: absolute; top: 10px; left: 10px; z-index: 20; transform: scale(1.5); }
+        .has-chk { padding-left: 35px !important; }
 
         @media screen and (max-width: 768px) { .desktop-view { display: none; } .mobile-view { display: flex; } }
-        .hidden { display: none !important; }
-        .text-danger { color: var(--danger); font-weight: 600; }
-        .text-success { color: var(--success); font-weight: 600; }
-        .text-warning { color: var(--warning); font-weight: 600; }
+        .hidden { display: none !important; } /* Lệnh đè hiển thị */
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); font-weight: bold; }
 
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 100; padding: 15px;}
-        .modal-content { background: white; padding: 25px; border-radius: 15px; width: 100%; max-width: 400px; }
+        .modal-content { background: white; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: var(--text-muted); font-size: 13px; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; outline: none; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
         .modal-actions .btn { flex: 1; padding: 12px; }
         
         .login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
         .login-box { background: white; padding: 30px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        
+        .summary-view { display: none; background: var(--surface); padding: 20px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .sum-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-top: 15px; }
+        .s-card { padding: 15px 10px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
+        .s-card h4 { font-size: 11px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; }
+        .s-card .s-val { font-size: 20px; font-weight: bold; color: var(--text); }
+        .facility-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .facility-table th, .facility-table td { padding: 10px; border-bottom: 1px solid var(--border); text-align: left; font-size: 13px; }
+        .facility-table th { background: #f8fafc; color: var(--text-muted); }
+        
+        .history-list { list-style: none; padding: 0; margin-top: 10px; }
+        .history-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
+        .history-item:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
 
+<!-- MÀN HÌNH ĐĂNG NHẬP -->
 <div id="loginView" class="login-screen">
     <div class="login-box">
-        <h2 style="margin-bottom: 25px; color: var(--primary); text-align: center;">Hệ Thống HEV (1000 Data)</h2>
+        <h2 style="margin-bottom: 25px; color: var(--primary); text-align: center;">HEV homework</h2>
         <div class="form-group" style="text-align: left;">
             <label>Chọn tài khoản truy cập:</label>
             <select id="roleSelect">
                 <option value="ADMIN">👑 Quản trị viên (Admin)</option>
-                <option value="F0040">🏭 Tổ thợ F0040</option>
-                <option value="F0041">🏭 Tổ thợ F0041</option>
-                <option value="F0042">🏭 Tổ thợ F0042</option>
-                <option value="F0043">🏭 Tổ thợ F0043</option>
-                <option value="F0044">🏭 Tổ thợ F0044</option>
-                <option value="F0045">🏭 Tổ thợ F0045</option>
-                <option value="F0046">🏭 Tổ thợ F0046</option>
-                <option value="F0047">🏭 Tổ thợ F0047</option>
+                <option value="RECEIVER">📦 Kho (Xác nhận hàng)</option>
+                <option value="KHC">🏭 Cơ sở KHC</option>
+                <option value="F1979">🏭 Cơ sở F1979</option>
+                <option value="F0040">🏭 Cơ sở F0040</option>
+                <option value="F0025">🏭 Cơ sở F0025</option>
+                <option value="F0198">🏭 Cơ sở F0198</option>
+                <option value="F0370">🏭 Cơ sở F0370</option>
+                <option value="M3311">🏭 Cơ sở M3311</option>
+                <option value="F0131">🏭 Cơ sở F0131</option>
+                <option value="F0949">🏭 Cơ sở F0949</option>
             </select>
         </div>
         <button class="btn btn-primary" style="width: 100%; padding: 12px; justify-content: center;" onclick="login()">Đăng Nhập</button>
@@ -121,9 +124,28 @@
 </div>
 
 <div id="appView" class="hidden">
+    <!-- TOPBAR TÍCH HỢP TÌM KIẾM -->
     <div class="topbar">
-        <h2 id="userInfo">App Gia Công</h2>
-        <button class="btn-logout" onclick="logout()">Thoát</button>
+        <div class="topbar-header">
+            <h2 id="userInfo">HEV homework</h2>
+            <button class="btn-logout" onclick="logout()">Thoát</button>
+        </div>
+        <div class="topbar-search" id="topSearchBar">
+            <input type="text" id="searchInput" placeholder="🔍 Mã SP, Số Lô..." onkeyup="renderTable()">
+            <!-- BỘ LỌC CƠ SỞ CHO ADMIN & KHO -->
+            <select id="facilityFilter" class="admin-receiver-only hidden" onchange="renderTable()">
+                <option value="ALL">🏢 Cơ sở</option>
+                <option value="KHC">KHC</option>
+                <option value="F1979">F1979</option>
+                <option value="F0040">F0040</option>
+                <option value="F0025">F0025</option>
+                <option value="F0198">F0198</option>
+                <option value="F0370">F0370</option>
+                <option value="M3311">M3311</option>
+                <option value="F0131">F0131</option>
+                <option value="F0949">F0949</option>
+            </select>
+        </div>
     </div>
 
     <div class="container">
@@ -131,37 +153,27 @@
         <div class="tabs">
             <div class="tab-btn active" onclick="changeTab('ALL', this)">Tất cả</div>
             <div class="tab-btn" onclick="changeTab('PENDING', this)">Đang Làm</div>
-            <div class="tab-btn" onclick="changeTab('DEBT', this)">Hàng Nợ <span id="debtCount" style="color:red"></span></div>
+            <div class="tab-btn" onclick="changeTab('WAITING', this)">Chờ Kho <span id="waitBadge" class="badge-count">0</span></div>
             <div class="tab-btn" onclick="changeTab('DONE', this)">Đã Xong</div>
-            <div class="tab-btn admin-only hidden" onclick="changeTab('SUMMARY', this)">📊 Tổng Hợp</div>
+            <div class="tab-btn admin-only hidden" onclick="changeTab('SUMMARY', this)">📊 Báo Cáo</div>
         </div>
 
-        <!-- VÙNG DANH SÁCH DỮ LIỆU -->
         <div id="dataArea">
-            <div id="deleteToolbar" class="toolbar admin-only hidden">
-                <button class="btn btn-outline" id="btnToggleDelete" onclick="toggleDeleteMode()">🗑 Chế độ Xóa nhiều lô</button>
-                <button class="btn btn-danger hidden" id="btnDeleteSelected" onclick="deleteSelected()">Xóa Lô Đã Chọn</button>
+            <div class="time-filters">
+                <button class="time-btn active" onclick="setTimeFilter('ALL', this)">Toàn thời gian</button>
+                <button class="time-btn" onclick="setTimeFilter('THIS_WEEK', this)">Tuần này</button>
+                <button class="time-btn" onclick="setTimeFilter('LAST_WEEK', this)">Tuần trước</button>
             </div>
 
-            <div class="filter-card">
-                <div class="search-row">
-                    <input type="text" id="searchInput" placeholder="🔍 Tìm Mã hàng, Số Lô..." onkeyup="renderTable()">
-                    <select id="facilityFilter" class="admin-only hidden" onchange="renderTable()" style="max-width: 120px;">
-                        <option value="ALL">🏢 Cơ sở</option>
-                        <option value="F0040">F0040</option>
-                        <option value="F0041">F0041</option>
-                        <option value="F0042">F0042</option>
-                        <option value="F0043">F0043</option>
-                        <option value="F0044">F0044</option>
-                        <option value="F0045">F0045</option>
-                        <option value="F0046">F0046</option>
-                        <option value="F0047">F0047</option>
-                    </select>
+            <!-- CÔNG CỤ XÓA / XÁC NHẬN HÀNG LOẠT -->
+            <div id="bulkToolbar" class="toolbar hidden">
+                <div class="admin-only hidden" style="display: flex; gap: 8px;">
+                    <button class="btn btn-outline" id="btnToggleDelete" onclick="toggleBulkMode('delete')">🗑 Xóa nhiều lô</button>
+                    <button class="btn btn-danger hidden" id="btnDeleteSelected" onclick="processBulk('delete')">Xác Nhận Xóa</button>
                 </div>
-                <div class="time-filters">
-                    <button class="time-btn active" onclick="setTimeFilter('ALL', this)">Tất cả</button>
-                    <button class="time-btn" onclick="setTimeFilter('THIS_WEEK', this)">Tuần này</button>
-                    <button class="time-btn" onclick="setTimeFilter('LAST_WEEK', this)">Tuần trước</button>
+                <div class="receiver-only hidden" style="display: flex; gap: 8px;">
+                    <button class="btn btn-outline" id="btnToggleConfirm" onclick="toggleBulkMode('confirm')">✅ Kho XN Nhiều Lô</button>
+                    <button class="btn btn-info hidden" id="btnConfirmSelected" onclick="processBulk('confirm')">Xác Nhận Đã Nhận</button>
                 </div>
             </div>
 
@@ -169,10 +181,9 @@
                 <thead>
                     <tr>
                         <th class="col-chk hidden" style="width: 40px;"><input type="checkbox" onchange="toggleAllChk(this)"></th>
-                        <th class="admin-only hidden">Cơ sở</th>
+                        <th class="admin-receiver-only hidden">Cơ sở</th>
                         <th>Mã SP / Số Lô</th>
-                        <th>Giao / Nợ</th>
-                        <th>Hạn trả</th>
+                        <th>Tiến độ</th>
                         <th>Trạng thái</th>
                         <th>Thao tác</th>
                     </tr>
@@ -183,53 +194,46 @@
             <div class="mobile-view" id="mobileList"></div>
         </div>
 
-        <!-- VÙNG TỔNG HỢP VÀ CÔNG CỤ NHẬP/XUẤT (Chỉ Admin) -->
+        <!-- VÙNG TỔNG HỢP VÀ CÔNG CỤ (Admin) -->
         <div id="summaryArea" class="summary-view">
             <div class="toolbar" style="background: #e0f2fe; border: 1px dashed #0284c7;">
                 <input type="file" id="excelUpload" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleExcelUpload(event)">
-                <button class="btn btn-primary" onclick="document.getElementById('excelUpload').click()">📥 Nhập File Excel</button>
-                <button class="btn btn-success" onclick="openExportModal()">📤 Xuất Báo Cáo Excel</button>
-                <button class="btn btn-warning" onclick="resetSampleData()" title="Sinh lại 1000 dữ liệu">🔄 Tạo lại 1000 mẫu</button>
+                <button class="btn btn-primary" onclick="document.getElementById('excelUpload').click()">📥 Nhập Excel</button>
+                <button class="btn btn-success" onclick="openExportModal()">📤 Xuất Excel</button>
+                <button class="btn btn-warning" onclick="resetSampleData()">🔄 Sinh 1000 Mẫu</button>
             </div>
 
-            <h3 style="color: var(--primary); margin-bottom: 15px; margin-top: 20px;">📊 TỔNG HỢP TỈ LỆ NỢ CHUNG</h3>
-            <div class="time-filters" style="margin-bottom: 15px;">
-                <button class="time-btn active" onclick="renderSummary('ALL', this)">Toàn thời gian</button>
-                <button class="time-btn" onclick="renderSummary('YESTERDAY', this)">Hôm qua</button>
+            <div class="time-filters" style="margin-top: 15px;">
+                <button class="time-btn active" onclick="renderSummary('ALL', this)">Toàn bộ</button>
                 <button class="time-btn" onclick="renderSummary('THIS_WEEK', this)">Tuần này</button>
                 <button class="time-btn" onclick="renderSummary('LAST_WEEK', this)">Tuần trước</button>
             </div>
 
             <div class="sum-cards">
                 <div class="s-card" style="background: #f8fafc;">
-                    <h4>Tổng SP Phải Giao</h4>
+                    <h4>Phải Giao</h4>
                     <div class="s-val" id="sumTotal">0</div>
                 </div>
                 <div class="s-card" style="background: #f0fdf4; border-color: #bbf7d0;">
-                    <h4>SP Đã Xong</h4>
+                    <h4>Đã Nhận</h4>
                     <div class="s-val text-success" id="sumDone">0</div>
                 </div>
                 <div class="s-card" style="background: #fef2f2; border-color: #fecaca;">
-                    <h4>SP Đang Nợ</h4>
-                    <div class="s-val text-danger" id="sumDebt">0</div>
+                    <h4>Còn Lại</h4>
+                    <div class="s-val text-danger" id="sumRemain">0</div>
                 </div>
             </div>
-            
-            <h4 style="margin-top: 20px; font-size: 13px;">Tỉ lệ Hàng Nợ Toàn Hệ Thống: <span id="debtPercentText" class="text-danger">0%</span></h4>
-            <div class="progress-container">
-                <div class="progress-bar" id="debtProgressBar" style="width: 0%;">0%</div>
-            </div>
 
-            <h3 style="color: var(--primary); margin-bottom: 10px; margin-top: 30px;">🏢 CHI TIẾT THEO TỪNG CƠ SỞ</h3>
+            <h3 style="color: var(--primary); margin-bottom: 10px; margin-top: 30px;">🏢 TIẾN ĐỘ THEO CƠ SỞ</h3>
             <div style="overflow-x: auto;">
                 <table class="facility-table">
                     <thead>
                         <tr>
-                            <th>Tên Cơ Sở</th>
-                            <th>Tổng Giao</th>
-                            <th>Đã Xong</th>
-                            <th>Đang Nợ</th>
-                            <th>Tỉ Lệ Nợ</th>
+                            <th>Cơ Sở</th>
+                            <th>Yêu Cầu</th>
+                            <th>Kho Đã Nhận</th>
+                            <th>Chờ XN</th>
+                            <th>% Xong</th>
                         </tr>
                     </thead>
                     <tbody id="facilitySummaryBody"></tbody>
@@ -239,38 +243,71 @@
     </div>
 </div>
 
-<!-- MODAL BÁO CÁO -->
-<div id="reportModal" class="modal">
+<!-- MODAL CHI TIẾT TÍCH HỢP -->
+<div id="detailModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-bottom: 20px; color: var(--primary);">📝 Báo Cáo Giao Nhận</h3>
-        <input type="hidden" id="m_id">
-        <div class="form-group"><label>Mã Hàng - Lô</label><input type="text" id="m_info" readonly></div>
-        <div class="form-group"><label>Giao (PCS)</label><input type="text" id="m_qty" readonly></div>
-        <div class="form-group">
-            <label>⚠ Số Lượng Nợ (Nhập 0 = Đã xong)</label>
-            <input type="number" id="m_debt" inputmode="numeric" oninput="checkDebt()">
+        <h3 style="margin-bottom: 10px; color: var(--primary);">Chi Tiết Lô Hàng</h3>
+        <input type="hidden" id="d_id">
+        <div style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                <strong style="font-size:15px; color:#0f172a;" id="d_code"></strong>
+                <span style="font-size:13px; color:var(--text-muted);" id="d_date"></span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="d-badge" id="d_lot"></span>
+                <span id="d_facility" style="font-size:12px; font-weight:bold; color:var(--info);"></span>
+            </div>
         </div>
-        <div class="form-group" id="debtDateGroup" style="display: none;">
-            <label>📅 Ngày hẹn trả nợ</label>
-            <input type="date" id="m_debt_date">
+
+        <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom: 15px; padding: 0 5px;">
+            <span>Tổng SP: <strong id="d_total">0</strong></span>
+            <span>Kho đã nhận: <strong id="d_done" class="text-success">0</strong></span>
         </div>
-        <div class="modal-actions">
-            <button class="btn btn-outline" onclick="closeModal('reportModal')">Hủy</button>
-            <button class="btn btn-primary" onclick="submitReport()">💾 Lưu</button>
+
+        <!-- KHU VỰC NHẬP LIỆU -->
+        <div id="inputArea" style="background: #f0f9ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: none;">
+            
+            <!-- Dành cho Cơ Sở nhập Trả hàng & Hẹn ngày (Sửa lỗi CSS ẩn cứng) -->
+            <div id="formFacility" style="display: none;">
+                <div class="form-group">
+                    <label>📦 Nhập số lượng trả lần này:</label>
+                    <input type="number" id="d_report_qty" inputmode="numeric" placeholder="VD: 500" style="border-color:#93c5fd;" oninput="checkRemain()">
+                </div>
+                <!-- Hiện ra khi trả không đủ số lượng -->
+                <div class="form-group" id="d_next_date_group" style="display: none; margin-bottom:0;">
+                    <label>📅 Hạn trả phần còn lại:</label>
+                    <input type="date" id="d_next_date" style="border-color:#93c5fd;">
+                    <p style="font-size:11px; color:var(--warning); margin-top:4px;">* Vẫn còn hàng chưa giao, vui lòng cập nhật hạn trả cho đợt tiếp theo.</p>
+                </div>
+            </div>
+
+            <!-- Dành cho Kho Xác nhận -->
+            <div id="formReceiver" style="display: none;">
+                <div style="color:var(--info); font-weight:600; text-align:center; margin-bottom:10px;">
+                    Cơ sở báo giao: <span id="d_wait_qty" style="font-size:18px;">0</span> PCS
+                </div>
+                <label style="display:block; font-weight:600; margin-bottom:6px; font-size:13px;">✔️ Kho thực nhận:</label>
+                <input type="number" id="d_confirm_qty" inputmode="numeric" style="width:100%; padding:10px; border-radius:6px; border:1px solid #c4b5fd;">
+            </div>
         </div>
+
+        <div style="margin-bottom: 15px;">
+            <h4 style="font-size:13px; color:var(--text-muted); border-bottom: 1px solid var(--border); padding-bottom: 5px;">🕒 Lịch sử Xác nhận</h4>
+            <ul class="history-list" id="d_history"></ul>
+        </div>
+
+        <div class="modal-actions" id="d_actions"></div>
     </div>
 </div>
 
-<!-- MODAL XUẤT EXCEL -->
 <div id="exportModal" class="modal">
     <div class="modal-content">
         <h3 style="margin-bottom: 20px; color: var(--success);">📤 Tùy Chọn Xuất Excel</h3>
         <div class="form-group">
-            <label>Khoảng thời gian (Dựa trên Ngày hạn):</label>
+            <label>Khoảng thời gian (Ngày hạn):</label>
             <select id="exportPeriod">
                 <option value="ALL">Toàn bộ dữ liệu</option>
                 <option value="THIS_WEEK">Chỉ Tuần này</option>
-                <option value="LAST_WEEK">Chỉ Tuần trước</option>
             </select>
         </div>
         <div class="modal-actions">
@@ -281,149 +318,100 @@
 </div>
 
 <script>
-    let currentUser = null; 
-    let currentTab = 'ALL';
-    let currentFilterTime = 'ALL';
-    let isDeleteMode = false;
-    let lotsData = [];
-    
-    // Ngày hiện tại mô phỏng
-    const TODAY = new Date("2026-10-06T00:00:00"); 
+    let currentUser = null; let currentTab = 'ALL'; let currentFilterTime = 'ALL'; let bulkMode = 'none'; let lotsData = [];
+    const TODAY = new Date("2026-10-27T00:00:00"); 
 
     const formatDate = (dateStr) => {
-        if(!dateStr) return "";
-        const [y, m, d] = dateStr.split('-');
-        return `${d}/${m}/${y}`;
+        if(!dateStr) return ""; let d = new Date(dateStr);
+        return `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()}`;
+    }
+    const formatTime = () => {
+        let d = new Date(); return `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} ${d.getHours()}:${d.getMinutes()}`;
     }
 
-    // TỰ ĐỘNG SINH 1000 DỮ LIỆU MẪU - 8 CƠ SỞ
+    const FACILITIES = ["KHC", "F1979", "F0040", "F0025", "F0198", "F0370", "M3311", "F0131", "F0949"];
+
     function generateSampleData() {
         const generated = [];
-        const facilities = ["F0040", "F0041", "F0042", "F0043", "F0044", "F0045", "F0046", "F0047"];
-        const products = [
-            "CON-0048-011-US-4808T", "D00ASM001-FULL", "AWW014ACKKC0", 
-            "HEV-WIRE-MAIN", "HEV-PIN-ASSY", "CAB-SENSOR-X", "BATT-CABLE-3P",
-            "POW-CORD-5M", "TERM-RING-04", "SHIELD-TAPE-B"
-        ];
-        const statuses = ["PENDING", "PENDING", "DONE", "DEBT"];
+        const products = ["CON-0048-011", "D00ASM001", "AWW014ACK", "HEV-WIRE-M", "HEV-PIN", "CAB-SENSOR", "BATT-CABLE", "POW-CORD"];
+        const statuses = ["PENDING", "WAITING", "PARTIAL", "DONE"];
 
         for(let i = 1; i <= 1000; i++) {
             let status = statuses[Math.floor(Math.random() * statuses.length)];
-            let d = new Date(TODAY);
-            // Random khoảng 40 ngày (trước 20, sau 20 ngày)
-            d.setDate(d.getDate() + (Math.floor(Math.random() * 40) - 20)); 
-            let dateStr = d.toISOString().split('T')[0];
-
+            let d = new Date(TODAY); d.setDate(d.getDate() + (Math.floor(Math.random() * 40) - 20)); 
+            
             let qty = Math.floor(Math.random() * 50) * 100 + 500;
-            let debtQty = 0;
-            let debtDate = "";
+            let doneQty = 0, waitQty = 0; let history = [];
 
-            if(status === 'DEBT') {
-                debtQty = Math.floor(Math.random() * (qty - 100)) + 50;
-                let dd = new Date(d);
-                dd.setDate(dd.getDate() + 3);
-                debtDate = dd.toISOString().split('T')[0];
-            }
+            if(status === 'DONE') { doneQty = qty; history.push({ time: formatDate(d.toISOString()), qty: qty }); } 
+            else if(status === 'PARTIAL') { doneQty = Math.floor(qty * 0.4); history.push({ time: formatDate(d.toISOString()), qty: doneQty }); } 
+            else if(status === 'WAITING') { doneQty = Math.floor(qty * 0.2); waitQty = Math.floor(qty * 0.3); if(doneQty > 0) history.push({ time: formatDate(d.toISOString()), qty: doneQty }); }
 
             generated.push({
-                id: i,
-                facility: facilities[i % facilities.length],
-                code: products[Math.floor(Math.random() * products.length)],
-                lot: `US26-${1000 + i}`,
-                qty: qty,
-                date: dateStr,
-                status: status,
-                debtQty: debtQty,
-                debtDate: debtDate
+                id: i, facility: FACILITIES[i % FACILITIES.length], code: products[Math.floor(Math.random() * products.length)], lot: `US26-${1000 + i}`,
+                qty: qty, doneQty: doneQty, waitQty: waitQty, date: d.toISOString().split('T')[0], status: status, history: history
             });
         }
         return generated;
     }
 
     function initData() {
-        // Đổi tên key để reset sạch sẽ dữ liệu cũ
-        const savedData = localStorage.getItem('hevLotsDataV8_1000');
-        if (savedData) { lotsData = JSON.parse(savedData); } 
-        else {
-            lotsData = generateSampleData();
-            saveData();
-        }
+        const savedData = localStorage.getItem('hevLotsDataV12');
+        if (savedData) { lotsData = JSON.parse(savedData); } else { lotsData = generateSampleData(); saveData(); }
     }
-
-    function saveData() { localStorage.setItem('hevLotsDataV8_1000', JSON.stringify(lotsData)); }
-
-    function resetSampleData() {
-        if(confirm("Làm mới lại toàn bộ 1000 dữ liệu ngẫu nhiên của 8 cơ sở?")) {
-            lotsData = generateSampleData();
-            saveData();
-            if(currentTab === 'SUMMARY') {
-                renderSummary('ALL', document.querySelector('#summaryArea .time-btn'));
-            } else {
-                renderTable();
-            }
-            alert("Đã khởi tạo thành công 1000 dữ liệu mới!");
-        }
-    }
+    function saveData() { localStorage.setItem('hevLotsDataV12', JSON.stringify(lotsData)); }
+    function resetSampleData() { if(confirm("Làm mới lại toàn bộ 1000 dữ liệu?")) { lotsData = generateSampleData(); saveData(); location.reload(); } }
 
     function getWeekRange(offset = 0) {
-        let curr = new Date(TODAY); 
-        let first = curr.getDate() - curr.getDay() + 1 + (offset * 7);
-        let firstDay = new Date(curr.setDate(first));
-        let lastDay = new Date(curr.setDate(curr.getDate() + 6));
-        return { start: firstDay, end: lastDay };
+        let curr = new Date(TODAY); let first = curr.getDate() - curr.getDay() + 1 + (offset * 7);
+        return { start: new Date(curr.setDate(first)), end: new Date(curr.setDate(first + 6)) };
     }
 
     function isDateMatch(dateString, mode) {
         if (!dateString || mode === 'ALL') return true;
         let d = new Date(dateString); d.setHours(0,0,0,0);
-        let t = new Date(TODAY); t.setHours(0,0,0,0);
-
-        if (mode === 'YESTERDAY') {
-            let y = new Date(t); y.setDate(y.getDate() - 1);
-            return d.getTime() === y.getTime();
-        }
         if (mode === 'THIS_WEEK' || mode === 'LAST_WEEK') {
-            let offset = mode === 'THIS_WEEK' ? 0 : -1;
-            let range = getWeekRange(offset);
+            let offset = mode === 'THIS_WEEK' ? 0 : -1; let range = getWeekRange(offset);
             range.start.setHours(0,0,0,0); range.end.setHours(23,59,59,999);
             return d >= range.start && d <= range.end;
         }
         return true;
     }
 
-    function checkOverdue(item) {
-        if (item.status === 'DONE') return false;
-        let targetDateStr = item.status === 'DEBT' ? item.debtDate : item.date;
-        if (!targetDateStr) return false;
-        return new Date(targetDateStr) < TODAY; 
-    }
-
     function login() {
         currentUser = document.getElementById('roleSelect').value;
         document.getElementById('loginView').classList.add('hidden');
         document.getElementById('appView').classList.remove('hidden');
-        document.getElementById('userInfo').innerText = currentUser === 'ADMIN' ? '👑 Admin' : `🏭 Cơ sở ${currentUser}`;
         
-        document.querySelectorAll('.admin-only').forEach(el => {
-            currentUser === 'ADMIN' ? el.classList.remove('hidden') : el.classList.add('hidden');
-        });
+        let uName = currentUser === 'ADMIN' ? '👑 Admin' : (currentUser === 'RECEIVER' ? '📦 Kho (Xác nhận)' : `🏭 Cơ sở ${currentUser}`);
+        document.getElementById('userInfo').innerText = uName;
+        
+        // Mở quyền Admin
+        document.querySelectorAll('.admin-only').forEach(el => currentUser === 'ADMIN' ? el.classList.remove('hidden') : el.classList.add('hidden'));
+        
+        // Mở quyền Kho
+        document.querySelectorAll('.receiver-only').forEach(el => currentUser === 'RECEIVER' ? el.classList.remove('hidden') : el.classList.add('hidden'));
+        
+        // Mở quyền dùng chung cho Admin & Kho (Bộ lọc cơ sở)
+        document.querySelectorAll('.admin-receiver-only').forEach(el => (currentUser === 'ADMIN' || currentUser === 'RECEIVER') ? el.classList.remove('hidden') : el.classList.add('hidden'));
+        
+        if(currentUser === 'ADMIN' || currentUser === 'RECEIVER') document.getElementById('bulkToolbar').classList.remove('hidden');
         
         initData(); renderTable();
     }
-
+    
     function logout() { location.reload(); }
 
     function changeTab(status, el) {
         currentTab = status;
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        el.classList.add('active');
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active')); el.classList.add('active');
         
         if (status === 'SUMMARY') {
-            document.getElementById('dataArea').classList.add('hidden');
+            document.getElementById('dataArea').classList.add('hidden'); document.getElementById('topSearchBar').classList.add('hidden');
             document.getElementById('summaryArea').style.display = 'block';
             renderSummary('ALL', document.querySelector('#summaryArea .time-btn')); 
         } else {
-            document.getElementById('dataArea').classList.remove('hidden');
+            document.getElementById('dataArea').classList.remove('hidden'); document.getElementById('topSearchBar').classList.remove('hidden');
             document.getElementById('summaryArea').style.display = 'none';
             renderTable();
         }
@@ -432,11 +420,9 @@
     function setTimeFilter(val, el) {
         currentFilterTime = val;
         document.querySelectorAll('#dataArea .time-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        renderTable();
+        el.classList.add('active'); renderTable();
     }
 
-    // TỐI ƯU RENDER 1000 ITEMS
     function renderTable() {
         const search = document.getElementById('searchInput').value.toLowerCase();
         const facFilter = document.getElementById('facilityFilter').value;
@@ -444,259 +430,298 @@
         const mobileList = document.getElementById('mobileList');
         
         desktopBody.innerHTML = ''; mobileList.innerHTML = '';
-        let debtCount = 0; let showCount = 0;
+        let waitCount = 0;
+        const dFrag = document.createDocumentFragment(); const mFrag = document.createDocumentFragment();
 
-        document.querySelectorAll('.col-chk').forEach(el => {
-            (isDeleteMode && currentUser === 'ADMIN') ? el.classList.remove('hidden') : el.classList.add('hidden');
-        });
-
-        // Tối ưu DOM: gom thẻ vào Fragment để tăng tốc vẽ 1000 dòng
-        const dFrag = document.createDocumentFragment();
-        const mFrag = document.createDocumentFragment();
+        document.querySelectorAll('.col-chk').forEach(el => { (bulkMode !== 'none') ? el.classList.remove('hidden') : el.classList.add('hidden'); });
 
         lotsData.forEach(item => {
-            if (currentUser !== 'ADMIN' && item.facility !== currentUser) return;
-            if (item.status === 'DEBT') debtCount++;
-            if (currentTab !== 'ALL' && currentTab !== 'SUMMARY' && item.status !== currentTab) return;
-            if (currentUser === 'ADMIN' && facFilter !== 'ALL' && item.facility !== facFilter) return;
+            if (currentUser !== 'ADMIN' && currentUser !== 'RECEIVER' && item.facility !== currentUser) return;
+            if (item.waitQty > 0) waitCount++;
+            if (currentTab === 'PENDING' && item.status !== 'PENDING' && item.status !== 'PARTIAL') return;
+            if (currentTab === 'WAITING' && item.waitQty === 0) return;
+            if (currentTab === 'DONE' && item.status !== 'DONE') return;
+            if ((currentUser === 'ADMIN' || currentUser === 'RECEIVER') && facFilter !== 'ALL' && item.facility !== facFilter) return;
             if (search && !item.code.toLowerCase().includes(search) && !item.lot.toLowerCase().includes(search)) return;
             if (currentFilterTime !== 'ALL' && !isDateMatch(item.date, currentFilterTime)) return;
+            if (bulkMode === 'confirm' && item.waitQty === 0) return;
 
-            showCount++;
-            const isAdmin = currentUser === 'ADMIN';
-            const isOverdue = checkOverdue(item); 
-            
-            let chkHtmlDesktop = (isAdmin && isDeleteMode) ? `<td class="col-chk"><input type="checkbox" class="chk-box lot-chk" value="${item.id}"></td>` : `<td class="col-chk hidden"></td>`;
-            let chkHtmlMobile = (isAdmin && isDeleteMode) ? `<input type="checkbox" class="m-chk lot-chk" value="${item.id}" onclick="event.stopPropagation()">` : ``;
+            const isOverdue = (item.status !== 'DONE') && (new Date(item.date) < TODAY); 
+            let chkHtmlDesktop = (bulkMode !== 'none') ? `<td class="col-chk"><input type="checkbox" class="chk-box lot-chk" value="${item.id}"></td>` : `<td class="col-chk hidden"></td>`;
+            let chkHtmlMobile = (bulkMode !== 'none') ? `<input type="checkbox" class="m-chk lot-chk" value="${item.id}" onclick="event.stopPropagation()">` : ``;
 
-            let statusBadge = "", actionBtn = "", debtDisplayDesktop = "", mobileBgClass = "", labelText = "", valText = "";
-            let dateDisplayDesktop = `<span style="color:var(--text-muted)">Giao:</span> ${formatDate(item.date)}`;
-            let dateVal = formatDate(item.date);
-
-            if (item.status === 'DONE') {
-                statusBadge = `<span class="text-success">✅ Đã xong</span>`; actionBtn = `<span style="color:var(--text-muted)">Đã lưu</span>`;
-                mobileBgClass = "m-status-done"; labelText = "Đạt"; valText = item.qty.toLocaleString();
-            } else if (item.status === 'DEBT') {
-                statusBadge = `<span class="text-danger">⚠ Đang Nợ</span>`; actionBtn = `<button class="btn btn-warning" onclick="openModal(${item.id})">Sửa Nợ</button>`;
-                debtDisplayDesktop = `<br><span class="text-danger">Nợ: ${item.debtQty.toLocaleString()}</span>`; dateDisplayDesktop += `<br><span class="text-danger">Trả Nợ: ${formatDate(item.debtDate)}</span>`;
-                mobileBgClass = "m-status-debt"; labelText = "Nợ"; valText = item.debtQty.toLocaleString(); dateVal = formatDate(item.debtDate);
-            } else {
-                statusBadge = `<span class="text-warning">⏳ Đang làm</span>`; actionBtn = `<button class="btn btn-primary" onclick="openModal(${item.id})">Báo cáo</button>`;
-                mobileBgClass = "m-status-pending"; labelText = "Giao"; valText = item.qty.toLocaleString();
-            }
-
-            if(isOverdue) { statusBadge += `<br><span style="color:red; font-size:12px; font-weight:bold;">🚨 QUÁ HẠN</span>`; mobileBgClass += " overdue"; }
+            let mobileBgClass = "m-status-pending"; let statusText = `<span class="text-warning">⏳ Đang làm</span>`;
+            if (item.status === 'DONE') { mobileBgClass = "m-status-done"; statusText = `<span class="text-success">✅ Đã xong</span>`; } 
+            else if (item.waitQty > 0) { mobileBgClass = "m-status-waiting"; statusText = `<span class="text-info">📦 Chờ Kho XN</span>`; } 
+            else if (item.status === 'PARTIAL') { statusText = `<span class="text-warning">⏳ Xong 1 phần</span>`; }
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 ${chkHtmlDesktop}
-                ${isAdmin ? `<td><strong>${item.facility}</strong></td>` : ''}
+                ${(currentUser === 'ADMIN' || currentUser === 'RECEIVER') ? `<td><strong>${item.facility}</strong></td>` : ''}
                 <td><strong>${item.code}</strong><br><span class="d-badge" style="margin-top:4px">${item.lot}</span></td>
-                <td>Giao: ${item.qty.toLocaleString()} ${debtDisplayDesktop}</td>
-                <td>${dateDisplayDesktop}</td>
-                <td>${statusBadge}</td>
-                <td>${actionBtn}</td>
+                <td>Đã xong: <strong>${item.doneQty.toLocaleString()} / ${item.qty.toLocaleString()}</strong>
+                    ${item.waitQty > 0 ? `<br><span style="font-size:11px; color:var(--info);">👉 Báo thêm: +${item.waitQty.toLocaleString()}</span>` : ''}
+                </td>
+                <td>${statusText}</td>
+                <td><button class="btn btn-outline btn-sm" onclick="openDetailModal(${item.id})">Mở</button></td>
             `;
             dFrag.appendChild(tr);
 
             const mobileCard = document.createElement('div');
-            mobileCard.className = `m-card ${mobileBgClass} ${isAdmin && isDeleteMode ? 'has-chk' : ''}`;
-            if(!isDeleteMode) mobileCard.setAttribute('onclick', `openModal(${item.id})`);
+            mobileCard.className = `m-card ${mobileBgClass} ${bulkMode !== 'none' ? 'has-chk' : ''}`;
+            
+            if(bulkMode === 'none') { mobileCard.setAttribute('onclick', `openDetailModal(${item.id})`); } 
+            else { mobileCard.setAttribute('onclick', `let chk = this.querySelector('.m-chk'); chk.checked = !chk.checked;`); }
             
             mobileCard.innerHTML = `
                 ${chkHtmlMobile}
-                ${isAdmin ? `<div style="font-size:11px; margin-bottom:6px; color:var(--text-muted);">🏢 CƠ SỞ: ${item.facility}</div>` : ''}
-                <div class="m-row"><div class="m-code">${item.code}</div><div class="m-date ${isOverdue ? 'text-danger' : ''}">${dateVal}</div></div>
-                <div class="m-row"><div class="m-lot">${item.lot}</div><div class="m-qty"><span>${labelText}</span> <strong>${valText}</strong></div></div>
+                ${(currentUser === 'ADMIN' || currentUser === 'RECEIVER') ? `<div style="font-size:10px; margin-bottom:4px; color:var(--text-muted); text-transform:uppercase;">Cơ Sở: ${item.facility}</div>` : ''}
+                <div class="m-row"><div class="m-code">${item.code}</div><div class="m-date ${isOverdue ? 'text-danger' : ''}">Hạn: ${formatDate(item.date)}</div></div>
+                <div class="m-row">
+                    <div class="m-lot">${item.lot}</div>
+                    <div class="m-qty">Đã xong: <strong>${item.doneQty.toLocaleString()} / ${item.qty.toLocaleString()}</strong></div>
+                </div>
             `;
             mFrag.appendChild(mobileCard);
         });
 
-        desktopBody.appendChild(dFrag);
-        mobileList.appendChild(mFrag);
-        document.getElementById('debtCount').innerText = debtCount > 0 ? `(${debtCount})` : "";
+        desktopBody.appendChild(dFrag); mobileList.appendChild(mFrag);
+        
+        let badge = document.getElementById('waitBadge');
+        if(waitCount > 0) { badge.style.display = 'inline-block'; badge.innerText = waitCount; } 
+        else { badge.style.display = 'none'; }
     }
 
+    // LOGIC MODAL CHI TIẾT & CẢNH BÁO HẠN TRẢ CÒN LẠI
+    function openDetailModal(id) {
+        const item = lotsData.find(x => x.id === id);
+        
+        document.getElementById('d_id').value = item.id;
+        document.getElementById('d_code').innerText = item.code;
+        document.getElementById('d_date').innerText = "Hạn: " + formatDate(item.date);
+        document.getElementById('d_lot').innerText = item.lot;
+        document.getElementById('d_facility').innerText = (currentUser === 'ADMIN' || currentUser === 'RECEIVER') ? `CS: ${item.facility}` : '';
+        document.getElementById('d_total').innerText = item.qty.toLocaleString();
+        document.getElementById('d_done').innerText = item.doneQty.toLocaleString();
+
+        document.getElementById('inputArea').style.display = 'none';
+        document.getElementById('formFacility').style.display = 'none';
+        document.getElementById('formReceiver').style.display = 'none';
+        document.getElementById('d_actions').innerHTML = `<button class="btn btn-outline" style="width:100%" onclick="closeModal('detailModal')">Đóng</button>`;
+
+        if (currentUser === 'RECEIVER' && item.waitQty > 0) {
+            document.getElementById('inputArea').style.display = 'block';
+            document.getElementById('formReceiver').style.display = 'block';
+            document.getElementById('d_wait_qty').innerText = item.waitQty.toLocaleString();
+            document.getElementById('d_confirm_qty').value = item.waitQty; 
+            
+            document.getElementById('d_actions').innerHTML = `
+                <button class="btn btn-outline" onclick="closeModal('detailModal')">Hủy</button>
+                <button class="btn btn-info" onclick="submitConfirm()">Xác Nhận Nhận Hàng</button>
+            `;
+        } 
+        // Đã sửa lại CSS của formFacility để hiển thị form nhập liệu cho Cơ sở
+        else if (currentUser !== 'ADMIN' && currentUser !== 'RECEIVER' && item.qty > item.doneQty + item.waitQty) {
+            document.getElementById('inputArea').style.display = 'block';
+            document.getElementById('formFacility').style.display = 'block';
+            document.getElementById('d_report_qty').value = ""; 
+            document.getElementById('d_next_date').value = "";
+            checkRemain(); // Kiểm tra ẩn/hiện hộp ngày
+            
+            document.getElementById('d_actions').innerHTML = `
+                <button class="btn btn-outline" onclick="closeModal('detailModal')">Hủy</button>
+                <button class="btn btn-primary" onclick="submitReport()">Gửi Kho Xác Nhận</button>
+            `;
+        }
+
+        const list = document.getElementById('d_history'); list.innerHTML = "";
+        if(!item.history || item.history.length === 0) {
+            list.innerHTML = `<li style="text-align:center; color:var(--text-muted); font-size:12px;">Chưa có lịch sử</li>`;
+        } else {
+            let reversed = [...item.history].reverse();
+            reversed.forEach(h => { list.innerHTML += `<li class="history-item"><span>📅 ${h.time}</span> <strong class="text-success">+ ${h.qty.toLocaleString()} PCS</strong></li>`; });
+        }
+        document.getElementById('detailModal').style.display = 'flex';
+    }
+
+    // 💡 Tự động bật Hộp Ngày Hạn nếu trả không đủ
+    function checkRemain() {
+        const id = parseFloat(document.getElementById('d_id').value);
+        const item = lotsData.find(x => x.id === id);
+        if (!item) return;
+
+        const reportQty = parseInt(document.getElementById('d_report_qty').value) || 0;
+        
+        // Nếu tổng (đã xong + đang chờ + vừa nhập) < yêu cầu -> Hiện ô hẹn ngày
+        if (item.doneQty + item.waitQty + reportQty < item.qty) {
+            document.getElementById('d_next_date_group').style.display = 'block';
+        } else {
+            document.getElementById('d_next_date_group').style.display = 'none';
+        }
+    }
+
+    function submitReport() {
+        const id = parseFloat(document.getElementById('d_id').value);
+        const reportQty = parseInt(document.getElementById('d_report_qty').value) || 0;
+        const nextDate = document.getElementById('d_next_date').value;
+
+        if (reportQty <= 0) { alert("Số lượng trả phải lớn hơn 0!"); return; }
+
+        const item = lotsData.find(x => x.id === id);
+        if (item.doneQty + item.waitQty + reportQty > item.qty) {
+            alert(`Vượt quá yêu cầu! Chỉ còn thiếu ${item.qty - item.doneQty - item.waitQty} PCS.`); return;
+        }
+
+        // Bắt lỗi nếu trả không đủ mà không chịu hẹn ngày
+        if (item.doneQty + item.waitQty + reportQty < item.qty && !nextDate) {
+            alert("Vui lòng cập nhật 'Hạn trả phần còn lại' vì số lượng vẫn chưa giao đủ!"); return;
+        }
+
+        item.waitQty += reportQty;
+        if(item.status === 'PENDING' || item.status === 'PARTIAL') item.status = 'WAITING';
+        
+        // Cập nhật lại hạn trả mới cho Lô hàng
+        if(nextDate) { item.date = nextDate; }
+        
+        saveData(); renderTable(); closeModal('detailModal');
+    }
+
+    function submitConfirm() {
+        const id = parseFloat(document.getElementById('d_id').value);
+        const confirmQty = parseInt(document.getElementById('d_confirm_qty').value) || 0;
+        if (confirmQty <= 0) return;
+
+        const item = lotsData.find(x => x.id === id);
+        item.doneQty += confirmQty; item.waitQty = 0; 
+        
+        if(!item.history) item.history = []; item.history.push({ time: formatTime(), qty: confirmQty });
+        if (item.doneQty >= item.qty) { item.status = 'DONE'; item.doneQty = item.qty; } else { item.status = 'PARTIAL'; }
+        
+        saveData(); renderTable(); closeModal('detailModal');
+    }
+
+    function toggleBulkMode(mode) {
+        if(bulkMode === mode) {
+            bulkMode = 'none'; document.getElementById('btnToggleDelete').classList.replace('btn-primary', 'btn-outline');
+            document.getElementById('btnToggleConfirm').classList.replace('btn-info', 'btn-outline');
+            document.getElementById('btnDeleteSelected').classList.add('hidden'); document.getElementById('btnConfirmSelected').classList.add('hidden');
+        } else {
+            bulkMode = mode;
+            if(mode === 'delete') { document.getElementById('btnToggleDelete').classList.replace('btn-outline', 'btn-primary'); document.getElementById('btnDeleteSelected').classList.remove('hidden'); } 
+            else if(mode === 'confirm') { document.getElementById('btnToggleConfirm').classList.replace('btn-outline', 'btn-info'); document.getElementById('btnConfirmSelected').classList.remove('hidden'); }
+        }
+        renderTable();
+    }
+    function toggleAllChk(master) { document.querySelectorAll('.lot-chk').forEach(chk => chk.checked = master.checked); }
+    function processBulk(mode) {
+        let selectedIds = Array.from(document.querySelectorAll('.lot-chk:checked')).map(c => parseFloat(c.value));
+        if(selectedIds.length === 0) { alert("Vui lòng chọn ít nhất 1 lô!"); return; }
+        
+        if(mode === 'delete' && confirm(`Xóa vĩnh viễn ${selectedIds.length} lô?`)) { lotsData = lotsData.filter(item => !selectedIds.includes(item.id)); saveData(); toggleBulkMode('delete'); } 
+        else if(mode === 'confirm' && confirm(`Xác nhận nhận đủ số lượng các Cơ sở đã báo cho ${selectedIds.length} lô?`)) {
+            selectedIds.forEach(id => {
+                let item = lotsData.find(x => x.id === id);
+                if(item.waitQty > 0) {
+                    item.doneQty += item.waitQty; item.waitQty = 0;
+                    if(!item.history) item.history = []; item.history.push({ time: formatTime(), qty: item.waitQty });
+                    item.status = (item.doneQty >= item.qty) ? 'DONE' : 'PARTIAL';
+                    if(item.doneQty > item.qty) item.doneQty = item.qty;
+                }
+            });
+            saveData(); toggleBulkMode('confirm'); alert(`Đã xác nhận thành công ${selectedIds.length} lô!`);
+        }
+    }
+
+    // TỔNG HỢP / NHẬP EXCEL 
     function renderSummary(mode, el) {
         document.querySelectorAll('#summaryArea .time-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
 
-        let totalQty = 0; let totalDone = 0; let totalDebt = 0;
+        let totalQty = 0; let totalDone = 0; let totalWait = 0;
         let facilityStats = {};
 
         lotsData.forEach(item => {
             if(isDateMatch(item.date, mode)) {
                 totalQty += item.qty;
-                if(item.status === 'DONE') totalDone += item.qty;
-                else if(item.status === 'DEBT') {
-                    totalDebt += item.debtQty;
-                    totalDone += (item.qty - item.debtQty); 
-                }
+                totalDone += item.doneQty;
+                totalWait += item.waitQty;
 
-                if(!facilityStats[item.facility]) { facilityStats[item.facility] = { total: 0, done: 0, debt: 0 }; }
+                if(!facilityStats[item.facility]) { facilityStats[item.facility] = { total: 0, done: 0, wait: 0 }; }
                 facilityStats[item.facility].total += item.qty;
-                if(item.status === 'DONE') { facilityStats[item.facility].done += item.qty; } 
-                else if(item.status === 'DEBT') {
-                    facilityStats[item.facility].debt += item.debtQty;
-                    facilityStats[item.facility].done += (item.qty - item.debtQty);
-                }
+                facilityStats[item.facility].done += item.doneQty;
+                facilityStats[item.facility].wait += item.waitQty;
             }
         });
 
         document.getElementById('sumTotal').innerText = totalQty.toLocaleString();
         document.getElementById('sumDone').innerText = totalDone.toLocaleString();
-        document.getElementById('sumDebt').innerText = totalDebt.toLocaleString();
-
-        let percent = totalQty === 0 ? 0 : Math.round((totalDebt / totalQty) * 100);
-        document.getElementById('debtPercentText').innerText = percent + "%";
-        let pBar = document.getElementById('debtProgressBar');
-        pBar.style.width = percent + "%"; pBar.innerText = percent > 5 ? percent + "%" : "";
+        document.getElementById('sumRemain').innerText = (totalQty - totalDone).toLocaleString();
 
         const facBody = document.getElementById('facilitySummaryBody');
         facBody.innerHTML = '';
         
-        let facArray = Object.keys(facilityStats).sort(); // Sort tên cơ sở A-Z
-        for (let fac of facArray) {
+        for (let fac of FACILITIES) {
+            if(!facilityStats[fac]) continue;
             let stat = facilityStats[fac];
-            let facPercent = stat.total === 0 ? 0 : Math.round((stat.debt / stat.total) * 100);
-            let colorClass = facPercent > 0 ? "var(--danger)" : "var(--success)";
+            let facPercent = stat.total === 0 ? 0 : Math.round((stat.done / stat.total) * 100);
             
             facBody.innerHTML += `
                 <tr>
                     <td><strong>${fac}</strong></td>
                     <td>${stat.total.toLocaleString()}</td>
                     <td class="text-success">${stat.done.toLocaleString()}</td>
-                    <td class="text-danger">${stat.debt.toLocaleString()}</td>
-                    <td><strong style="color: ${colorClass}">${facPercent}%</strong></td>
+                    <td class="text-info">${stat.wait.toLocaleString()}</td>
+                    <td><strong>${facPercent}%</strong></td>
                 </tr>
             `;
         }
-        
-        if (facArray.length === 0) {
-            facBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Không có dữ liệu trong thời gian này</td></tr>`;
-        }
     }
-
-    function toggleDeleteMode() {
-        isDeleteMode = !isDeleteMode;
-        document.getElementById('btnToggleDelete').classList.toggle('btn-outline');
-        document.getElementById('btnToggleDelete').classList.toggle('btn-primary');
-        if(isDeleteMode) document.getElementById('btnDeleteSelected').classList.remove('hidden');
-        else document.getElementById('btnDeleteSelected').classList.add('hidden');
-        renderTable();
-    }
-
-    function toggleAllChk(master) {
-        document.querySelectorAll('.chk-box').forEach(chk => chk.checked = master.checked);
-    }
-
-    function deleteSelected() {
-        let selectedIds = Array.from(document.querySelectorAll('.lot-chk:checked')).map(c => parseFloat(c.value));
-        if(selectedIds.length === 0) { alert("Vui lòng chọn ít nhất 1 lô để xóa!"); return; }
-        if(confirm(`Xác nhận xóa vĩnh viễn ${selectedIds.length} lô dữ liệu?`)) {
-            lotsData = lotsData.filter(item => !selectedIds.includes(item.id));
-            saveData(); toggleDeleteMode(); 
-        }
-    }
-
-    function handleExcelUpload(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
+    function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+    function handleExcelUpload(e) { /* Giữ nguyên script xử lý sheetJS */
+        const file = e.target.files[0]; if (!file) return;
         const reader = new FileReader();
         reader.onload = function(e) {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, {type: 'array'});
-            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-            const excelData = XLSX.utils.sheet_to_json(firstSheet);
-            
-            let added = 0; let updated = 0;
-
+            const excelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+            let added = 0, updated = 0;
             excelData.forEach(row => {
-                let facility = row["Cơ sở"] || "F0040";
-                let code = row["Mã hàng"] || row["Mã SP"] || "Unknown";
-                let lot = row["Số lô"] || row["Lot"] || "";
-                let qty = parseInt(row["Số lượng"] || row["SL"]) || 0;
-                
+                let facility = row["Cơ sở"] || "KHC"; let code = row["Mã hàng"] || row["Mã SP"] || "Unknown";
+                let lot = row["Số lô"] || row["Lot"] || ""; let qty = parseInt(row["Số lượng"] || row["SL"]) || 0;
                 let dateStr = row["Ngày hạn"] || TODAY.toISOString().split('T')[0];
-                if(typeof dateStr === 'number') {
-                    let d = new Date((dateStr - (25567 + 2)) * 86400 * 1000);
-                    dateStr = d.toISOString().split('T')[0];
-                }
+                if(typeof dateStr === 'number') { dateStr = new Date((dateStr - (25567 + 2)) * 86400 * 1000).toISOString().split('T')[0]; }
 
                 if(lot && qty > 0) {
                     let existing = lotsData.find(x => x.lot === lot);
-                    if (existing) {
-                        existing.qty = qty; existing.date = dateStr; updated++;
-                    } else {
-                        lotsData.unshift({
-                            id: Date.now() + Math.random(),
-                            facility: facility, code: code, lot: lot, qty: qty, date: dateStr,
-                            status: "PENDING", debtQty: 0, debtDate: ""
-                        });
+                    if (existing) { existing.qty = qty; existing.date = dateStr; updated++; } 
+                    else {
+                        lotsData.unshift({ id: Date.now() + Math.random(), facility: facility, code: code, lot: lot, qty: qty, doneQty: 0, waitQty: 0, date: dateStr, status: "PENDING", history: [] });
                         added++;
                     }
                 }
             });
-            
-            saveData(); 
-            if(currentTab === 'SUMMARY') { renderSummary('ALL', document.querySelector('#summaryArea .time-btn')); } 
-            else { renderTable(); }
-            alert(`Nhập Excel thành công!\n- Đã thêm mới: ${added} lô\n- Cập nhật số lượng: ${updated} lô trùng.`);
-            document.getElementById('excelUpload').value = ""; 
+            saveData(); renderSummary('ALL', document.querySelector('#summaryArea .time-btn'));
+            alert(`Nhập Excel thành công!\n- Thêm mới: ${added} lô\n- Cập nhật: ${updated} lô.`);
         };
         reader.readAsArrayBuffer(file);
     }
-
     function openExportModal() { document.getElementById('exportModal').style.display = 'flex'; }
-    
     function executeExport() {
         const period = document.getElementById('exportPeriod').value;
         let exportData = lotsData;
         if(period !== 'ALL') exportData = lotsData.filter(item => isDateMatch(item.date, period));
-        if(exportData.length === 0) { alert("Không có dữ liệu trong khoảng thời gian này để xuất!"); return; }
-
+        
         let flatData = exportData.map(item => ({
-            "Cơ sở": item.facility, "Mã Sản Phẩm": item.code, "Số Lô": item.lot, "Số Lượng Giao": item.qty,
-            "Ngày Hạn Trả": formatDate(item.date),
-            "Trạng Thái": item.status === 'DONE' ? 'Đã Xong' : (item.status === 'DEBT' ? 'Đang Nợ' : 'Đang Làm'),
-            "Số Lượng Nợ": item.debtQty, "Ngày Hẹn Trả Nợ": formatDate(item.debtDate)
+            "Cơ sở": item.facility, "Mã Sản Phẩm": item.code, "Số Lô": item.lot, "Tổng Phải Giao": item.qty,
+            "Kho Đã Nhận": item.doneQty, "Đang Chờ XN": item.waitQty, "Ngày Hạn": formatDate(item.date),
+            "Trạng Thái": item.status === 'DONE' ? 'Đã Xong' : 'Đang Làm'
         }));
 
-        const ws = XLSX.utils.json_to_sheet(flatData);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Du_Lieu_Gia_Cong");
-        XLSX.writeFile(wb, `HEV_BaoCao_${period}_${new Date().getTime()}.xlsx`);
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(flatData), "Du_Lieu");
+        XLSX.writeFile(wb, `HEV_TienDo_${period}_${new Date().getTime()}.xlsx`);
         closeModal('exportModal');
-    }
-
-    function openModal(id) {
-        if(isDeleteMode) return; 
-        const item = lotsData.find(x => x.id === id);
-        document.getElementById('m_id').value = item.id; document.getElementById('m_info').value = `${item.code} - Lô: ${item.lot}`;
-        document.getElementById('m_qty').value = item.qty.toLocaleString(); 
-        document.getElementById('m_debt').value = item.debtQty > 0 ? item.debtQty : 0; document.getElementById('m_debt_date').value = item.debtDate || "";
-        checkDebt(); document.getElementById('reportModal').style.display = 'flex';
-    }
-
-    function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
-    function checkDebt() {
-        const debt = parseInt(document.getElementById('m_debt').value) || 0;
-        document.getElementById('debtDateGroup').style.display = debt > 0 ? 'block' : 'none';
-    }
-
-    function submitReport() {
-        const id = parseFloat(document.getElementById('m_id').value);
-        const debt = parseInt(document.getElementById('m_debt').value) || 0;
-        const debtDate = document.getElementById('m_debt_date').value;
-        
-        if (debt > 0 && !debtDate) { alert("Vui lòng nhập Ngày hẹn trả nợ!"); return; }
-
-        const item = lotsData.find(x => x.id === id);
-        if (debt === 0) { item.status = 'DONE'; item.debtQty = 0; item.debtDate = ""; } 
-        else { item.status = 'DEBT'; item.debtQty = debt; item.debtDate = debtDate; }
-        
-        saveData(); renderTable(); closeModal('reportModal');
     }
 </script>
 </body>
